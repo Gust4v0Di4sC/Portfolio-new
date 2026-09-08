@@ -6,5 +6,15 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), sitemap()]
+  output: 'static',
+
+  // Trocar quando o domínio definitivo for escolhido.
+  site: 'https://example.com',
+
+  integrations: [react(), sitemap()],
+  vite: {
+    build: {
+      sourcemap: false,
+    },
+  },
 });

@@ -1,0 +1,30 @@
+:root {
+  color-scheme: dark;
+
+  --color-background: #02060d;
+  --color-surface: #07111f;
+  --color-surface-elevated: #0a1728;
+
+  --color-text: #f1f7ff;
+  --color-text-muted: #9cb0c3;
+
+  --color-primary: #22d3ee;
+  --color-primary-intense: #00e5ff;
+  --color-secondary: #2563eb;
+  --color-focus: #f8e16c;
+  --color-error: #ff6b7a;
+
+  --font-display: 'Orbitron', system-ui, sans-serif;
+  --font-body: Inter, system-ui, sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  --container-width: 75rem;
+  --header-height: 4.5rem;
+
+  --radius-small: 0.25rem;
+  --radius-medium: 0.5rem;
+  --radius-large: 1rem;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+}

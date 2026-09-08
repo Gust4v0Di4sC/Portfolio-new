@@ -1,17 +1,78 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Gustavo Dias — Desenvolvedor Front-end"
+  description="Portfólio de Gustavo Dias, desenvolvedor Front-end e UI/UX Designer."
+>
+  <header slot="header" class="container">
+    <nav aria-label="Navegação principal">
+      <a href="/">GD/&gt;</a>
+
+      <ul>
+        <li><a href="#experiencia">Experiência</a></li>
+        <li><a href="#projetos">Projetos</a></li>
+        <li><a href="#habilidades">Habilidades</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero container" aria-labelledby="hero-title">
+    <p>Desenvolvedor Front-end e UI/UX Designer</p>
+
+    <h1 id="hero-title">Gustavo Dias</h1>
+
+    <p>Transformando ideias em experiências digitais.</p>
+
+    <a href="#projetos">Explorar projetos</a>
+  </section>
+
+  <section id="experiencia" class="container">
+    <h2>Experiência</h2>
+  </section>
+
+  <section id="projetos" class="container">
+    <h2>Projetos</h2>
+  </section>
+
+  <section id="habilidades" class="container">
+    <h2>Habilidades</h2>
+  </section>
+
+  <section id="contato" class="container">
+    <h2>Contato</h2>
+  </section>
+</BaseLayout>
+
+<style>
+  header {
+    min-height: var(--header-height);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: inherit;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero {
+    display: grid;
+    min-height: calc(100svh - var(--header-height));
+    align-content: center;
+  }
+
+  section {
+    min-height: 50vh;
+    padding-block: 5rem;
+  }
+</style>
