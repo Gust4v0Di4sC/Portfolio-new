@@ -12,11 +12,11 @@ type SplashBlock = {
 };
 
 const statusMessages = [
-  'Building portfolio scene...',
-  'Raising memory towers...',
-  'Calibrating cyan grid...',
-  'Loading interface layer...',
-  'Portfolio ready.',
+  'Inicializando interface...',
+  'Sincronizando malha visual...',
+  'Montando blocos de memoria...',
+  'Calibrando camada interativa...',
+  'Interface pronta.',
 ];
 
 export default function SplashIntro() {
@@ -59,7 +59,7 @@ export default function SplashIntro() {
       ended = true;
       fill.style.width = '100%';
       percent.textContent = '100%';
-      status.textContent = 'Portfolio ready.';
+      status.textContent = 'Interface pronta.';
       root.classList.add('is-leaving');
 
       window.setTimeout(() => {
@@ -358,27 +358,27 @@ export default function SplashIntro() {
     <section
       className="splash-intro"
       data-splash-intro
-      aria-label="Intro do portfolio"
+      aria-label="Intro de carregamento"
       ref={rootRef}
     >
       <canvas className="splash-canvas" data-splash-canvas aria-hidden="true" ref={canvasRef} />
       <div className="splash-scanlines" aria-hidden="true" />
 
       <div className="splash-ui">
-        <p className="splash-brand">GD/&gt;</p>
-        <h2>Gustavo Dias</h2>
-        <p className="splash-role">Desenvolvedor Front-end &amp; UI/UX Designer</p>
+        <p className="splash-brand">BOOT/UI</p>
+        <h2>Inicializando</h2>
+        <p className="splash-role">Carregando interface visual</p>
       </div>
 
       <div className="splash-progress" aria-live="polite">
         <div className="progress-row">
-          <span>INITIALIZING</span>
+          <span>INICIALIZANDO</span>
           <span ref={percentRef}>0%</span>
         </div>
         <div className="progress-track">
           <span ref={fillRef} />
         </div>
-        <p ref={statusRef}>Building portfolio scene...</p>
+        <p ref={statusRef}>Inicializando interface...</p>
       </div>
 
       <style>{`
