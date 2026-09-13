@@ -1,0 +1,253 @@
+.skills .section-heading {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  margin-bottom: var(--space-content);
+  text-align: center;
+}
+
+.skills .section-heading p {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--step-small);
+}
+
+.skills .skill-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.skills .skill-group {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  align-content: start;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  color: inherit;
+  background: rgb(7 17 31 / 0.54);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.skills .skill-group-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.skills .skill-group-header > span:first-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.skills .skill-kicker,
+.skills .proof-count {
+  color: var(--color-text-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.skills .skill-title {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.skills .skill-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.skills .skill-row {
+  display: grid;
+  grid-template-columns: 2.3rem 1fr;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-text-muted);
+  font-size: var(--step-small);
+}
+
+.skills .skill-icon {
+  display: grid;
+  width: 2.3rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgb(34 211 238 / 0.16);
+  border-radius: var(--radius-small);
+  color: var(--color-primary-intense);
+  background: rgb(2 6 13 / 0.72);
+  box-shadow: inset 0 0 0.8rem rgb(34 211 238 / 0.05);
+}
+
+.skills .skill-group:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-glow-soft);
+  transform: translateY(-0.125rem);
+}
+
+.skills .skill-group:focus-visible {
+  border-color: var(--color-focus);
+  box-shadow: var(--shadow-glow-soft);
+}
+
+.skills .skill-proof-dialog {
+  width: min(calc(100% - 2rem), 47rem);
+  max-height: min(44rem, calc(100dvh - 2rem));
+  padding: 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-medium);
+  color: var(--color-text);
+  background: transparent;
+  box-shadow: var(--shadow-glow-strong);
+}
+
+.skills .skill-proof-dialog[open] {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.skills .skill-proof-dialog::backdrop {
+  background:
+    radial-gradient(circle at 50% 24%, rgb(34 211 238 / 0.15), transparent 26rem), rgb(1 3 7 / 0.78);
+  backdrop-filter: blur(0.35rem);
+}
+
+.skills .proof-panel {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  background: linear-gradient(90deg, rgb(34 211 238 / 0.08), transparent 35%), rgb(2 6 13 / 0.94);
+}
+
+.skills .proof-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.skills .proof-header p,
+.skills .proof-header span,
+.skills .proof-list small,
+.skills .proof-list span {
+  font-family: var(--font-mono);
+}
+
+.skills .proof-header p {
+  color: var(--color-text-subtle);
+  font-size: 0.78rem;
+}
+
+.skills .proof-header h3 {
+  margin-top: 0.18rem;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 0.95rem + 1vw, 1.65rem);
+  font-weight: 600;
+}
+
+.skills .proof-header span {
+  display: block;
+  max-width: 36rem;
+  margin-top: 0.45rem;
+  color: var(--color-text-muted);
+  font-size: var(--step-small);
+}
+
+.skills .proof-close {
+  flex: 0 0 auto;
+  width: 2.2rem;
+  padding: 0;
+}
+
+.skills .proof-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.skills .proof-skills span {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgb(34 211 238 / 0.14);
+  border-radius: var(--radius-small);
+  color: var(--color-primary-intense);
+  background: rgb(7 17 31 / 0.64);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.skills .proof-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skills .proof-list li {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem;
+  border: 1px solid rgb(156 176 195 / 0.1);
+  border-radius: var(--radius-small);
+  background: rgb(7 17 31 / 0.5);
+}
+
+.skills .proof-list strong {
+  color: var(--color-text);
+}
+
+.skills .proof-list span,
+.skills .proof-list small {
+  color: var(--color-primary);
+  font-size: 0.78rem;
+}
+
+.skills .proof-list p {
+  color: var(--color-text-muted);
+  font-size: var(--step-small);
+}
+
+.skills .proof-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 0.25rem;
+}
+
+@media (max-width: 64rem) {
+  .skills .skill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 34rem) {
+  .skills .skill-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skills .skill-proof-dialog {
+    width: calc(100% - 1rem);
+  }
+
+  .skills .proof-header {
+    gap: 0.75rem;
+  }
+
+  .skills .proof-actions {
+    justify-content: flex-start;
+  }
+}
