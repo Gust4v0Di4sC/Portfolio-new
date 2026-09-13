@@ -42,6 +42,8 @@ const socialImage = new URL(image, Astro.site);
   </head>
 
   <body>
+    <slot name="intro" />
+
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
     <slot name="header" />

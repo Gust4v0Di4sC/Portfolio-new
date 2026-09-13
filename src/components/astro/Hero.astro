@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import heroCover from '../../assets/images/heroimg.png';
+import HeroCard from '../react/HeroCard';
+---
+
+<section class="hero container" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="hero-kicker">Desenvolvedor Front-end &amp; UI/UX Designer</p>
+
+    <h1 id="hero-title">Gustavo Dias</h1>
+
+    <p class="hero-text">Transformando ideias em experiências digitais</p>
+
+    <div class="hero-actions" aria-label="Ações principais">
+      <a
+        class="action ps-control ps-control-cross"
+        href="#projetos"
+        aria-label="Explorar projetos"
+        data-shortcut="x"
+        data-sound="confirm"
+      >
+        <span class="ps-symbol" aria-hidden="true">×</span>
+        <span>Explorar</span>
+      </a>
+
+      <a
+        class="action ps-control ps-control-triangle"
+        href="#contato"
+        aria-label="Entrar em contato"
+        data-shortcut="t"
+        data-sound="option"
+      >
+        <span class="ps-symbol" aria-hidden="true">△</span>
+        <span>Contato</span>
+      </a>
+    </div>
+  </div>
+
+  <HeroCard client:load caption="Capa ilustrada de Gustavo Dias.">
+    <Image
+      src={heroCover}
+      alt="Ilustração estilizada de Gustavo Dias em uma capa inspirada em jogos da era PlayStation 2."
+      class="hero-cover-image"
+      widths={[320, 480, 640, 768]}
+      sizes="(max-width: 54rem) min(78vw, 24rem), min(26vw, 24rem)"
+      loading="eager"
+      decoding="async"
+    />
+  </HeroCard>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    min-height: calc(100svh - var(--header-height));
+    grid-template-columns: minmax(0, 1.02fr) minmax(18rem, 0.78fr);
+    align-items: center;
+    gap: clamp(2rem, 7vw, 6rem);
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-kicker {
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: var(--step-subtitle);
+    line-height: 1.3;
+    text-shadow: 0 0 1rem rgb(0 229 255 / 0.32);
+  }
+
+  h1 {
+    max-width: 11ch;
+    margin-block: 0.5rem 1rem;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: var(--step-title);
+    font-weight: 700;
+    line-height: 0.98;
+    text-shadow:
+      0 0 0.75rem rgb(34 211 238 / 0.34),
+      0 0 2rem rgb(37 99 235 / 0.32);
+  }
+
+  .hero-text {
+    max-width: 34rem;
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 0.93rem + 0.5vw, 1.25rem);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 4vw, 3.2rem);
+    margin-top: clamp(1.8rem, 4vw, 3rem);
+  }
+
+  .action {
+    flex: 0 0 auto;
+  }
+
+  @media (max-width: 54rem) {
+    .hero {
+      min-height: auto;
+      grid-template-columns: 1fr;
+      padding-block: clamp(3rem, 12vw, 5rem);
+    }
+
+    h1 {
+      max-width: 100%;
+      font-size: clamp(2.75rem, 12vw, 4.8rem);
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .hero-actions {
+      gap: 1rem 1.5rem;
+    }
+  }
+</style>
