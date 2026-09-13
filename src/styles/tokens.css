@@ -2,15 +2,24 @@
   color-scheme: dark;
 
   --color-background: #02060d;
+  --color-background-soft: #030914;
   --color-surface: #07111f;
   --color-surface-elevated: #0a1728;
+  --color-surface-glass: rgb(7 17 31 / 0.74);
+  --color-border: rgb(34 211 238 / 0.18);
+  --color-border-strong: rgb(34 211 238 / 0.42);
 
   --color-text: #f1f7ff;
   --color-text-muted: #9cb0c3;
+  --color-text-subtle: #657a91;
 
   --color-primary: #22d3ee;
   --color-primary-intense: #00e5ff;
   --color-secondary: #2563eb;
+  --color-control-cross: #5fa9ff;
+  --color-control-circle: #ff6677;
+  --color-control-triangle: #35f49a;
+  --color-control-square: #d980ff;
   --color-focus: #f8e16c;
   --color-error: #ff6b7a;
 
@@ -19,11 +28,23 @@
   --font-mono: 'Share Tech Mono', monospace;
 
   --container-width: 75rem;
-  --header-height: 4.5rem;
+  --container-padding: clamp(1rem, 4vw, 2.5rem);
+  --header-height: clamp(4rem, 8vw, 4.5rem);
 
   --radius-small: 0.25rem;
   --radius-medium: 0.5rem;
   --radius-large: 1rem;
+
+  --space-section: clamp(4.5rem, 12vw, 9rem);
+  --space-content: clamp(1.5rem, 4vw, 3rem);
+
+  --step-small: clamp(0.82rem, 0.78rem + 0.22vw, 0.95rem);
+  --step-base: clamp(1rem, 0.94rem + 0.31vw, 1.125rem);
+  --step-title: clamp(2.4rem, 1.1rem + 6vw, 6.5rem);
+  --step-subtitle: clamp(1.05rem, 0.88rem + 0.85vw, 1.7rem);
+
+  --shadow-glow-soft: 0 0 1.5rem rgb(34 211 238 / 0.18);
+  --shadow-glow-strong: 0 0 2.5rem rgb(0 229 255 / 0.34);
 
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
