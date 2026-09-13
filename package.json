@@ -17,7 +17,10 @@
     "format:check": "prettier . --check",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:e2e": "playwright test"
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test tests/e2e",
+    "test:a11y": "playwright test tests/a11y",
+    "test:all": "pnpm test:unit && pnpm test:e2e && pnpm test:a11y"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
