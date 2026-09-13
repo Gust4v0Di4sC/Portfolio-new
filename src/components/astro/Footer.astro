@@ -1,5 +1,4 @@
 ---
-import { ContactRound, GitFork } from '@lucide/astro';
 import Particles from '../react/Particles';
 ---
 
@@ -31,9 +30,7 @@ import Particles from '../react/Particles';
         rel="noopener noreferrer"
         aria-label="Visitar LinkedIn de Gustavo Dias (abre em nova aba)"
       >
-        <span aria-hidden="true">
-          <ContactRound size={17} stroke-width={1.7} />
-        </span>
+        <img src="/icons/social/linkedin.svg" alt="" width="24" height="24" />
         LinkedIn
       </a>
       <a
@@ -42,9 +39,7 @@ import Particles from '../react/Particles';
         rel="noopener noreferrer"
         aria-label="Visitar GitHub de Gustavo Dias (abre em nova aba)"
       >
-        <span aria-hidden="true">
-          <GitFork size={17} stroke-width={1.7} />
-        </span>
+        <img class="github-icon" src="/icons/social/github.svg" alt="" width="24" height="24" />
         GitHub
       </a>
     </nav>
@@ -101,39 +96,44 @@ import Particles from '../react/Particles';
 
   .footer-socials a {
     display: inline-flex;
-    min-height: 2.4rem;
+    min-height: 2rem;
     align-items: center;
-    gap: 0.55rem;
-    padding: 0.35rem 0.65rem 0.35rem 0.4rem;
-    border: 1px solid rgb(34 211 238 / 0.18);
-    border-radius: var(--radius-small);
+    gap: 0.5rem;
+    padding-block: 0.2rem;
     color: var(--color-primary);
-    background: rgb(2 6 13 / 0.68);
     transition:
-      border-color var(--transition-fast),
       color var(--transition-fast),
-      box-shadow var(--transition-fast),
       transform var(--transition-fast);
   }
 
-  .footer-socials a span {
-    display: grid;
-    width: 1.75rem;
-    aspect-ratio: 1;
-    place-items: center;
-    border: 1px solid rgb(34 211 238 / 0.2);
-    border-radius: var(--radius-small);
-    color: var(--color-primary-intense);
-    background: rgb(7 17 31 / 0.72);
-    box-shadow: inset 0 0 0.65rem rgb(34 211 238 / 0.06);
+  .footer-socials img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+    transition:
+      filter var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .footer-socials .github-icon {
+    filter: invert(1);
   }
 
   .footer-socials a:hover,
   .footer-socials a:focus-visible {
     transform: translateY(-0.125rem);
-    border-color: var(--color-border-strong);
     color: var(--color-text);
-    box-shadow: var(--shadow-glow-soft);
+  }
+
+  .footer-socials a:hover img,
+  .footer-socials a:focus-visible img {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 0.45rem rgb(34 211 238 / 0.55));
+  }
+
+  .footer-socials a:hover .github-icon,
+  .footer-socials a:focus-visible .github-icon {
+    filter: invert(1) drop-shadow(0 0 0.45rem rgb(34 211 238 / 0.55));
   }
 
   @media (max-width: 42rem) {
