@@ -38,10 +38,10 @@ export default function SplashIntro() {
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const introDelay = reducedMotion ? 250 : 1500;
-    const animationDuration = reducedMotion ? 1800 : 11200;
+    const introDelay = reducedMotion ? 180 : 450;
+    const animationDuration = reducedMotion ? 2200 : 12500;
     const totalDuration = introDelay + animationDuration;
-    const fadeDuration = reducedMotion ? 260 : 900;
+    const fadeDuration = reducedMotion ? 220 : 520;
     const blocks: SplashBlock[] = [];
     let animationFrame = 0;
     let finishTimer = 0;
@@ -189,7 +189,7 @@ export default function SplashIntro() {
           targetY,
           delay,
           height,
-          speed: 0.78 + Math.random() * 0.32,
+          speed: 0.72 + Math.random() * 0.3,
           sway: Math.random() * Math.PI * 2,
         });
       };
@@ -202,7 +202,7 @@ export default function SplashIntro() {
         const levels = 4 + Math.floor(Math.random() * 11);
         const width = 0.82 + Math.random() * 0.58;
         const depth = 0.82 + Math.random() * 0.58;
-        const baseDelay = Math.random() * 2.7 + radius * 0.025;
+        const baseDelay = Math.random() * 2.4 + radius * 0.026;
 
         for (let level = 0; level < levels; level += 1) {
           const height = 0.8 + Math.random() * 0.55;
@@ -254,15 +254,16 @@ export default function SplashIntro() {
       };
 
       const updateUi = (elapsed: number) => {
-        const progress = THREE.MathUtils.clamp(elapsed / (animationDuration / 1000 - 0.7), 0, 1);
-        const pct = Math.min(100, Math.floor(progress * 100));
+        const rawProgress = THREE.MathUtils.clamp(elapsed / (animationDuration / 1000 - 0.9), 0, 1);
+        const progress = THREE.MathUtils.smoothstep(rawProgress, 0, 1);
+        const pct = Math.min(100, Math.round(progress * 100));
         const messageIndex = Math.min(
           statusMessages.length - 1,
           Math.floor(progress * statusMessages.length),
         );
 
         fill.style.width = `${pct}%`;
-        percent.textContent = `${pct}%`;
+        percent.textContent = `${pct.toString().padStart(2, '0')}%`;
         status.textContent =
           statusMessages[messageIndex] ?? statusMessages[statusMessages.length - 1] ?? '';
       };
@@ -274,7 +275,7 @@ export default function SplashIntro() {
 
         const elapsed = (now - startTime) / 1000;
         const sceneElapsed = Math.max(0, elapsed - introDelay / 1000);
-        const cameraProgress = THREE.MathUtils.smoothstep(sceneElapsed / 9.4, 0, 1);
+        const cameraProgress = THREE.MathUtils.smoothstep(sceneElapsed / 9.5, 0, 1);
 
         updateBlocks(sceneElapsed);
 
@@ -397,8 +398,8 @@ export default function SplashIntro() {
             radial-gradient(circle at 50% 50%, rgb(0 229 255 / 0.13), transparent 28rem), #02060d;
           opacity: 1;
           transition:
-            opacity 900ms ease,
-            visibility 900ms ease;
+            opacity 520ms ease,
+            visibility 520ms ease;
         }
 
         .splash-intro.is-leaving {
