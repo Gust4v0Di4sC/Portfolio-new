@@ -1,10 +1,73 @@
 ---
+import {
+  Accessibility,
+  AppWindow,
+  Atom,
+  Braces,
+  Cable,
+  CloudUpload,
+  CodeXml,
+  FileType,
+  FingerprintPattern,
+  FlaskConical,
+  Gauge,
+  GitBranch,
+  LayoutPanelTop,
+  ListChecks,
+  MousePointerClick,
+  Orbit,
+  Palette,
+  PanelsTopLeft,
+  PenTool,
+  SearchCheck,
+} from '@lucide/astro';
+
 const groups = [
-  { title: 'Interfaces', skills: ['HTML', 'CSS', 'Acessibilidade', 'Responsividade'] },
-  { title: 'Frameworks', skills: ['Astro', 'React', 'Next.js', 'TypeScript'] },
-  { title: 'Integrações', skills: ['APIs', 'Git', 'Deploy', 'SEO'] },
-  { title: 'Qualidade', skills: ['Lint', 'Testes', 'Performance', 'Semântica'] },
-  { title: 'Design', skills: ['UI', 'UX', 'Figma', 'Identidade visual'] },
+  {
+    title: 'Interfaces',
+    skills: [
+      { name: 'HTML', icon: CodeXml },
+      { name: 'CSS', icon: Palette },
+      { name: 'Acessibilidade', icon: Accessibility },
+      { name: 'Responsividade', icon: PanelsTopLeft },
+    ],
+  },
+  {
+    title: 'Frameworks',
+    skills: [
+      { name: 'Astro', icon: Orbit },
+      { name: 'React', icon: Atom },
+      { name: 'Next.js', icon: AppWindow },
+      { name: 'TypeScript', icon: FileType },
+    ],
+  },
+  {
+    title: 'Integrações',
+    skills: [
+      { name: 'APIs', icon: Cable },
+      { name: 'Git', icon: GitBranch },
+      { name: 'Deploy', icon: CloudUpload },
+      { name: 'SEO', icon: SearchCheck },
+    ],
+  },
+  {
+    title: 'Qualidade',
+    skills: [
+      { name: 'Lint', icon: ListChecks },
+      { name: 'Testes', icon: FlaskConical },
+      { name: 'Performance', icon: Gauge },
+      { name: 'Semântica', icon: Braces },
+    ],
+  },
+  {
+    title: 'Design',
+    skills: [
+      { name: 'UI', icon: LayoutPanelTop },
+      { name: 'UX', icon: MousePointerClick },
+      { name: 'Figma', icon: PenTool },
+      { name: 'Identidade visual', icon: FingerprintPattern },
+    ],
+  },
 ];
 ---
 
@@ -24,10 +87,12 @@ const groups = [
         <article class="skill-group">
           <h3>{group.title}</h3>
           <ul>
-            {group.skills.map((skill) => (
+            {group.skills.map(({ name, icon: Icon }) => (
               <li>
-                <span aria-hidden="true">{skill.slice(0, 2).toUpperCase()}</span>
-                {skill}
+                <span class="skill-icon" aria-hidden="true">
+                  <Icon size={18} stroke-width={1.7} />
+                </span>
+                {name}
               </li>
             ))}
           </ul>
@@ -88,7 +153,7 @@ const groups = [
     font-size: var(--step-small);
   }
 
-  .skill-group span {
+  .skill-icon {
     display: grid;
     width: 2.3rem;
     aspect-ratio: 1;
@@ -96,9 +161,8 @@ const groups = [
     border: 1px solid rgb(34 211 238 / 0.16);
     border-radius: var(--radius-small);
     color: var(--color-primary-intense);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
     background: rgb(2 6 13 / 0.72);
+    box-shadow: inset 0 0 0.8rem rgb(34 211 238 / 0.05);
   }
 
   .skill-group:hover {

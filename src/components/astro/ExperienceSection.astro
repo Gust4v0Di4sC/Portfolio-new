@@ -1,4 +1,6 @@
 ---
+import { BriefcaseBusiness, Building, CalendarDays } from '@lucide/astro';
+
 const experiences = [
   {
     role: 'TODO: cargo atual',
@@ -34,21 +36,33 @@ const experiences = [
       experiences.map((experience) => (
         <li>
           <article class="experience-card">
-            <div class="experience-topline">
-              <div>
-                <h3>{experience.role}</h3>
-                <p>{experience.company}</p>
+            <span class="experience-icon" aria-hidden="true">
+              <BriefcaseBusiness size={20} stroke-width={1.7} />
+            </span>
+
+            <div class="experience-content">
+              <div class="experience-topline">
+                <div>
+                  <h3>{experience.role}</h3>
+                  <p>
+                    <Building size={14} stroke-width={1.7} aria-hidden="true" />
+                    {experience.company}
+                  </p>
+                </div>
+                <time>
+                  <CalendarDays size={14} stroke-width={1.7} aria-hidden="true" />
+                  {experience.period}
+                </time>
               </div>
-              <time>{experience.period}</time>
+
+              <p class="experience-summary">{experience.summary}</p>
+
+              <ul class="tag-list" aria-label="Tecnologias e temas">
+                {experience.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
             </div>
-
-            <p class="experience-summary">{experience.summary}</p>
-
-            <ul class="tag-list" aria-label="Tecnologias e temas">
-              {experience.tags.map((tag) => (
-                <li>{tag}</li>
-              ))}
-            </ul>
           </article>
         </li>
       ))
@@ -113,11 +127,33 @@ const experiences = [
   }
 
   .experience-card {
+    display: grid;
+    grid-template-columns: 2.7rem minmax(0, 1fr);
+    gap: 1rem;
     padding: clamp(1.1rem, 3vw, 1.6rem);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
     background: linear-gradient(180deg, rgb(7 17 31 / 0.74), rgb(2 6 13 / 0.82));
     box-shadow: var(--shadow-glow-soft);
+  }
+
+  .experience-icon {
+    display: grid;
+    width: 2.7rem;
+    aspect-ratio: 1;
+    place-items: center;
+    align-self: start;
+    border: 1px solid rgb(34 211 238 / 0.22);
+    border-radius: var(--radius-small);
+    color: var(--color-primary-intense);
+    background: rgb(2 6 13 / 0.72);
+    box-shadow:
+      0 0 1rem rgb(34 211 238 / 0.08),
+      inset 0 0 0.8rem rgb(34 211 238 / 0.06);
+  }
+
+  .experience-content {
+    min-width: 0;
   }
 
   .experience-topline {
@@ -135,6 +171,9 @@ const experiences = [
 
   .experience-topline p,
   time {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     color: var(--color-text-muted);
     font-family: var(--font-mono);
     font-size: var(--step-small);
@@ -177,6 +216,15 @@ const experiences = [
 
     .experience-topline {
       display: grid;
+    }
+
+    .experience-card {
+      grid-template-columns: 2.4rem minmax(0, 1fr);
+      gap: 0.8rem;
+    }
+
+    .experience-icon {
+      width: 2.4rem;
     }
   }
 </style>
