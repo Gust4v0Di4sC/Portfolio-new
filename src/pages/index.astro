@@ -1,78 +1,34 @@
 ---
+import AboutSection from '../components/astro/AboutSection.astro';
+import ContactSection from '../components/astro/ContactSection.astro';
+import ExperienceSection from '../components/astro/ExperienceSection.astro';
+import Footer from '../components/astro/Footer.astro';
+import Header from '../components/astro/Header.astro';
+import Hero from '../components/astro/Hero.astro';
+import ProjectMemoryCard from '../components/astro/ProjectMemoryCard.astro';
+import SkillsSection from '../components/astro/SkillsSection.astro';
+import InterfaceController from '../components/react/InterfaceController';
+import ScrollBackground from '../components/react/ScrollBackground';
+import SplashIntro from '../components/react/SplashIntro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Gustavo Dias — Desenvolvedor Front-end"
+  title="Gustavo Dias - Desenvolvedor Front-end"
   description="Portfólio de Gustavo Dias, desenvolvedor Front-end e UI/UX Designer."
 >
-  <header slot="header" class="container">
-    <nav aria-label="Navegação principal">
-      <a href="/">GD/&gt;</a>
+  <SplashIntro slot="intro" client:load />
+  <Header slot="header" />
 
-      <ul>
-        <li><a href="#experiencia">Experiência</a></li>
-        <li><a href="#projetos">Projetos</a></li>
-        <li><a href="#habilidades">Habilidades</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
+  <ScrollBackground client:load />
+  <Hero />
 
-  <section class="hero container" aria-labelledby="hero-title">
-    <p>Desenvolvedor Front-end e UI/UX Designer</p>
+  <ExperienceSection />
+  <ProjectMemoryCard />
+  <SkillsSection />
+  <AboutSection />
+  <ContactSection />
+  <InterfaceController client:load />
 
-    <h1 id="hero-title">Gustavo Dias</h1>
-
-    <p>Transformando ideias em experiências digitais.</p>
-
-    <a href="#projetos">Explorar projetos</a>
-  </section>
-
-  <section id="experiencia" class="container">
-    <h2>Experiência</h2>
-  </section>
-
-  <section id="projetos" class="container">
-    <h2>Projetos</h2>
-  </section>
-
-  <section id="habilidades" class="container">
-    <h2>Habilidades</h2>
-  </section>
-
-  <section id="contato" class="container">
-    <h2>Contato</h2>
-  </section>
+  <Footer slot="footer" />
 </BaseLayout>
-
-<style>
-  header {
-    min-height: var(--header-height);
-  }
-
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: inherit;
-  }
-
-  nav ul {
-    display: flex;
-    gap: 1.5rem;
-    padding: 0;
-    list-style: none;
-  }
-
-  .hero {
-    display: grid;
-    min-height: calc(100svh - var(--header-height));
-    align-content: center;
-  }
-
-  section {
-    min-height: 50vh;
-    padding-block: 5rem;
-  }
-</style>

@@ -1,0 +1,104 @@
+---
+const navItems = [
+  { href: '#experiencia', label: 'Experiência' },
+  { href: '#projetos', label: 'Projetos' },
+  { href: '#habilidades', label: 'Habilidades' },
+  { href: '#sobre', label: 'Sobre' },
+  { href: '#contato', label: 'Contato' },
+];
+---
+
+<header class="site-header">
+  <nav class="site-nav container" aria-label="Navegação principal">
+    <a class="brand" href="/" aria-label="Gustavo Dias, página inicial" data-sound="confirm"
+      >GD/&gt;</a
+    >
+
+    <ul class="nav-links">
+      {
+        navItems.map((item) => (
+          <li>
+            <a href={item.href} data-sound="confirm">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    min-height: var(--header-height);
+    border-bottom: 1px solid rgb(34 211 238 / 0.08);
+    background: linear-gradient(180deg, rgb(2 6 13 / 0.9), rgb(2 6 13 / 0.64));
+    backdrop-filter: blur(16px);
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-height);
+    gap: 1rem;
+  }
+
+  .brand {
+    color: var(--color-primary-intense);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 0.9rem + 0.45vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 0.9rem rgb(0 229 255 / 0.48);
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: clamp(0.35rem, 1vw, 1rem);
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding: 0.4rem clamp(0.45rem, 1.2vw, 0.8rem);
+    border-radius: var(--radius-small);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    transition:
+      color var(--transition-fast),
+      text-shadow var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .nav-links a:hover {
+    color: var(--color-primary);
+    background-color: rgb(34 211 238 / 0.06);
+    text-shadow: 0 0 0.75rem rgb(0 229 255 / 0.35);
+  }
+
+  @media (max-width: 42rem) {
+    .site-nav {
+      min-height: auto;
+      align-items: flex-start;
+      flex-direction: column;
+      padding-block: 0.9rem;
+    }
+
+    .nav-links {
+      justify-content: flex-start;
+      width: 100%;
+    }
+  }
+</style>

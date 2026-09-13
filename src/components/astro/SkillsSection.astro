@@ -1,0 +1,120 @@
+---
+const groups = [
+  { title: 'Interfaces', skills: ['HTML', 'CSS', 'Acessibilidade', 'Responsividade'] },
+  { title: 'Frameworks', skills: ['Astro', 'React', 'Next.js', 'TypeScript'] },
+  { title: 'Integrações', skills: ['APIs', 'Git', 'Deploy', 'SEO'] },
+  { title: 'Qualidade', skills: ['Lint', 'Testes', 'Performance', 'Semântica'] },
+  { title: 'Design', skills: ['UI', 'UX', 'Figma', 'Identidade visual'] },
+];
+---
+
+<section
+  id="habilidades"
+  class="skills section-shell container"
+  aria-labelledby="habilidades-title"
+>
+  <div class="section-heading">
+    <p>System Abilities</p>
+    <h2 id="habilidades-title">Habilidades</h2>
+  </div>
+
+  <div class="skill-grid">
+    {
+      groups.map((group) => (
+        <article class="skill-group">
+          <h3>{group.title}</h3>
+          <ul>
+            {group.skills.map((skill) => (
+              <li>
+                <span aria-hidden="true">{skill.slice(0, 2).toUpperCase()}</span>
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .section-heading {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    margin-bottom: var(--space-content);
+    text-align: center;
+  }
+
+  .section-heading p {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+  }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .skill-group {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background: rgb(7 17 31 / 0.54);
+  }
+
+  .skill-group h3 {
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+
+  .skill-group ul {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .skill-group li {
+    display: grid;
+    grid-template-columns: 2.3rem 1fr;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-text-muted);
+    font-size: var(--step-small);
+  }
+
+  .skill-group span {
+    display: grid;
+    width: 2.3rem;
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid rgb(34 211 238 / 0.16);
+    border-radius: var(--radius-small);
+    color: var(--color-primary-intense);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: rgb(2 6 13 / 0.72);
+  }
+
+  .skill-group:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-glow-soft);
+  }
+
+  @media (max-width: 64rem) {
+    .skill-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .skill-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

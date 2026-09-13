@@ -1,0 +1,182 @@
+---
+const experiences = [
+  {
+    role: 'TODO: cargo atual',
+    company: 'TODO: empresa ou contratante',
+    period: 'TODO: período',
+    summary:
+      'Substitua este texto por um resumo real da experiência, destacando responsabilidades, impacto e contexto técnico.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'Suporte', 'UI'],
+  },
+  {
+    role: 'TODO: experiência anterior',
+    company: 'TODO: empresa',
+    period: 'TODO: período',
+    summary:
+      'Use este espaço para uma segunda experiência profissional, estágio, freelance ou atuação relevante.',
+    tags: ['React', 'TypeScript', 'Git', 'Design'],
+  },
+];
+---
+
+<section
+  id="experiencia"
+  class="experience section-shell container"
+  aria-labelledby="experiencia-title"
+>
+  <div class="section-heading">
+    <p>Version Information</p>
+    <h2 id="experiencia-title">Experiência</h2>
+  </div>
+
+  <ol class="timeline" aria-label="Linha do tempo profissional">
+    {
+      experiences.map((experience) => (
+        <li>
+          <article class="experience-card">
+            <div class="experience-topline">
+              <div>
+                <h3>{experience.role}</h3>
+                <p>{experience.company}</p>
+              </div>
+              <time>{experience.period}</time>
+            </div>
+
+            <p class="experience-summary">{experience.summary}</p>
+
+            <ul class="tag-list" aria-label="Tecnologias e temas">
+              {experience.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .experience {
+    padding-top: clamp(4rem, 10vw, 8rem);
+  }
+
+  .section-heading {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    margin-bottom: var(--space-content);
+    text-align: center;
+  }
+
+  .section-heading p {
+    color: var(--color-focus);
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    letter-spacing: 0.08em;
+  }
+
+  .timeline {
+    position: relative;
+    display: grid;
+    max-width: 50rem;
+    gap: 1.5rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline::before {
+    position: absolute;
+    inset-block: 1.25rem;
+    left: -1.5rem;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--color-primary), transparent);
+    content: '';
+    opacity: 0.45;
+  }
+
+  .timeline > li {
+    position: relative;
+  }
+
+  .timeline > li::before {
+    position: absolute;
+    top: 1.45rem;
+    left: -1.75rem;
+    width: 0.5rem;
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background: var(--color-primary-intense);
+    box-shadow: 0 0 1rem var(--color-primary-intense);
+    content: '';
+  }
+
+  .experience-card {
+    padding: clamp(1.1rem, 3vw, 1.6rem);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background: linear-gradient(180deg, rgb(7 17 31 / 0.74), rgb(2 6 13 / 0.82));
+    box-shadow: var(--shadow-glow-soft);
+  }
+
+  .experience-topline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  h3 {
+    color: var(--color-text);
+    font-size: clamp(1rem, 0.94rem + 0.35vw, 1.2rem);
+    font-weight: 700;
+  }
+
+  .experience-topline p,
+  time {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+  }
+
+  time {
+    color: var(--color-primary);
+    white-space: nowrap;
+  }
+
+  .experience-summary {
+    margin-top: 1rem;
+    color: var(--color-text-muted);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tag-list li {
+    padding: 0.25rem 0.55rem;
+    border: 1px solid rgb(34 211 238 / 0.18);
+    border-radius: var(--radius-small);
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: rgb(34 211 238 / 0.05);
+  }
+
+  @media (max-width: 42rem) {
+    .timeline::before,
+    .timeline > li::before {
+      display: none;
+    }
+
+    .experience-topline {
+      display: grid;
+    }
+  }
+</style>
