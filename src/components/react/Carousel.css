@@ -1,0 +1,190 @@
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-large);
+  background: rgb(2 6 13 / 0.82);
+  box-shadow: inset 0 0 1.8rem rgb(34 211 238 / 0.05);
+  --outer-r: var(--radius-large);
+  --p-distance: 0.5rem;
+}
+
+.carousel-track {
+  display: flex;
+  touch-action: pan-y;
+}
+
+.carousel-item {
+  position: relative;
+  display: flex;
+  min-height: 22rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid rgb(34 211 238 / 0.24);
+  border-radius: calc(var(--outer-r) - var(--p-distance));
+  background: linear-gradient(135deg, rgb(37 99 235 / 0.14), transparent 48%), rgb(7 17 31 / 0.92);
+  cursor: grab;
+}
+
+.carousel-item::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 2rem rgb(0 229 255 / 0.05);
+  content: '';
+  pointer-events: none;
+}
+
+.carousel-item:active {
+  cursor: grabbing;
+}
+
+.carousel-container.round,
+.carousel-item.round {
+  border-color: var(--color-border-strong);
+}
+
+.carousel-item.round {
+  bottom: 0.1em;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  text-align: center;
+}
+
+.carousel-item-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.carousel-item-header.round {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-icon-container {
+  display: flex;
+  width: 3.25rem;
+  height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  color: var(--color-primary-intense);
+  background: rgb(2 6 13 / 0.76);
+  box-shadow: var(--shadow-glow-soft);
+}
+
+.carousel-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.carousel-item-meta,
+.carousel-item-stack {
+  color: var(--color-primary);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.carousel-item-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.carousel-item-title {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1rem + 1vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.carousel-item-description {
+  color: var(--color-text-muted);
+  font-size: var(--step-small);
+}
+
+.carousel-item-link {
+  width: fit-content;
+  margin-top: 0.35rem;
+}
+
+.carousel-indicators-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.carousel-indicators-container.round {
+  position: absolute;
+  bottom: 3em;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+.carousel-indicators {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-height: 1.75rem;
+  margin-top: 1rem;
+}
+
+.carousel-indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  appearance: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.carousel-indicator.active {
+  background-color: var(--color-primary-intense);
+  box-shadow: 0 0 0.75rem var(--color-primary-intense);
+}
+
+.carousel-indicator.inactive {
+  background-color: var(--color-text-subtle);
+}
+
+.carousel-indicator:focus-visible {
+  outline: 0.1875rem solid var(--color-focus);
+  outline-offset: 0.25rem;
+}
+
+@media (max-width: 34rem) {
+  .carousel-item {
+    min-height: 24rem;
+  }
+
+  .carousel-item-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    scroll-behavior: auto;
+  }
+}
