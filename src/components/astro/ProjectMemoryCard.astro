@@ -1,30 +1,5 @@
 ---
-const projects = [
-  {
-    title: 'TODO: Projeto 01',
-    category: 'Interface',
-    year: '2026',
-    summary: 'Adicione um resumo curto do projeto, problema resolvido e papel exercido.',
-    stack: ['Astro', 'CSS', 'UI'],
-    icon: '◇',
-  },
-  {
-    title: 'TODO: Projeto 02',
-    category: 'Aplicação',
-    year: '2026',
-    summary: 'Use este save para um case com demo, repositório e decisões técnicas.',
-    stack: ['React', 'TypeScript'],
-    icon: '▣',
-  },
-  {
-    title: 'TODO: Projeto 03',
-    category: 'Experiência',
-    year: '2026',
-    summary: 'Reserve este espaço para um projeto visual, 3D ou interativo.',
-    stack: ['Design', 'Motion'],
-    icon: '✦',
-  },
-];
+import ProjectCarousel from '../react/ProjectCarousel';
 ---
 
 <section id="projetos" class="projects section-shell container" aria-labelledby="projetos-title">
@@ -37,68 +12,18 @@ const projects = [
     <header class="memory-header">
       <div>
         <p>Memory Card (PS2)/1</p>
-        <span>{projects.length} saves profissionais - conteúdo em preparação</span>
+        <span>3 saves profissionais — conteúdo em preparação</span>
       </div>
       <strong>Portfolio<br />Save Data</strong>
     </header>
 
-    <ul class="save-grid">
-      {
-        projects.map((project, index) => (
-          <li>
-            <a
-              class:list={['save-item', index === 0 && 'is-selected']}
-              href="#contato"
-              data-sound="confirm"
-            >
-              <span class="save-icon" aria-hidden="true">
-                {project.icon}
-              </span>
-              <span class="save-title">{project.title}</span>
-              <span class="save-meta">
-                {project.category} / {project.year}
-              </span>
-              <span class="save-summary">{project.summary}</span>
-              <span class="save-stack">{project.stack.join(' + ')}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="carousel-slot">
+      <ProjectCarousel client:visible />
+    </div>
 
-    <footer class="memory-actions" aria-label="Ações do painel">
-      <a
-        class="memory-control ps-control ps-control-cross"
-        href="#contato"
-        aria-label="Abrir projeto selecionado"
-        data-shortcut="x"
-        data-sound="confirm"
-      >
-        <span class="ps-symbol" aria-hidden="true">×</span>
-        <span>Abrir</span>
-      </a>
-
-      <a
-        class="memory-control ps-control ps-control-circle"
-        href="#conteudo"
-        aria-label="Voltar para o início do conteúdo"
-        data-shortcut="o"
-        data-sound="back"
-      >
-        <span class="ps-symbol" aria-hidden="true">○</span>
-        <span>Voltar</span>
-      </a>
-
-      <a
-        class="memory-control ps-control ps-control-triangle"
-        href="#contato"
-        aria-label="Abrir opções de contato"
-        data-shortcut="t"
-        data-sound="option"
-      >
-        <span class="ps-symbol" aria-hidden="true">△</span>
-        <span>Opções</span>
-      </a>
+    <footer class="memory-actions" aria-label="Instruções do carrossel">
+      <span>Arraste para navegar</span>
+      <span>Selecione um indicador para abrir outro save</span>
     </footer>
   </article>
 </section>
@@ -121,9 +46,9 @@ const projects = [
   .memory-card {
     max-width: 62rem;
     margin-inline: auto;
+    overflow: hidden;
     border: 1px solid var(--color-border-strong);
     border-radius: var(--radius-medium);
-    overflow: hidden;
     background:
       linear-gradient(
         90deg,
@@ -155,7 +80,8 @@ const projects = [
     font-weight: 700;
   }
 
-  .memory-header span {
+  .memory-header span,
+  .memory-actions {
     color: var(--color-text-muted);
     font-size: var(--step-small);
   }
@@ -167,112 +93,25 @@ const projects = [
     text-align: right;
   }
 
-  .save-grid {
+  .carousel-slot {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(0.75rem, 2vw, 1rem);
-    margin: 0;
-    padding: clamp(1rem, 3vw, 1.5rem);
-    list-style: none;
-  }
-
-  .save-item {
-    display: grid;
-    min-height: 16rem;
-    align-content: start;
-    gap: 0.65rem;
-    padding: 1rem;
-    border: 1px solid rgb(156 176 195 / 0.08);
-    border-radius: var(--radius-small);
-    color: var(--color-text-muted);
-    background: rgb(7 17 31 / 0.48);
-    transition:
-      border-color var(--transition-fast),
-      box-shadow var(--transition-fast),
-      transform var(--transition-fast);
-  }
-
-  .save-item:hover,
-  .save-item:focus-visible,
-  .save-item.is-selected {
-    border-color: var(--color-primary-intense);
-    box-shadow:
-      inset 0 0 1.2rem rgb(34 211 238 / 0.08),
-      var(--shadow-glow-soft);
-  }
-
-  .save-item:hover {
-    transform: translateY(-0.125rem);
-  }
-
-  .save-icon {
-    display: grid;
-    width: 3rem;
-    aspect-ratio: 1;
-    place-items: center;
-    color: var(--color-primary-intense);
-    font-size: 1.6rem;
-    text-shadow: 0 0 1rem var(--color-primary-intense);
-  }
-
-  .save-title {
-    color: var(--color-text);
-    font-weight: 700;
-  }
-
-  .save-meta,
-  .save-stack {
-    color: var(--color-primary);
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-  }
-
-  .save-summary {
-    color: var(--color-text-muted);
-    font-size: var(--step-small);
+    justify-items: center;
+    padding: clamp(1rem, 4vw, 2rem);
   }
 
   .memory-actions {
     justify-content: center;
     flex-wrap: wrap;
-    gap: clamp(0.8rem, 3vw, 2rem);
     min-height: 3.7rem;
     padding-block: 0.7rem;
     border-top: 1px solid rgb(34 211 238 / 0.12);
-    color: var(--color-text-muted);
-    font-size: var(--step-small);
+    text-align: center;
   }
 
-  .memory-control {
-    min-height: 1.75rem;
-    gap: 0.45rem;
-    padding: 0.15rem 0;
-    color: var(--color-text-muted);
-    letter-spacing: 0;
-  }
-
-  .memory-control:hover,
-  .memory-control:focus-visible {
-    color: var(--color-text);
-  }
-
-  .memory-control .ps-symbol {
-    width: 1.22rem;
-    color: var(--ps-control-color);
-    font-size: 0.62rem;
-    box-shadow:
-      0 0 0.45rem color-mix(in srgb, var(--ps-control-color) 44%, transparent),
-      inset 0 0 0.42rem color-mix(in srgb, var(--ps-control-color) 16%, transparent);
-  }
-
-  @media (max-width: 50rem) {
-    .save-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .save-item {
-      min-height: auto;
-    }
+  .memory-actions span + span::before {
+    margin-right: 1rem;
+    color: var(--color-primary);
+    content: '•';
   }
 
   @media (max-width: 34rem) {
@@ -286,8 +125,12 @@ const projects = [
     }
 
     .memory-actions {
-      justify-content: flex-start;
-      gap: 0.65rem 1rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+
+    .memory-actions span + span::before {
+      content: none;
     }
   }
 </style>

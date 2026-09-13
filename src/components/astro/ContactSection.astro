@@ -1,14 +1,12 @@
 <section id="contato" class="contact section-shell container" aria-labelledby="contato-title">
   <div class="contact-panel">
-    <p class="contact-status">Network Options</p>
     <h2 id="contato-title">Entre em contato comigo</h2>
     <p>Vamos criar algo incrível juntos.</p>
 
-    <div class="contact-actions" aria-label="Canais de contato">
-      <span class="pending-contact">TODO: adicionar e-mail real</span>
-      <span class="pending-contact">TODO: adicionar LinkedIn</span>
-      <span class="pending-contact">TODO: adicionar GitHub</span>
-    </div>
+    <a class="email-button ps-control ps-control-cross" href="mailto:dscharraa@gmail.com">
+      <span class="ps-symbol" aria-hidden="true">×</span>
+      <span>Enviar e-mail</span>
+    </a>
   </div>
 </section>
 
@@ -33,39 +31,19 @@
     text-align: center;
   }
 
-  .contact-status {
-    color: var(--color-primary);
-    font-family: var(--font-mono);
-    font-size: var(--step-small);
-  }
-
   h2 {
     color: var(--color-primary);
     font-family: var(--font-display);
     font-size: clamp(1.35rem, 1rem + 1.8vw, 2rem);
   }
 
-  .contact-panel > p:not(.contact-status) {
+  .contact-panel > p {
     color: var(--color-text-muted);
   }
 
-  .contact-actions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-  }
-
-  .pending-contact {
-    display: inline-flex;
+  .email-button {
     min-height: 2.75rem;
-    align-items: center;
-    padding: 0.65rem 0.9rem;
-    border: 1px dashed rgb(34 211 238 / 0.36);
-    border-radius: var(--radius-small);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--step-small);
+    margin-top: 0.5rem;
+    padding-inline: 1rem;
   }
 </style>
