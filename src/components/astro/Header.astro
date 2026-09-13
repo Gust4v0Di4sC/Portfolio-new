@@ -1,22 +1,21 @@
 ---
-const navItems = [
-  { href: '#experiencia', label: 'Experiência' },
-  { href: '#projetos', label: 'Projetos' },
-  { href: '#habilidades', label: 'Habilidades' },
-  { href: '#sobre', label: 'Sobre' },
-  { href: '#contato', label: 'Contato' },
-];
+import { navigationContent as content } from '../../content';
 ---
 
 <header class="site-header">
-  <nav class="site-nav container" aria-label="Navegação principal">
-    <a class="brand" href="/" aria-label="Gustavo Dias, página inicial" data-sound="confirm"
-      >GD/&gt;</a
+  <nav class="site-nav container" aria-label={content.ariaLabel}>
+    <a
+      class="brand"
+      href={content.brand.href}
+      aria-label={content.brand.ariaLabel}
+      data-sound="confirm"
     >
+      {content.brand.label}
+    </a>
 
     <ul class="nav-links">
       {
-        navItems.map((item) => (
+        content.items.map((item) => (
           <li>
             <a href={item.href} data-sound="confirm">
               {item.label}

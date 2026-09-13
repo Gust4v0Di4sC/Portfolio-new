@@ -1,29 +1,38 @@
 ---
-import ProjectCarousel from '../react/ProjectCarousel';
+import { projectsContent as content } from '../../content';
+import ProjectCarousel from '../react/islands/ProjectCarousel';
 ---
 
 <section id="projetos" class="projects section-shell container" aria-labelledby="projetos-title">
   <div class="section-heading">
-    <p>Memory Card / Portfolio</p>
-    <h2 id="projetos-title">Projetos</h2>
+    <p>{content.eyebrow}</p>
+    <h2 id="projetos-title">{content.title}</h2>
   </div>
 
-  <article class="memory-card" aria-label="Projetos em formato de Memory Card">
+  <article class="memory-card" aria-label={content.cardAriaLabel}>
     <header class="memory-header">
       <div>
-        <p>Memory Card (PS2)/1</p>
-        <span>3 saves profissionais — conteúdo em preparação</span>
+        <p>{content.memorySlot}</p>
+        <span>{content.status}</span>
       </div>
-      <strong>Portfolio<br />Save Data</strong>
+      <strong
+        >{
+          content.saveLabel.split(' / ').map((line) => (
+            <Fragment>
+              {line}
+              <br />
+            </Fragment>
+          ))
+        }</strong
+      >
     </header>
 
     <div class="carousel-slot">
       <ProjectCarousel client:visible />
     </div>
 
-    <footer class="memory-actions" aria-label="Instruções do carrossel">
-      <span>Arraste para navegar</span>
-      <span>Selecione um indicador para abrir outro save</span>
+    <footer class="memory-actions" aria-label={content.instructionsAriaLabel}>
+      {content.instructions.map((instruction) => <span>{instruction}</span>)}
     </footer>
   </article>
 </section>

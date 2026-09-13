@@ -1,24 +1,6 @@
 ---
 import { BriefcaseBusiness, Building, CalendarDays } from '@lucide/astro';
-
-const experiences = [
-  {
-    role: 'TODO: cargo atual',
-    company: 'TODO: empresa ou contratante',
-    period: 'TODO: período',
-    summary:
-      'Substitua este texto por um resumo real da experiência, destacando responsabilidades, impacto e contexto técnico.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'Suporte', 'UI'],
-  },
-  {
-    role: 'TODO: experiência anterior',
-    company: 'TODO: empresa',
-    period: 'TODO: período',
-    summary:
-      'Use este espaço para uma segunda experiência profissional, estágio, freelance ou atuação relevante.',
-    tags: ['React', 'TypeScript', 'Git', 'Design'],
-  },
-];
+import { experienceContent as content } from '../../content';
 ---
 
 <section
@@ -27,13 +9,13 @@ const experiences = [
   aria-labelledby="experiencia-title"
 >
   <div class="section-heading">
-    <p>Version Information</p>
-    <h2 id="experiencia-title">Experiência</h2>
+    <p>{content.eyebrow}</p>
+    <h2 id="experiencia-title">{content.title}</h2>
   </div>
 
-  <ol class="timeline" aria-label="Linha do tempo profissional">
+  <ol class="timeline" aria-label={content.timelineAriaLabel}>
     {
-      experiences.map((experience) => (
+      content.items.map((experience) => (
         <li>
           <article class="experience-card">
             <span class="experience-icon" aria-hidden="true">
@@ -57,7 +39,7 @@ const experiences = [
 
               <p class="experience-summary">{experience.summary}</p>
 
-              <ul class="tag-list" aria-label="Tecnologias e temas">
+              <ul class="tag-list" aria-label={content.tagsAriaLabel}>
                 {experience.tags.map((tag) => (
                   <li>{tag}</li>
                 ))}

@@ -1,46 +1,51 @@
 ---
 import { Image } from 'astro:assets';
 import heroCover from '../../assets/images/heroimg.png';
-import HeroCard from '../react/HeroCard';
+import { heroContent as content } from '../../content';
+import HeroCard from '../react/islands/HeroCard';
 ---
 
 <section class="hero container" aria-labelledby="hero-title">
   <div class="hero-copy">
-    <p class="hero-kicker">Desenvolvedor Front-end &amp; UI/UX Designer</p>
+    <p class="hero-kicker">{content.kicker}</p>
 
-    <h1 id="hero-title">Gustavo Dias</h1>
+    <h1 id="hero-title">{content.title}</h1>
 
-    <p class="hero-text">Transformando ideias em experiências digitais</p>
+    <p class="hero-text">{content.description}</p>
 
-    <div class="hero-actions" aria-label="Ações principais">
+    <div class="hero-actions" aria-label={content.actionsAriaLabel}>
       <a
         class="action ps-control ps-control-cross"
-        href="#projetos"
-        aria-label="Explorar projetos"
+        href={content.actions.projects.href}
+        aria-label={content.actions.projects.ariaLabel}
         data-shortcut="x"
         data-sound="confirm"
       >
         <span class="ps-symbol" aria-hidden="true">×</span>
-        <span>Explorar</span>
+        <span>{content.actions.projects.label}</span>
       </a>
 
       <a
         class="action ps-control ps-control-triangle"
-        href="#contato"
-        aria-label="Entrar em contato"
+        href={content.actions.contact.href}
+        aria-label={content.actions.contact.ariaLabel}
         data-shortcut="t"
         data-sound="option"
       >
         <span class="ps-symbol" aria-hidden="true">△</span>
-        <span>Contato</span>
+        <span>{content.actions.contact.label}</span>
       </a>
     </div>
   </div>
 
-  <HeroCard client:load caption="Capa ilustrada de Gustavo Dias.">
+  <HeroCard
+    client:load
+    caption={content.image.caption}
+    figureAriaLabel={content.image.figureAriaLabel}
+  >
     <Image
       src={heroCover}
-      alt="Ilustração estilizada de Gustavo Dias em uma capa inspirada em jogos da era PlayStation 2."
+      alt={content.image.alt}
       class="hero-cover-image"
       widths={[320, 480, 640, 768]}
       sizes="(max-width: 54rem) min(78vw, 24rem), min(26vw, 24rem)"

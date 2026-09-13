@@ -1,23 +1,8 @@
 import { useEffect, useRef } from 'react';
-import type { Group } from 'three';
 
-type ThreeModule = typeof import('three');
-type SplashBlock = {
-  group: Group;
-  targetY: number;
-  delay: number;
-  height: number;
-  speed: number;
-  sway: number;
-};
-
-const statusMessages = [
-  'Inicializando interface...',
-  'Sincronizando malha visual...',
-  'Montando blocos de memoria...',
-  'Calibrando camada interativa...',
-  'Interface pronta.',
-];
+import { splashContent as content } from '../../../content';
+import { getSplashTimings, loadThree } from '../../../scripts/three/splashScene';
+import type { SplashBlock } from '../../../scripts/three/splashScene';
 
 export default function SplashIntro() {
   const rootRef = useRef<HTMLElement>(null);
@@ -38,10 +23,8 @@ export default function SplashIntro() {
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const introDelay = reducedMotion ? 180 : 450;
-    const animationDuration = reducedMotion ? 2200 : 12500;
+    const { introDelay, animationDuration, fadeDuration } = getSplashTimings(reducedMotion);
     const totalDuration = introDelay + animationDuration;
-    const fadeDuration = reducedMotion ? 220 : 520;
     const blocks: SplashBlock[] = [];
     let animationFrame = 0;
     let finishTimer = 0;
@@ -59,7 +42,7 @@ export default function SplashIntro() {
       ended = true;
       fill.style.width = '100%';
       percent.textContent = '100%';
-      status.textContent = 'Interface pronta.';
+      status.textContent = content.statusMessages.at(-1) ?? content.initialStatus;
       root.classList.add('is-leaving');
 
       window.setTimeout(() => {
@@ -72,7 +55,7 @@ export default function SplashIntro() {
     };
 
     const setup = async () => {
-      const THREE: ThreeModule = await import('three');
+      const THREE = await loadThree();
 
       if (ended) {
         return;
@@ -258,14 +241,14 @@ export default function SplashIntro() {
         const progress = THREE.MathUtils.smoothstep(rawProgress, 0, 1);
         const pct = Math.min(100, Math.round(progress * 100));
         const messageIndex = Math.min(
-          statusMessages.length - 1,
-          Math.floor(progress * statusMessages.length),
+          content.statusMessages.length - 1,
+          Math.floor(progress * content.statusMessages.length),
         );
 
         fill.style.width = `${pct}%`;
         percent.textContent = `${pct.toString().padStart(2, '0')}%`;
         status.textContent =
-          statusMessages[messageIndex] ?? statusMessages[statusMessages.length - 1] ?? '';
+          content.statusMessages[messageIndex] ?? content.statusMessages.at(-1) ?? '';
       };
 
       const render = (now: number) => {
@@ -359,27 +342,27 @@ export default function SplashIntro() {
     <section
       className="splash-intro"
       data-splash-intro
-      aria-label="Intro de carregamento"
+      aria-label={content.ariaLabel}
       ref={rootRef}
     >
       <canvas className="splash-canvas" data-splash-canvas aria-hidden="true" ref={canvasRef} />
       <div className="splash-scanlines" aria-hidden="true" />
 
       <div className="splash-ui">
-        <p className="splash-brand">BOOT/UI</p>
-        <h2>Inicializando</h2>
-        <p className="splash-role">Carregando interface visual</p>
+        <p className="splash-brand">{content.brand}</p>
+        <h2>{content.title}</h2>
+        <p className="splash-role">{content.role}</p>
       </div>
 
       <div className="splash-progress" aria-live="polite">
         <div className="progress-row">
-          <span>INICIALIZANDO</span>
+          <span>{content.progressLabel}</span>
           <span ref={percentRef}>0%</span>
         </div>
         <div className="progress-track">
           <span ref={fillRef} />
         </div>
-        <p ref={statusRef}>Inicializando interface...</p>
+        <p ref={statusRef}>{content.initialStatus}</p>
       </div>
 
       <style>{`

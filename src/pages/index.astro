@@ -7,16 +7,14 @@ import Header from '../components/astro/Header.astro';
 import Hero from '../components/astro/Hero.astro';
 import ProjectMemoryCard from '../components/astro/ProjectMemoryCard.astro';
 import SkillsSection from '../components/astro/SkillsSection.astro';
-import InterfaceController from '../components/react/InterfaceController';
-import ScrollBackground from '../components/react/ScrollBackground';
-import SplashIntro from '../components/react/SplashIntro';
+import InterfaceController from '../components/react/islands/InterfaceController';
+import ScrollBackground from '../components/react/islands/ScrollBackground';
+import SplashIntro from '../components/react/islands/SplashIntro';
+import { siteContent } from '../content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="Gustavo Dias - Desenvolvedor Front-end"
-  description="Portfólio de Gustavo Dias, desenvolvedor Front-end e UI/UX Designer."
->
+<BaseLayout title={siteContent.title} description={siteContent.description}>
   <SplashIntro slot="intro" client:load />
   <Header slot="header" />
 

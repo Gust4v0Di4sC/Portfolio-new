@@ -1,5 +1,6 @@
 ---
-import Particles from '../react/Particles';
+import { footerContent as content } from '../../content';
+import Particles from '../react/islands/Particles';
 ---
 
 <footer class="site-footer">
@@ -19,29 +20,24 @@ import Particles from '../react/Particles';
 
   <div class="container footer-inner">
     <div>
-      <p>Desenvolvido por Gustavo Dias.</p>
-      <p class="footer-note">Inspirado pela atmosfera da era PS2, sem afiliação oficial.</p>
+      <p>{content.credit}</p>
+      <p class="footer-note">{content.note}</p>
     </div>
 
-    <nav class="footer-socials" aria-label="Redes sociais">
-      <a
-        href="https://www.linkedin.com/in/gustavo-dias-charra/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Visitar LinkedIn de Gustavo Dias (abre em nova aba)"
-      >
-        <img src="/icons/social/linkedin.svg" alt="" width="24" height="24" />
-        LinkedIn
-      </a>
-      <a
-        href="https://github.com/Gust4v0Di4sC"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Visitar GitHub de Gustavo Dias (abre em nova aba)"
-      >
-        <img class="github-icon" src="/icons/social/github.svg" alt="" width="24" height="24" />
-        GitHub
-      </a>
+    <nav class="footer-socials" aria-label={content.socialsAriaLabel}>
+      {
+        content.socials.map((social) => (
+          <a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.ariaLabel}
+          >
+            <img class={social.iconClass} src={social.icon} alt="" width="24" height="24" />
+            {social.label}
+          </a>
+        ))
+      }
     </nav>
   </div>
 </footer>
