@@ -1,15 +1,12 @@
+---
+import { aboutContent as content } from '../../content';
+---
+
 <section id="sobre" class="about section-shell container" aria-labelledby="sobre-title">
   <div class="about-panel">
-    <p class="eyebrow">About Save</p>
-    <h2 id="sobre-title">Sobre</h2>
-    <p>
-      Gustavo Dias une desenvolvimento front-end, UI/UX e direção visual para criar interfaces
-      digitais com presença, clareza e cuidado técnico.
-    </p>
-    <p>
-      TODO: substituir este bloco por uma bio curta com trajetória real, contexto profissional e
-      objetivos atuais.
-    </p>
+    <p class="eyebrow">{content.eyebrow}</p>
+    <h2 id="sobre-title">{content.title}</h2>
+    {content.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
   </div>
 </section>
 

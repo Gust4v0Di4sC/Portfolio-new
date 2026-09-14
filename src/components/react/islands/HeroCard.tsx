@@ -1,11 +1,12 @@
 import { type CSSProperties, type PointerEvent, type ReactNode, useEffect, useRef } from 'react';
 
-import PixelCard from './PixelCard';
+import PixelCard from '../bits/PixelCard';
 import './HeroCard.css';
 
 type HeroCardProps = {
   children: ReactNode;
   caption: string;
+  figureAriaLabel: string;
 };
 
 type HeroCardStyle = CSSProperties & {
@@ -22,7 +23,7 @@ const restingStyle: HeroCardStyle = {
   '--hero-card-shine-y': '45%',
 };
 
-export default function HeroCard({ children, caption }: HeroCardProps) {
+export default function HeroCard({ children, caption, figureAriaLabel }: HeroCardProps) {
   const figureRef = useRef<HTMLElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
 
@@ -97,7 +98,7 @@ export default function HeroCard({ children, caption }: HeroCardProps) {
   return (
     <figure
       className="hero-card"
-      aria-label="Capa ilustrada de Gustavo Dias com atmosfera de jogo."
+      aria-label={figureAriaLabel}
       ref={figureRef}
       style={restingStyle}
       onPointerMove={updateTilt}

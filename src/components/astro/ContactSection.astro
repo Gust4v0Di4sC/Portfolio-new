@@ -1,11 +1,15 @@
+---
+import { contactContent as content } from '../../content';
+---
+
 <section id="contato" class="contact section-shell container" aria-labelledby="contato-title">
   <div class="contact-panel">
-    <h2 id="contato-title">Entre em contato comigo</h2>
-    <p>Vamos criar algo incrível juntos.</p>
+    <h2 id="contato-title">{content.title}</h2>
+    <p>{content.description}</p>
 
-    <a class="email-button ps-control ps-control-cross" href="mailto:dscharraa@gmail.com">
+    <a class="email-button ps-control ps-control-cross" href={`mailto:${content.email}`}>
       <span class="ps-symbol" aria-hidden="true">×</span>
-      <span>Enviar e-mail</span>
+      <span>{content.actionLabel}</span>
     </a>
   </div>
 </section>

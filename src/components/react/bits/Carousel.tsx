@@ -17,6 +17,12 @@ export type CarouselItemData = {
 
 type CarouselProps = {
   items: CarouselItemData[];
+  labels: {
+    ariaLabel: string;
+    ariaRoleDescription: string;
+    openLabel: string;
+    indicatorLabel: string;
+  };
   baseWidth?: number;
   autoplay?: boolean;
   autoplayDelay?: number;
@@ -33,6 +39,7 @@ type CarouselItemProps = {
   trackItemOffset: number;
   x: ReturnType<typeof useMotionValue<number>>;
   transition: typeof SPRING_OPTIONS | { duration: number };
+  openLabel: string;
 };
 
 const DRAG_BUFFER = 0;
@@ -49,6 +56,7 @@ function CarouselItem({
   trackItemOffset,
   x,
   transition,
+  openLabel,
 }: CarouselItemProps) {
   const range = [
     -(index + 1) * trackItemOffset,
@@ -92,7 +100,7 @@ function CarouselItem({
             <span className="ps-symbol" aria-hidden="true">
               ×
             </span>
-            <span>Abrir projeto</span>
+            <span>{openLabel}</span>
           </a>
         )}
       </div>
@@ -102,6 +110,7 @@ function CarouselItem({
 
 export default function Carousel({
   items,
+  labels,
   baseWidth = 560,
   autoplay = false,
   autoplayDelay = 3000,
@@ -203,8 +212,8 @@ export default function Carousel({
       onMouseEnter={() => pauseOnHover && setIsHovered(true)}
       onMouseLeave={() => pauseOnHover && setIsHovered(false)}
       role="region"
-      aria-roledescription="carrossel"
-      aria-label="Projetos em destaque"
+      aria-roledescription={labels.ariaRoleDescription}
+      aria-label={labels.ariaLabel}
     >
       <motion.div
         className="carousel-track"
@@ -247,6 +256,7 @@ export default function Carousel({
             trackItemOffset={trackItemOffset}
             x={x}
             transition={effectiveTransition}
+            openLabel={labels.openLabel}
           />
         ))}
       </motion.div>
@@ -258,7 +268,7 @@ export default function Carousel({
               type="button"
               key={item.id}
               className={`carousel-indicator ${activeIndex === index ? 'active' : 'inactive'}`}
-              aria-label={`Ir para o projeto ${index + 1}: ${item.title}`}
+              aria-label={`${labels.indicatorLabel} ${index + 1}: ${item.title}`}
               aria-current={activeIndex === index ? 'true' : undefined}
               animate={{ scale: activeIndex === index ? 1.2 : 1 }}
               onClick={() => setPosition(loop ? index + 1 : index)}
