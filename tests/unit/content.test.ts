@@ -34,5 +34,6 @@ describe('blocos de conteúdo', () => {
       expect(project.description.length).toBeGreaterThan(20);
       expect(project.stack.length).toBeGreaterThan(0);
     }
+    expect(projectsContent.items.filter(({ status }) => status === 'construction')).toHaveLength(2);
   });
 });
