@@ -1,6 +1,5 @@
 export const footerContent = {
   credit: 'Desenvolvido por Gustavo Dias.',
-  note: 'Inspirado pela atmosfera da era PS2, sem afiliação oficial.',
   socialsAriaLabel: 'Redes sociais',
   socials: [
     {
