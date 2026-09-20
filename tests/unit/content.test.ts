@@ -27,7 +27,7 @@ describe('blocos de conteúdo', () => {
 
   it('mantém cards editoriais com conteúdo mínimo', () => {
     expect(experienceContent.items).toHaveLength(2);
-    expect(projectsContent.items).toHaveLength(3);
+    expect(projectsContent.items).toHaveLength(4);
     expect(skillsContent.groups).toHaveLength(5);
     for (const project of projectsContent.items) {
       expect(project.title).not.toBe('');
