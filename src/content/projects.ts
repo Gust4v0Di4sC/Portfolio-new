@@ -1,11 +1,11 @@
-export type ProjectIcon = 'code' | 'boxes' | 'sparkles';
+export type ProjectLogo = 'infoshop' | 'petcorner' | 'pizzaParty' | 'themeForge';
 
 export const projectsContent = {
   eyebrow: 'Memory Card / Portfolio',
   title: 'Projetos',
   cardAriaLabel: 'Projetos em formato de Memory Card',
   memorySlot: 'Memory Card (PS2)/1',
-  status: '3 saves profissionais — conteúdo em preparação',
+  status: '4 saves profissionais — conteúdo em preparação',
   saveLabel: 'Portfolio / Save Data',
   instructionsAriaLabel: 'Instruções do carrossel',
   instructions: ['Arraste para navegar', 'Selecione um indicador para abrir outro save'],
@@ -17,33 +17,44 @@ export const projectsContent = {
   },
   items: [
     {
-      title: 'TODO: Projeto 01',
+      title: 'InfoShop',
       category: 'Interface',
       year: '2026',
       description: 'Adicione um resumo curto do projeto, problema resolvido e papel exercido.',
       stack: ['Astro', 'CSS', 'UI'],
       id: 1,
-      icon: 'code',
+      logo: 'infoshop',
       href: '#contato',
     },
     {
-      title: 'TODO: Projeto 02',
+      title: 'PetCorner',
       category: 'Aplicação',
       year: '2026',
       description: 'Use este save para um case com demo, repositório e decisões técnicas.',
       stack: ['React', 'TypeScript'],
       id: 2,
-      icon: 'boxes',
+      logo: 'petcorner',
       href: '#contato',
     },
     {
-      title: 'TODO: Projeto 03',
+      title: 'Pizza Party',
       category: 'Experiência',
       year: '2026',
       description: 'Reserve este espaço para um projeto visual, 3D ou interativo.',
       stack: ['Design', 'Motion'],
       id: 3,
-      icon: 'sparkles',
+      logo: 'pizzaParty',
+      href: '#contato',
+    },
+    {
+      title: 'Theme Forge',
+      category: 'Experiência',
+      year: '2026',
+      description:
+        'Reserve este espaço para apresentar o projeto, seus objetivos e decisões técnicas.',
+      stack: ['Design', 'Front-end'],
+      id: 4,
+      logo: 'themeForge',
       href: '#contato',
     },
   ] satisfies Array<{
@@ -53,7 +64,7 @@ export const projectsContent = {
     description: string;
     stack: string[];
     id: number;
-    icon: ProjectIcon;
+    logo: ProjectLogo;
     href: string;
   }>,
 } as const;
