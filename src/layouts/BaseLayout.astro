@@ -6,38 +6,89 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  imageAlt?: string;
   noindex?: boolean;
 }
 
-const { title, description, image = '/og/default.png', noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  image = siteContent.socialImage.path,
+  imageAlt = siteContent.socialImage.alt,
+  noindex = false,
+} = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const socialImage = new URL(image, Astro.site);
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const socialImage = new URL(image, Astro.site ?? Astro.url.origin);
+const robotsContent = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${canonicalURL.origin}/#website`,
+      url: canonicalURL.origin,
+      name: siteContent.name,
+      description: siteContent.description,
+      inLanguage: siteContent.language,
+    },
+    {
+      '@type': 'Person',
+      '@id': `${canonicalURL.origin}/#person`,
+      name: siteContent.name,
+      url: canonicalURL.origin,
+      image: socialImage.href,
+      jobTitle: 'Desenvolvedor Front-end e UI/UX Designer',
+      sameAs: siteContent.sameAs,
+      knowsAbout: siteContent.keywords,
+    },
+  ],
+};
 ---
 
 <!doctype html>
 <html lang={siteContent.language}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="author" content={siteContent.author} />
+    <meta name="keywords" content={siteContent.keywords.join(', ')} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="theme-color" content={siteContent.themeColor} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="generator" content={Astro.generator} />
 
     <link rel="canonical" href={canonicalURL} />
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Portfolio" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:locale" content={siteContent.locale} />
+    <meta property="og:site_name" content={siteContent.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content={String(siteContent.socialImage.width)} />
+    <meta property="og:image:height" content={String(siteContent.socialImage.height)} />
+    <meta property="og:image:alt" content={imageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline />
 
     <title>{title}</title>
   </head>
