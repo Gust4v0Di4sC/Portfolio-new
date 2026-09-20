@@ -5,7 +5,6 @@ import './HeroCard.css';
 
 type HeroCardProps = {
   children: ReactNode;
-  caption: string;
   figureAriaLabel: string;
 };
 
@@ -23,7 +22,7 @@ const restingStyle: HeroCardStyle = {
   '--hero-card-shine-y': '45%',
 };
 
-export default function HeroCard({ children, caption, figureAriaLabel }: HeroCardProps) {
+export default function HeroCard({ children, figureAriaLabel }: HeroCardProps) {
   const figureRef = useRef<HTMLElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
 
@@ -118,7 +117,6 @@ export default function HeroCard({ children, caption, figureAriaLabel }: HeroCar
           </div>
         </PixelCard>
       </div>
-      <figcaption>{caption}</figcaption>
     </figure>
   );
 }
