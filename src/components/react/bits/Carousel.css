@@ -145,6 +145,17 @@
   font-size: var(--step-small);
 }
 
+.carousel-item-status {
+  width: fit-content;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgb(34 211 238 / 0.22);
+  border-radius: var(--radius-small);
+  color: var(--color-primary-intense);
+  background: rgb(2 6 13 / 0.62);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
 .carousel-item-link {
   width: fit-content;
   margin-top: 0.35rem;

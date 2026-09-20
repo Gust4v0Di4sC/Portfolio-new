@@ -23,6 +23,26 @@ test('abre e fecha a prova de habilidade com controles acessíveis', async ({ pa
   await expect(dialog).not.toBeVisible();
 });
 
+test('abre a prévia de um projeto com ações externas', async ({ page }) => {
+  const projectCarousel = page.locator('#projetos astro-island');
+  await projectCarousel.scrollIntoViewIfNeeded();
+  await expect(projectCarousel).not.toHaveAttribute('ssr', '');
+  await page.locator('[data-project-trigger="1"]:visible').first().click();
+  const dialog = page.getByRole('dialog', { name: 'InfoShop' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('Disponível', { exact: true })).toBeVisible();
+  await expect(dialog.getByRole('link', { name: 'Abrir projeto' })).toHaveAttribute(
+    'href',
+    'https://infoshop.netlify.app/',
+  );
+  await expect(dialog.getByRole('link', { name: 'Abrir repositório' })).toHaveAttribute(
+    'href',
+    'https://github.com/Gust4v0Di4sC/Info-Shop',
+  );
+  await dialog.getByRole('button', { name: 'Fechar prévia do projeto' }).click();
+  await expect(dialog).not.toBeVisible();
+});
+
 test('oferece link para pular diretamente ao conteúdo', async ({ page }) => {
   await page.keyboard.press('Tab');
   const skipLink = page.getByRole('link', { name: 'Pular para o conteúdo' });

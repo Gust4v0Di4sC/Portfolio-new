@@ -12,6 +12,7 @@ export type CarouselItemData = {
   category?: string;
   year?: string;
   stack?: string[];
+  status?: string;
   href?: string;
 };
 
@@ -29,6 +30,7 @@ type CarouselProps = {
   pauseOnHover?: boolean;
   loop?: boolean;
   round?: boolean;
+  onOpenItem?: (item: CarouselItemData) => void;
 };
 
 type CarouselItemProps = {
@@ -40,6 +42,7 @@ type CarouselItemProps = {
   x: ReturnType<typeof useMotionValue<number>>;
   transition: typeof SPRING_OPTIONS | { duration: number };
   openLabel: string;
+  onOpenItem: ((item: CarouselItemData) => void) | undefined;
 };
 
 const DRAG_BUFFER = 0;
@@ -57,6 +60,7 @@ function CarouselItem({
   x,
   transition,
   openLabel,
+  onOpenItem,
 }: CarouselItemProps) {
   const range = [
     -(index + 1) * trackItemOffset,
@@ -89,9 +93,25 @@ function CarouselItem({
 
       <div className="carousel-item-content">
         <h3 className="carousel-item-title">{item.title}</h3>
+        {item.status && <span className="carousel-item-status">{item.status}</span>}
         <p className="carousel-item-description">{item.description}</p>
         {item.stack && <p className="carousel-item-stack">{item.stack.join(' + ')}</p>}
-        {item.href && (
+        {onOpenItem ? (
+          <button
+            className="carousel-item-link ps-control ps-control-cross"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="project-preview-dialog"
+            data-project-trigger={item.id}
+            data-sound="confirm"
+            onClick={() => onOpenItem(item)}
+          >
+            <span className="ps-symbol" aria-hidden="true">
+              ×
+            </span>
+            <span>{openLabel}</span>
+          </button>
+        ) : item.href ? (
           <a
             className="carousel-item-link ps-control ps-control-cross"
             href={item.href}
@@ -102,7 +122,7 @@ function CarouselItem({
             </span>
             <span>{openLabel}</span>
           </a>
-        )}
+        ) : null}
       </div>
     </motion.article>
   );
@@ -117,6 +137,7 @@ export default function Carousel({
   pauseOnHover = false,
   loop = false,
   round = false,
+  onOpenItem,
 }: CarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [carouselWidth, setCarouselWidth] = useState(baseWidth);
@@ -257,6 +278,7 @@ export default function Carousel({
             x={x}
             transition={effectiveTransition}
             openLabel={labels.openLabel}
+            onOpenItem={onOpenItem}
           />
         ))}
       </motion.div>
