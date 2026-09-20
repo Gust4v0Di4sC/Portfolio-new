@@ -84,11 +84,37 @@
   box-shadow: var(--shadow-glow-soft);
 }
 
-.project-logo-video {
+.project-logo,
+.project-logo-canvas,
+.project-logo-fallback,
+.project-logo-canvas canvas {
   width: 100%;
   height: 100%;
+}
+
+.project-logo {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.project-logo-canvas,
+.project-logo-fallback {
+  position: absolute;
+  inset: 0;
+}
+
+.project-logo-canvas canvas {
   display: block;
+}
+
+.project-logo-fallback {
   object-fit: contain;
+  transition: opacity var(--transition-fast);
+}
+
+.project-logo-fallback.is-hidden {
+  opacity: 0;
 }
 
 .carousel-item-meta,
