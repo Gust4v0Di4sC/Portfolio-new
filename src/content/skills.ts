@@ -47,18 +47,18 @@ export const skillsContent = {
       ],
       proofProjects: [
         {
-          title: 'Portfolio PS2',
-          category: 'Interface principal',
+          title: 'InfoShop',
+          category: 'E-commerce responsivo',
           evidence:
-            'Estrutura semântica em seções, grids responsivos, foco visível e controles com estados de hover/focus.',
-          stack: ['Astro', 'HTML', 'CSS', 'Acessibilidade'],
+            'Interface de loja com catálogo, listagens, carrinho, checkout e painel administrativo organizados em fluxos claros.',
+          stack: ['Angular', 'TypeScript', 'HTML', 'CSS'],
         },
         {
-          title: 'Memory Card de Projetos',
-          category: 'Componente visual',
+          title: 'PetCorner',
+          category: 'Ecossistema para pet shop',
           evidence:
-            'Cards de save com hierarquia clara, conteúdo escaneável e comportamento consistente em telas pequenas.',
-          stack: ['CSS Grid', 'Responsividade', 'UI'],
+            'Área pública e espaço do cliente com vitrine, pets, carrinho, pedidos e agendamentos reunidos em uma experiência consistente.',
+          stack: ['Next.js', 'React', 'Responsividade', 'UI'],
         },
       ],
     },
@@ -66,7 +66,7 @@ export const skillsContent = {
       slug: 'frameworks',
       title: 'Frameworks',
       summary:
-        'Aplicação prática na composição do site com Astro e ilhas React para recursos interativos específicos.',
+        'Aplicação prática de frameworks modernos na construção de produtos web completos e interfaces componentizadas.',
       skills: [
         { name: 'Astro', icon: 'orbit' },
         { name: 'React', icon: 'atom' },
@@ -75,18 +75,18 @@ export const skillsContent = {
       ],
       proofProjects: [
         {
-          title: 'Portfolio PS2',
-          category: 'Arquitetura front-end',
+          title: 'PetCorner',
+          category: 'Aplicação Next.js',
           evidence:
-            'Páginas e componentes em Astro, com componentes React isolados para splash, background e controles da interface.',
-          stack: ['Astro', 'React', 'TypeScript'],
+            'Ecossistema full-stack construído com Next.js e React para integrar loja, área do cliente, pedidos e agendamentos.',
+          stack: ['Next.js', 'React', 'Firebase'],
         },
         {
-          title: 'Interface Controller',
-          category: 'Interação client-side',
+          title: 'Theme Forge',
+          category: 'Plataforma React',
           evidence:
-            'Camada React dedicada para efeitos e comandos globais sem transformar todo o site em SPA.',
-          stack: ['React', 'TypeScript'],
+            'Interface componentizada para criação e visualização de temas, conectada a uma arquitetura back-end dedicada.',
+          stack: ['React', 'TypeScript', 'Chakra UI', 'NestJS'],
         },
       ],
     },
@@ -94,7 +94,7 @@ export const skillsContent = {
       slug: 'integracoes',
       title: 'Integrações',
       summary:
-        'Aplicação prática em navegação, publicação, leitura por buscadores e fluxo de versionamento.',
+        'Aplicação prática na integração entre interfaces, APIs e serviços externos para autenticação, dados e pagamentos.',
       skills: [
         { name: 'APIs', icon: 'cable' },
         { name: 'Git', icon: 'gitBranch' },
@@ -103,18 +103,18 @@ export const skillsContent = {
       ],
       proofProjects: [
         {
-          title: 'Base de Portfolio',
-          category: 'Publicação',
+          title: 'InfoShop',
+          category: 'Dados e serviços',
           evidence:
-            'Configuração Astro com sitemap, robots, favicon e metadados de página para indexação.',
-          stack: ['Astro Sitemap', 'SEO', 'Deploy'],
+            'Integração do front-end Angular com Supabase e Express para sustentar autenticação, catálogo, checkout e operações administrativas.',
+          stack: ['Angular', 'Supabase', 'Express', 'APIs'],
         },
         {
-          title: 'Fluxo de branch por feature',
-          category: 'Versionamento',
+          title: 'PetCorner',
+          category: 'Pagamentos e persistência',
           evidence:
-            'Alterações isoladas em branch de feature, mantendo o fluxo de revisão pronto para pull request.',
-          stack: ['Git', 'Branching'],
+            'Uso de Firebase e Stripe nos fluxos de cliente, carrinho, checkout, pedidos e agendamentos do ecossistema.',
+          stack: ['Firebase', 'Stripe', 'Next.js', 'APIs'],
         },
       ],
     },
@@ -131,18 +131,18 @@ export const skillsContent = {
       ],
       proofProjects: [
         {
-          title: 'Pipeline local',
-          category: 'Validação',
+          title: 'Pizza Party',
+          category: 'Arquitetura de produto',
           evidence:
-            'Scripts de lint, check, build e testes configurados no projeto para verificar regressão antes de publicar.',
-          stack: ['ESLint', 'Astro Check', 'Vitest'],
+            'Separação entre plataforma web, API e suporte mobile para atender loja, pedidos, delivery, eventos e operação offline.',
+          stack: ['ASP.NET Core', 'Angular', 'PostgreSQL', 'Ionic'],
         },
         {
-          title: 'Componentes estáticos primeiro',
-          category: 'Performance',
+          title: 'Theme Forge',
+          category: 'Reuso e consistência',
           evidence:
-            'Interatividade adicionada de forma pontual, preservando HTML renderizado pelo Astro e baixo custo de JavaScript.',
-          stack: ['Astro', 'Semântica', 'Performance'],
+            'Estrutura voltada à criação e exportação de temas reutilizáveis, com dados organizados para facilitar manutenção e evolução.',
+          stack: ['TypeScript', 'NestJS', 'Prisma', 'Componentização'],
         },
       ],
     },
@@ -150,7 +150,7 @@ export const skillsContent = {
       slug: 'design',
       title: 'Design',
       summary:
-        'Aplicação prática em direção visual, microinterações e consistência de experiência inspirada no universo PS2.',
+        'Aplicação prática em sistemas visuais, organização de jornadas e consistência de experiência em produtos digitais.',
       skills: [
         { name: 'UI', icon: 'layout' },
         { name: 'UX', icon: 'mousePointer' },
@@ -159,18 +159,18 @@ export const skillsContent = {
       ],
       proofProjects: [
         {
-          title: 'Sistema visual PS2',
-          category: 'Identidade',
+          title: 'Theme Forge',
+          category: 'Sistema de temas',
           evidence:
-            'Tokens de cor, tipografia, bordas, controles e estados visuais alinhados ao tema de Memory Card.',
-          stack: ['UI', 'Identidade visual', 'CSS Tokens'],
+            'Criação e visualização de paletas, tipografia e modos claro e escuro com exportação para diferentes formatos.',
+          stack: ['UI', 'Chakra UI', 'Temas', 'Identidade visual'],
         },
         {
-          title: 'Jornada de Portfolio',
-          category: 'Experiência',
+          title: 'PetCorner',
+          category: 'Jornada do cliente',
           evidence:
-            'Navegação por seções com chamadas claras, feedback visual em controles e conteúdo organizado por contexto.',
-          stack: ['UX', 'Figma', 'Interação'],
+            'Organização de uma jornada que conecta descoberta de serviços, gestão de pets, compras, pedidos e agendamentos.',
+          stack: ['UX', 'React', 'Fluxos', 'Interação'],
         },
       ],
     },

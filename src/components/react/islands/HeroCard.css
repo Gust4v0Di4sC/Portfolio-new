@@ -73,16 +73,6 @@
   pointer-events: none;
 }
 
-.hero-card figcaption {
-  position: relative;
-  z-index: 1;
-  max-width: 22rem;
-  color: var(--color-text-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  text-align: center;
-}
-
 @media (max-width: 54rem) {
   .hero-card {
     min-height: clamp(19rem, 75vw, 28rem);

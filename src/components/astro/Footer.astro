@@ -19,10 +19,7 @@ import Particles from '../react/islands/Particles';
   </div>
 
   <div class="container footer-inner">
-    <div>
-      <p>{content.credit}</p>
-      <p class="footer-note">{content.note}</p>
-    </div>
+    <p>{content.credit}</p>
 
     <nav class="footer-socials" aria-label={content.socialsAriaLabel}>
       {
@@ -78,10 +75,6 @@ import Particles from '../react/islands/Particles';
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.75rem 1.25rem;
-  }
-
-  .footer-note {
-    color: rgb(156 176 195 / 0.68);
   }
 
   .footer-socials {

@@ -26,7 +26,7 @@ describe('blocos de conteúdo', () => {
   });
 
   it('mantém cards editoriais com conteúdo mínimo', () => {
-    expect(experienceContent.items).toHaveLength(2);
+    expect(experienceContent.items).toHaveLength(4);
     expect(projectsContent.items).toHaveLength(4);
     expect(skillsContent.groups).toHaveLength(5);
     for (const project of projectsContent.items) {
@@ -35,5 +35,15 @@ describe('blocos de conteúdo', () => {
       expect(project.stack.length).toBeGreaterThan(0);
     }
     expect(projectsContent.items.filter(({ status }) => status === 'construction')).toHaveLength(2);
+  });
+
+  it('liga as provas de habilidade aos projetos cadastrados', () => {
+    const projectTitles = new Set(projectsContent.items.map(({ title }) => title));
+
+    for (const group of skillsContent.groups) {
+      for (const project of group.proofProjects) {
+        expect(projectTitles.has(project.title)).toBe(true);
+      }
+    }
   });
 });
