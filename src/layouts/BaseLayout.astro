@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { siteContent } from '../content';
+import { projectsContent, siteContent } from '../content';
 
 interface Props {
   title: string;
@@ -20,26 +20,57 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 const socialImage = new URL(image, Astro.site ?? Astro.url.origin);
+const sitemapURL = new URL('sitemap-index.xml', Astro.site ?? Astro.url.origin);
 const robotsContent = noindex
   ? 'noindex, nofollow'
   : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const projectEntities = projectsContent.items.map((project) => ({
+  '@type': 'CreativeWork',
+  name: project.title,
+  description: project.description,
+  dateCreated: project.year,
+  keywords: project.stack.join(', '),
+  ...(project.projectUrl ? { url: project.projectUrl } : {}),
+  ...(project.repositoryUrl ? { sameAs: project.repositoryUrl } : {}),
+}));
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'ImageObject',
+      '@id': `${canonicalURL.origin}/#primaryimage`,
+      url: socialImage.href,
+      contentUrl: socialImage.href,
+      width: siteContent.socialImage.width,
+      height: siteContent.socialImage.height,
+      caption: imageAlt,
+    },
+    {
       '@type': 'WebSite',
       '@id': `${canonicalURL.origin}/#website`,
-      url: canonicalURL.origin,
+      url: `${canonicalURL.origin}/`,
       name: siteContent.name,
       description: siteContent.description,
       inLanguage: siteContent.language,
     },
     {
+      '@type': 'ProfilePage',
+      '@id': `${canonicalURL.href}#webpage`,
+      url: canonicalURL.href,
+      name: title,
+      description,
+      inLanguage: siteContent.language,
+      isPartOf: { '@id': `${canonicalURL.origin}/#website` },
+      primaryImageOfPage: { '@id': `${canonicalURL.origin}/#primaryimage` },
+      mainEntity: { '@id': `${canonicalURL.origin}/#person` },
+      hasPart: projectEntities,
+    },
+    {
       '@type': 'Person',
       '@id': `${canonicalURL.origin}/#person`,
       name: siteContent.name,
-      url: canonicalURL.origin,
-      image: socialImage.href,
+      url: `${canonicalURL.origin}/`,
+      image: { '@id': `${canonicalURL.origin}/#primaryimage` },
       jobTitle: 'Desenvolvedor Front-end e UI/UX Designer',
       sameAs: siteContent.sameAs,
       knowsAbout: siteContent.keywords,
@@ -62,6 +93,9 @@ const structuredData = {
     <meta name="generator" content={Astro.generator} />
 
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang={siteContent.language} href={canonicalURL} />
+    <link rel="alternate" hreflang="x-default" href={canonicalURL} />
+    <link rel="sitemap" href={sitemapURL} />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -81,6 +115,7 @@ const structuredData = {
     <meta property="og:image:width" content={String(siteContent.socialImage.width)} />
     <meta property="og:image:height" content={String(siteContent.socialImage.height)} />
     <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image:url" content={socialImage} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

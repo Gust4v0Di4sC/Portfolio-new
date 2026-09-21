@@ -1,21 +1,27 @@
 {
-  "name": "Portfolio",
-  "short_name": "Portfolio",
+  "name": "Portfólio de Gustavo Dias",
+  "short_name": "Gustavo Dias",
+  "description": "Portfólio de Gustavo Dias, desenvolvedor Front-end e UI/UX Designer.",
+  "lang": "pt-BR",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "theme_color": "#02060d",
   "background_color": "#02060d",
-  "display": "standalone"
+  "display": "standalone",
+  "categories": ["portfolio", "design", "development"]
 }
