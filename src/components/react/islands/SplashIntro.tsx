@@ -7,18 +7,12 @@ import type { SplashBlock } from '../../../scripts/three/splashScene';
 export default function SplashIntro() {
   const rootRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fillRef = useRef<HTMLSpanElement>(null);
-  const percentRef = useRef<HTMLSpanElement>(null);
-  const statusRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
     const canvas = canvasRef.current;
-    const fill = fillRef.current;
-    const percent = percentRef.current;
-    const status = statusRef.current;
 
-    if (!root || !canvas || !fill || !percent || !status) {
+    if (!root || !canvas) {
       return undefined;
     }
 
@@ -40,9 +34,6 @@ export default function SplashIntro() {
       }
 
       ended = true;
-      fill.style.width = '100%';
-      percent.textContent = '100%';
-      status.textContent = content.statusMessages.at(-1) ?? content.initialStatus;
       root.classList.add('is-leaving');
 
       window.setTimeout(() => {
@@ -53,6 +44,8 @@ export default function SplashIntro() {
         document.documentElement.classList.remove('splash-running');
       }, fadeDuration);
     };
+
+    finishTimer = window.setTimeout(finishSplash, totalDuration);
 
     const setup = async () => {
       const THREE = await loadThree();
@@ -172,7 +165,7 @@ export default function SplashIntro() {
           targetY,
           delay,
           height,
-          speed: 0.72 + Math.random() * 0.3,
+          speed: 1.55 + Math.random() * 0.55,
           sway: Math.random() * Math.PI * 2,
         });
       };
@@ -232,23 +225,8 @@ export default function SplashIntro() {
           block.group.visible = true;
           block.group.position.y = THREE.MathUtils.lerp(-16 - block.height, block.targetY, eased);
           block.group.scale.y = THREE.MathUtils.lerp(0.035, 1, eased);
-          block.group.rotation.y = Math.sin(elapsed * 0.45 + block.sway) * 0.018;
+          block.group.rotation.y = Math.sin(elapsed * 0.9 + block.sway) * 0.018;
         });
-      };
-
-      const updateUi = (elapsed: number) => {
-        const rawProgress = THREE.MathUtils.clamp(elapsed / (animationDuration / 1000 - 0.9), 0, 1);
-        const progress = THREE.MathUtils.smoothstep(rawProgress, 0, 1);
-        const pct = Math.min(100, Math.round(progress * 100));
-        const messageIndex = Math.min(
-          content.statusMessages.length - 1,
-          Math.floor(progress * content.statusMessages.length),
-        );
-
-        fill.style.width = `${pct}%`;
-        percent.textContent = `${pct.toString().padStart(2, '0')}%`;
-        status.textContent =
-          content.statusMessages[messageIndex] ?? content.statusMessages.at(-1) ?? '';
       };
 
       const render = (now: number) => {
@@ -261,10 +239,6 @@ export default function SplashIntro() {
         const cameraProgress = THREE.MathUtils.smoothstep(sceneElapsed / 9.5, 0, 1);
 
         updateBlocks(sceneElapsed);
-
-        if (sceneElapsed > 0) {
-          updateUi(sceneElapsed);
-        }
 
         stars.rotation.y = sceneElapsed * 0.014;
         keyLight.position.set(
@@ -324,7 +298,6 @@ export default function SplashIntro() {
         startTime = now;
         render(now);
       });
-      finishTimer = window.setTimeout(finishSplash, totalDuration);
     };
 
     void setup();
@@ -349,20 +322,8 @@ export default function SplashIntro() {
       <div className="splash-scanlines" aria-hidden="true" />
 
       <div className="splash-ui">
-        <p className="splash-brand">{content.brand}</p>
         <h2>{content.title}</h2>
-        <p className="splash-role">{content.role}</p>
-      </div>
-
-      <div className="splash-progress" aria-live="polite">
-        <div className="progress-row">
-          <span>{content.progressLabel}</span>
-          <span ref={percentRef}>0%</span>
-        </div>
-        <div className="progress-track">
-          <span ref={fillRef} />
-        </div>
-        <p ref={statusRef}>{content.initialStatus}</p>
+        <p className="splash-portfolio">{content.subtitle}</p>
       </div>
 
       <style>{`
@@ -430,18 +391,6 @@ export default function SplashIntro() {
           pointer-events: none;
         }
 
-        .splash-brand {
-          color: var(--color-primary-intense);
-          font-family: var(--font-display);
-          font-size: clamp(0.9rem, 0.78rem + 0.55vw, 1.25rem);
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-shadow:
-            0 0 0.8rem rgb(0 229 255 / 0.85),
-            0 0 3rem rgb(37 99 235 / 0.42);
-          animation: splash-reveal 1100ms ease 900ms both;
-        }
-
         .splash-ui h2 {
           color: var(--color-text);
           font-family: var(--font-display);
@@ -454,76 +403,17 @@ export default function SplashIntro() {
           animation: splash-title 1300ms ease 1350ms both;
         }
 
-        .splash-role {
-          color: rgb(156 176 195 / 0.82);
-          font-family: var(--font-mono);
-          font-size: clamp(0.78rem, 0.66rem + 0.5vw, 1rem);
-          letter-spacing: 0.22em;
+        .splash-portfolio {
+          color: var(--color-primary-intense);
+          font-family: var(--font-display);
+          font-size: clamp(0.95rem, 0.8rem + 0.7vw, 1.4rem);
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-shadow:
+            0 0 0.8rem rgb(0 229 255 / 0.75),
+            0 0 2.5rem rgb(37 99 235 / 0.38);
           text-transform: uppercase;
           animation: splash-reveal 1100ms ease 2000ms both;
-        }
-
-        .splash-progress {
-          position: absolute;
-          right: 50%;
-          bottom: clamp(2.5rem, 9vw, 5.5rem);
-          z-index: 2;
-          display: grid;
-          width: min(20rem, calc(100% - 3rem));
-          gap: 0.45rem;
-          color: rgb(156 176 195 / 0.72);
-          font-family: var(--font-mono);
-          font-size: 0.78rem;
-          transform: translateX(50%);
-        }
-
-        .progress-row {
-          display: flex;
-          justify-content: space-between;
-          gap: 1rem;
-          letter-spacing: 0.12em;
-        }
-
-        .progress-track {
-          position: relative;
-          height: 2px;
-          overflow: hidden;
-          background: rgb(34 211 238 / 0.16);
-        }
-
-        .progress-track::before,
-        .progress-track::after {
-          position: absolute;
-          top: -3px;
-          width: 2px;
-          height: 8px;
-          background: rgb(0 229 255 / 0.58);
-          content: '';
-        }
-
-        .progress-track::before {
-          left: 0;
-        }
-
-        .progress-track::after {
-          right: 0;
-        }
-
-        .progress-track span {
-          display: block;
-          width: 0;
-          height: 100%;
-          background: linear-gradient(90deg, var(--color-secondary), var(--color-primary-intense));
-          box-shadow:
-            0 0 0.7rem rgb(0 229 255 / 0.9),
-            0 0 1.5rem rgb(37 99 235 / 0.45);
-          transition: width 160ms linear;
-        }
-
-        .splash-progress p {
-          min-height: 1.2rem;
-          color: rgb(156 176 195 / 0.52);
-          letter-spacing: 0.12em;
         }
 
         @keyframes splash-reveal {
@@ -554,18 +444,12 @@ export default function SplashIntro() {
           .splash-ui {
             transform: translate(-50%, -44%);
           }
-
-          .splash-role {
-            max-width: 24rem;
-            letter-spacing: 0.12em;
-          }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .splash-intro,
-          .splash-brand,
           .splash-ui h2,
-          .splash-role {
+          .splash-portfolio {
             animation: none;
             transition-duration: 0.01ms;
           }
