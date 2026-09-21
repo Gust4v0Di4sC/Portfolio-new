@@ -42,15 +42,14 @@ import HeroCard from '../react/islands/HeroCard';
     </div>
   </div>
 
-  <HeroCard client:load figureAriaLabel={content.image.figureAriaLabel}>
+  <HeroCard client:idle figureAriaLabel={content.image.figureAriaLabel}>
     <Image
       src={heroCover}
       alt={content.image.alt}
       class="hero-cover-image"
       widths={[320, 480, 640, 768]}
       sizes="(max-width: 54rem) min(78vw, 24rem), min(26vw, 24rem)"
-      loading="eager"
-      decoding="async"
+      priority
     />
   </HeroCard>
 </section>
