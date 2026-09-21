@@ -68,10 +68,8 @@
   font-weight: 600;
 }
 
-.project-preview-close {
+.project-preview-header .dialog-close-button {
   align-self: start;
-  width: 2.25rem;
-  padding: 0;
 }
 
 .project-preview-details {

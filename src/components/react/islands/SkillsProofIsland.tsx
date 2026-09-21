@@ -25,6 +25,7 @@ import {
 
 import { skillsContent as content } from '../../../content';
 import type { SkillIcon } from '../../../content/skills';
+import DialogCloseButton from '../bits/DialogCloseButton';
 import './SkillsProofIsland.css';
 
 const icons: Record<SkillIcon, LucideIcon> = {
@@ -112,6 +113,8 @@ export default function SkillsProofIsland() {
             key={group.slug}
             aria-controls="skill-proof-dialog"
             aria-haspopup="dialog"
+            aria-keyshortcuts="X"
+            data-shortcut="x"
             data-sound="confirm"
             data-proof-trigger={group.slug}
             onClick={() => setSelectedGroup(group)}
@@ -160,17 +163,7 @@ export default function SkillsProofIsland() {
                 <h3 id="skill-proof-title">{selectedGroup.title}</h3>
                 <span id="skill-proof-summary">{selectedGroup.summary}</span>
               </div>
-              <button
-                className="proof-close ps-control ps-control-circle"
-                type="button"
-                aria-label={content.closeLabel}
-                data-sound="back"
-                onClick={closeDialog}
-              >
-                <span className="ps-symbol" aria-hidden="true">
-                  ×
-                </span>
-              </button>
+              <DialogCloseButton label={content.closeLabel} onClick={closeDialog} />
             </header>
             <div className="proof-skills" aria-label={content.relatedSkillsLabel}>
               {selectedGroup.skills.map(({ name }) => (
@@ -191,6 +184,8 @@ export default function SkillsProofIsland() {
               <a
                 className="ps-control ps-control-cross"
                 href="#projetos"
+                aria-keyshortcuts="X"
+                data-shortcut="x"
                 data-sound="confirm"
                 onClick={closeDialog}
               >
@@ -202,6 +197,8 @@ export default function SkillsProofIsland() {
               <button
                 className="ps-control ps-control-circle"
                 type="button"
+                aria-keyshortcuts="O Escape"
+                data-shortcut="o"
                 data-sound="back"
                 onClick={closeDialog}
               >

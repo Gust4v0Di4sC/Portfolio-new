@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { motion, useMotionValue, useTransform } from 'motion/react';
 
@@ -102,7 +102,9 @@ function CarouselItem({
             type="button"
             aria-haspopup="dialog"
             aria-controls="project-preview-dialog"
+            aria-keyshortcuts="X"
             data-project-trigger={item.id}
+            data-shortcut="x"
             data-sound="confirm"
             onClick={() => onOpenItem(item)}
           >
@@ -115,6 +117,7 @@ function CarouselItem({
           <a
             className="carousel-item-link ps-control ps-control-cross"
             href={item.href}
+            data-shortcut="x"
             data-sound="confirm"
           >
             <span className="ps-symbol" aria-hidden="true">
@@ -222,6 +225,36 @@ export default function Carousel({
         ? (position - 1 + items.length) % items.length
         : Math.min(position, items.length - 1);
 
+  const goToRelativeItem = useCallback(
+    (direction: -1 | 1) => {
+      if (items.length <= 1) return;
+      const nextIndex = loop
+        ? (activeIndex + direction + items.length) % items.length
+        : Math.max(0, Math.min(activeIndex + direction, items.length - 1));
+      setPosition(loop ? nextIndex + 1 : nextIndex);
+    },
+    [activeIndex, items.length, loop],
+  );
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return undefined;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') ||
+        !(event.target instanceof Node) ||
+        !container.contains(event.target)
+      )
+        return;
+      event.preventDefault();
+      goToRelativeItem(event.key === 'ArrowLeft' ? -1 : 1);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [goToRelativeItem]);
+
   return (
     <div
       ref={containerRef}
@@ -235,6 +268,7 @@ export default function Carousel({
       role="region"
       aria-roledescription={labels.ariaRoleDescription}
       aria-label={labels.ariaLabel}
+      aria-keyshortcuts="ArrowLeft ArrowRight"
     >
       <motion.div
         className="carousel-track"

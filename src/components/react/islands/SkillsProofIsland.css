@@ -166,10 +166,8 @@
   font-size: var(--step-small);
 }
 
-.skills .proof-close {
+.skills .proof-header .dialog-close-button {
   flex: 0 0 auto;
-  width: 2.2rem;
-  padding: 0;
 }
 
 .skills .proof-skills {
