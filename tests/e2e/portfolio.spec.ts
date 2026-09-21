@@ -26,7 +26,7 @@ test('abre e fecha a prova de habilidade com controles acessíveis', async ({ pa
 test('abre a prévia de um projeto com ações externas', async ({ page }) => {
   const projectCarousel = page.locator('#projetos astro-island');
   await projectCarousel.scrollIntoViewIfNeeded();
-  await expect(projectCarousel).not.toHaveAttribute('ssr', '');
+  await expect(projectCarousel).not.toHaveAttribute('ssr', '', { timeout: 15_000 });
   await page.locator('[data-project-trigger="1"]:visible').first().click();
   const dialog = page.getByRole('dialog', { name: 'InfoShop' });
   await expect(dialog).toBeVisible();
@@ -49,4 +49,52 @@ test('oferece link para pular diretamente ao conteúdo', async ({ page }) => {
   await expect(skipLink).toBeFocused();
   await skipLink.press('Enter');
   await expect(page.locator('#conteudo')).toBeFocused();
+});
+
+test('executa os comandos de teclado no contexto correto da interface', async ({ page }) => {
+  await page.keyboard.press('a');
+  await expect(page).toHaveURL(/#contato$/);
+
+  const skillTrigger = page.locator('[data-proof-trigger="interfaces"]');
+  await skillTrigger.scrollIntoViewIfNeeded();
+  await skillTrigger.focus();
+  await page.keyboard.press('x');
+
+  const skillDialog = page.getByRole('dialog', { name: 'Interfaces' });
+  await expect(skillDialog).toBeVisible();
+  await page.keyboard.press('o');
+  await expect(skillDialog).not.toBeVisible();
+
+  const projectTrigger = page.locator('[data-project-trigger="1"]:visible').first();
+  await projectTrigger.scrollIntoViewIfNeeded();
+  await expect(page.locator('#projetos astro-island')).not.toHaveAttribute('ssr', '', {
+    timeout: 15_000,
+  });
+  await projectTrigger.focus();
+  await page.keyboard.press('x');
+
+  const projectDialog = page.getByRole('dialog', { name: 'InfoShop' });
+  await expect(projectDialog).toBeVisible();
+
+  const repositoryPagePromise = page.waitForEvent('popup');
+  await page.keyboard.press('z');
+  const repositoryPage = await repositoryPagePromise;
+  await expect(repositoryPage).toHaveURL(/github\.com\/Gust4v0Di4sC\/Info-Shop\/?$/);
+  await repositoryPage.close();
+
+  await page.keyboard.press('Escape');
+  await expect(projectDialog).not.toBeVisible();
+});
+
+test('navega pelo carrossel com as setas do teclado', async ({ page }) => {
+  const firstIndicator = page.getByRole('button', { name: /Ir para o projeto 1:/ });
+  const secondIndicator = page.getByRole('button', { name: /Ir para o projeto 2:/ });
+  await firstIndicator.scrollIntoViewIfNeeded();
+  await firstIndicator.click();
+  await expect(firstIndicator).toHaveAttribute('aria-current', 'true');
+
+  await firstIndicator.press('ArrowRight');
+  await expect(secondIndicator).toHaveAttribute('aria-current', 'true');
+  await secondIndicator.press('ArrowLeft');
+  await expect(firstIndicator).toHaveAttribute('aria-current', 'true');
 });

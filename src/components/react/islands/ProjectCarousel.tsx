@@ -11,6 +11,7 @@ import themeForgeVideo from '../../../assets/images/theme-forge-ps2-save-icon.we
 import { projectsContent } from '../../../content';
 import Carousel from '../bits/Carousel';
 import type { CarouselItemData } from '../bits/Carousel';
+import DialogCloseButton from '../bits/DialogCloseButton';
 import ProjectLogo3D from '../bits/ProjectLogo3D';
 import './ProjectCarousel.css';
 
@@ -109,17 +110,7 @@ export default function ProjectCarousel() {
                   {selectedProject.category} / {selectedProject.year}
                 </span>
               </div>
-              <button
-                className="project-preview-close ps-control ps-control-circle"
-                type="button"
-                aria-label={projectsContent.dialog.closeLabel}
-                data-sound="back"
-                onClick={closeDialog}
-              >
-                <span className="ps-symbol" aria-hidden="true">
-                  ○
-                </span>
-              </button>
+              <DialogCloseButton label={projectsContent.dialog.closeLabel} onClick={closeDialog} />
             </header>
 
             <div className="project-preview-details">
@@ -145,6 +136,8 @@ export default function ProjectCarousel() {
                   href={selectedProject.projectUrl}
                   target="_blank"
                   rel="noreferrer"
+                  aria-keyshortcuts="X"
+                  data-shortcut="x"
                   data-sound="confirm"
                 >
                   <span className="ps-symbol" aria-hidden="true">
@@ -160,6 +153,8 @@ export default function ProjectCarousel() {
                   href={selectedProject.repositoryUrl}
                   target="_blank"
                   rel="noreferrer"
+                  aria-keyshortcuts="Z"
+                  data-shortcut="z"
                   data-sound="confirm"
                 >
                   <span className="ps-symbol" aria-hidden="true">

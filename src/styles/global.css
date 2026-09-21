@@ -181,6 +181,31 @@ footer {
   position: relative;
   min-height: 42vh;
   padding-block: var(--space-section);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 44rem;
+}
+
+.dialog-close-button {
+  display: inline-grid;
+  width: 2.5rem;
+  min-height: 2.5rem;
+  flex: 0 0 2.5rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--color-control-circle);
+  border-radius: 50%;
+  color: var(--color-control-circle);
+  background: rgb(2 6 13 / 0.72);
+  box-shadow:
+    0 0 0.55rem color-mix(in srgb, var(--color-control-circle) 36%, transparent),
+    inset 0 0 0.55rem color-mix(in srgb, var(--color-control-circle) 14%, transparent);
+}
+
+.dialog-close-button svg {
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: auto;
 }
 
 .section-shell h2 {

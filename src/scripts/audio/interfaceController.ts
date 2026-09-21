@@ -1,5 +1,5 @@
 export type UiSound = 'hover' | 'confirm' | 'back' | 'option';
-type UiShortcut = 'x' | 'o' | 't';
+type UiShortcut = 'x' | 'o' | 'a' | 'z';
 type AudioEnabledWindow = Window & typeof globalThis & { webkitAudioContext?: typeof AudioContext };
 
 const interactiveSelector =
@@ -66,15 +66,20 @@ export function setupInterfaceController() {
     target instanceof HTMLElement &&
     (target.isContentEditable ||
       ['input', 'select', 'textarea'].includes(target.tagName.toLowerCase()));
+  const getShortcutScope = () =>
+    Array.from(document.querySelectorAll('dialog[open]')).at(-1) ?? document;
   const getVisibleShortcutTarget = (shortcut: UiShortcut) => {
     const active = document.activeElement;
     if (
       active instanceof HTMLElement &&
+      getShortcutScope().contains(active) &&
       active.matches(`${shortcutSelector}[data-shortcut="${shortcut}"]`)
     )
       return active;
     const viewportCenter = window.innerHeight / 2;
-    return Array.from(document.querySelectorAll(`${shortcutSelector}[data-shortcut="${shortcut}"]`))
+    return Array.from(
+      getShortcutScope().querySelectorAll(`${shortcutSelector}[data-shortcut="${shortcut}"]`),
+    )
       .filter((target): target is HTMLElement => target instanceof HTMLElement && isVisible(target))
       .sort((a, b) => {
         const aRect = a.getBoundingClientRect();
@@ -101,21 +106,37 @@ export function setupInterfaceController() {
     if (target) playTone(target.dataset.sound || 'confirm');
   };
   const handleKeydown = (event: KeyboardEvent) => {
-    if (!canInteract() || isTyping(event.target)) return;
+    if (
+      !canInteract() ||
+      isTyping(event.target) ||
+      event.defaultPrevented ||
+      event.repeat ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey
+    )
+      return;
     const keyMap: Record<string, UiShortcut> = {
       x: 'x',
       X: 'x',
       o: 'o',
       O: 'o',
       Escape: 'o',
-      t: 't',
-      T: 't',
-      ArrowUp: 't',
-      Triangle: 't',
+      a: 'a',
+      A: 'a',
+      ArrowUp: 'a',
+      Triangle: 'a',
+      z: 'z',
+      Z: 'z',
+      Square: 'z',
     };
     const shortcut = keyMap[event.key];
     if (!shortcut) return;
-    const target = getVisibleShortcutTarget(shortcut);
+    const active = findInteractive(document.activeElement);
+    const target =
+      shortcut === 'x' && active && getShortcutScope().contains(active)
+        ? active
+        : getVisibleShortcutTarget(shortcut);
     if (!target) return;
     event.preventDefault();
     target.focus({ preventScroll: true });

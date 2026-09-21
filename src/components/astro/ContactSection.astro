@@ -7,7 +7,12 @@ import { contactContent as content } from '../../content';
     <h2 id="contato-title">{content.title}</h2>
     <p>{content.description}</p>
 
-    <a class="email-button ps-control ps-control-cross" href={`mailto:${content.email}`}>
+    <a
+      class="email-button ps-control ps-control-cross"
+      href={`mailto:${content.email}`}
+      aria-keyshortcuts="X"
+      data-shortcut="x"
+    >
       <span class="ps-symbol" aria-hidden="true">×</span>
       <span>{content.actionLabel}</span>
     </a>
