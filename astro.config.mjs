@@ -6,14 +6,29 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-const site = env.PUBLIC_SITE_URL ?? 'https://example.com';
+const deploymentSite =
+  env.PUBLIC_SITE_URL ??
+  env.VERCEL_PROJECT_PRODUCTION_URL ??
+  env.URL ??
+  env.CF_PAGES_URL ??
+  'https://example.com';
+const site = /^https?:\/\//i.test(deploymentSite) ? deploymentSite : `https://${deploymentSite}`;
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   site,
 
-  integrations: [react(), sitemap()],
+  integrations: [
+    react(),
+    sitemap({
+      namespaces: {
+        news: false,
+        video: false,
+        xhtml: false,
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     build: {
