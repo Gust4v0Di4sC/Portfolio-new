@@ -18,6 +18,7 @@ export const projectsContent = {
   dialog: {
     eyebrow: 'Project Preview',
     closeLabel: 'Fechar prévia do projeto',
+    videoLabel: 'Prévia em vídeo',
     statusLabel: 'Status',
     stackLabel: 'Tecnologias',
     projectAction: 'Abrir projeto',
@@ -41,6 +42,7 @@ export const projectsContent = {
       status: 'published',
       projectUrl: 'https://infoshop.netlify.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Info-Shop',
+      previewSlug: 'infoshop',
     },
     {
       title: 'PetCorner',
@@ -54,6 +56,7 @@ export const projectsContent = {
       status: 'published',
       projectUrl: 'https://pet-corner-next-nine.vercel.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Pet-Corner-Next',
+      previewSlug: 'pet-corner',
     },
     {
       title: 'Pizza Party',
@@ -67,6 +70,7 @@ export const projectsContent = {
       status: 'construction',
       projectUrl: undefined,
       repositoryUrl: undefined,
+      previewSlug: undefined,
     },
     {
       title: 'Theme Forge',
@@ -80,6 +84,7 @@ export const projectsContent = {
       status: 'construction',
       projectUrl: undefined,
       repositoryUrl: undefined,
+      previewSlug: undefined,
     },
   ] satisfies Array<{
     title: string;
@@ -92,5 +97,6 @@ export const projectsContent = {
     status: 'published' | 'construction';
     projectUrl: string | undefined;
     repositoryUrl: string | undefined;
+    previewSlug: 'infoshop' | 'pet-corner' | undefined;
   }>,
 } as const;

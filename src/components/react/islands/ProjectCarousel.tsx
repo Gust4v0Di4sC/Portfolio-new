@@ -13,6 +13,7 @@ import Carousel from '../bits/Carousel';
 import type { CarouselItemData } from '../bits/Carousel';
 import DialogCloseButton from '../bits/DialogCloseButton';
 import ProjectLogo3D from '../bits/ProjectLogo3D';
+import ProjectPreviewMedia from '../bits/ProjectPreviewMedia';
 import './ProjectCarousel.css';
 
 type Project = (typeof projectsContent.items)[number];
@@ -112,6 +113,19 @@ export default function ProjectCarousel() {
               </div>
               <DialogCloseButton label={projectsContent.dialog.closeLabel} onClick={closeDialog} />
             </header>
+
+            {selectedProject.previewSlug && (
+              <section
+                className="project-preview-section"
+                aria-labelledby="project-preview-video-title"
+              >
+                <h4 id="project-preview-video-title">{projectsContent.dialog.videoLabel}</h4>
+                <ProjectPreviewMedia
+                  slug={selectedProject.previewSlug}
+                  title={selectedProject.title}
+                />
+              </section>
+            )}
 
             <div className="project-preview-details">
               <p className="project-preview-status">

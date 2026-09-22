@@ -31,6 +31,32 @@ test('abre a prévia de um projeto com ações externas', async ({ page }) => {
   const dialog = page.getByRole('dialog', { name: 'InfoShop' });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText('Disponível', { exact: true })).toBeVisible();
+  const previewVideo = dialog.getByLabel('Prévia animada do projeto InfoShop');
+
+  await expect(previewVideo).toHaveAttribute('preload', 'metadata');
+  await expect(previewVideo).toHaveAttribute('autoplay', '');
+  await expect(previewVideo).toHaveAttribute('loop', '');
+  await expect(previewVideo).toBeVisible();
+  await expect(dialog.locator('video source')).toHaveAttribute(
+    'src',
+    '/media/projects/infoshop-preview.webm',
+  );
+  await expect(previewVideo).toHaveAttribute('poster', '/media/projects/infoshop-poster.webp');
+  await expect
+    .poll(() =>
+      previewVideo.evaluate((video: HTMLVideoElement) => ({
+        width: video.videoWidth,
+        height: video.videoHeight,
+        duration: video.duration,
+      })),
+    )
+    .toEqual({ width: 1280, height: 720, duration: 10 });
+  await expect
+    .poll(() => previewVideo.evaluate((video: HTMLVideoElement) => video.paused))
+    .toBe(false);
+  await expect
+    .poll(() => previewVideo.evaluate((video: HTMLVideoElement) => video.currentTime))
+    .toBeGreaterThan(0.1);
   await expect(dialog.getByRole('link', { name: 'Abrir projeto' })).toHaveAttribute(
     'href',
     'https://infoshop.netlify.app/',

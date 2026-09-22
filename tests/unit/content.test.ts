@@ -37,6 +37,16 @@ describe('blocos de conteúdo', () => {
     expect(projectsContent.items.filter(({ status }) => status === 'construction')).toHaveLength(2);
   });
 
+  it('configura prévias WebM somente para InfoShop e PetCorner', () => {
+    const projectsWithPreview = projectsContent.items.filter(({ previewSlug }) => previewSlug);
+
+    expect(projectsWithPreview.map(({ title }) => title)).toEqual(['InfoShop', 'PetCorner']);
+    expect(projectsWithPreview.map(({ previewSlug }) => previewSlug)).toEqual([
+      'infoshop',
+      'pet-corner',
+    ]);
+  });
+
   it('liga as provas de habilidade aos projetos cadastrados', () => {
     const projectTitles = new Set(projectsContent.items.map(({ title }) => title));
 
