@@ -1,114 +1,166 @@
-.skills .section-heading {
+.skills {
   display: grid;
-  justify-items: center;
-  gap: 0.35rem;
-  margin-bottom: var(--space-content);
-  text-align: center;
+  max-width: 68rem;
+  grid-template-columns: minmax(12rem, 0.62fr) minmax(0, 1.55fr);
+  align-items: start;
+  gap: clamp(2rem, 7vw, 6rem);
+}
+
+.skills .section-heading {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  padding-left: 1.4rem;
+}
+
+.skills .section-heading::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: linear-gradient(180deg, #37d8ff, rgb(55 216 255 / 0.08));
+  box-shadow: 0 0 0.9rem rgb(55 216 255 / 0.35);
+  content: '';
 }
 
 .skills .section-heading p {
-  color: var(--color-text-muted);
+  color: #d8e400;
   font-family: var(--font-mono);
-  font-size: var(--step-small);
+  font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+  letter-spacing: 0.1em;
+  text-shadow: 0 2px 2px rgb(0 0 0 / 0.9);
+  text-transform: uppercase;
+}
+
+.skills .section-heading h1 {
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.3rem + 2.8vw, 3.7rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  text-shadow:
+    0 2px 2px rgb(0 0 0 / 0.9),
+    0 0 1rem rgb(55 216 255 / 0.2);
 }
 
 .skills .skill-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1rem;
+  width: 100%;
+  max-width: 46rem;
 }
 
 .skills .skill-group {
+  position: relative;
   display: grid;
   width: 100%;
-  min-height: 100%;
-  align-content: start;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-medium);
+  gap: 0.7rem;
+  padding: clamp(0.9rem, 2vh, 1.2rem) 0;
+  border: 0;
+  border-bottom: 1px solid rgb(190 210 255 / 0.13);
   color: inherit;
-  background: rgb(7 17 31 / 0.54);
+  background: transparent;
   text-align: left;
   cursor: pointer;
   transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+    color var(--transition-fast),
+    padding-left var(--transition-fast),
+    text-shadow var(--transition-fast);
+}
+
+.skills .skill-group::before {
+  position: absolute;
+  top: 1.55rem;
+  left: -1rem;
+  width: 0.7rem;
+  height: 1px;
+  background: #37d8ff;
+  box-shadow: 0 0 0.55rem rgb(55 216 255 / 0.72);
+  content: '';
+  opacity: 0;
+  transition: opacity var(--transition-fast);
 }
 
 .skills .skill-group-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .skills .skill-group-header > span:first-child {
   display: grid;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .skills .skill-kicker,
 .skills .proof-count {
   color: var(--color-text-subtle);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   line-height: 1.2;
 }
 
 .skills .skill-title {
-  color: var(--color-primary);
-  font-family: var(--font-mono);
-  font-size: 1rem;
+  color: rgb(229 226 238 / 0.82);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1rem + 0.6vw, 1.45rem);
+  font-weight: 500;
 }
 
 .skills .skill-list {
-  display: grid;
-  gap: 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
 }
 
 .skills .skill-row {
-  display: grid;
-  grid-template-columns: 2.3rem 1fr;
+  display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.4rem;
   color: var(--color-text-muted);
-  font-size: var(--step-small);
+  font-size: clamp(0.78rem, 1.25vw, 0.9rem);
 }
 
 .skills .skill-icon {
   display: grid;
-  width: 2.3rem;
-  aspect-ratio: 1;
+  width: 1.15rem;
   place-items: center;
-  border: 1px solid rgb(34 211 238 / 0.16);
-  border-radius: var(--radius-small);
-  color: var(--color-primary-intense);
-  background: rgb(2 6 13 / 0.72);
-  box-shadow: inset 0 0 0.8rem rgb(34 211 238 / 0.05);
+  color: rgb(55 216 255 / 0.7);
 }
 
-.skills .skill-group:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-glow-soft);
-  transform: translateY(-0.125rem);
+.skills .skill-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
+.skills .skill-group:hover,
 .skills .skill-group:focus-visible {
-  border-color: var(--color-focus);
-  box-shadow: var(--shadow-glow-soft);
+  padding-left: 0.65rem;
+  outline: none;
+}
+
+.skills .skill-group:hover::before,
+.skills .skill-group:focus-visible::before {
+  opacity: 1;
+}
+
+.skills .skill-group:hover .skill-title,
+.skills .skill-group:focus-visible .skill-title {
+  color: #37d8ff;
+  text-shadow: 0 0 0.75rem rgb(55 216 255 / 0.44);
 }
 
 .skills .skill-proof-dialog {
-  width: min(calc(100% - 2rem), 47rem);
+  width: min(calc(100% - 2rem), 48rem);
   max-height: min(44rem, calc(100dvh - 2rem));
   padding: 0;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-medium);
+  border: 1px solid rgb(95 218 255 / 0.32);
+  border-radius: 0.25rem;
   color: var(--color-text);
   background: transparent;
-  box-shadow: var(--shadow-glow-strong);
+  box-shadow:
+    0 1.5rem 5rem rgb(0 0 0 / 0.62),
+    0 0 2rem rgb(55 216 255 / 0.12);
 }
 
 .skills .skill-proof-dialog[open] {
@@ -120,15 +172,38 @@
 
 .skills .skill-proof-dialog::backdrop {
   background:
-    radial-gradient(circle at 50% 24%, rgb(34 211 238 / 0.15), transparent 26rem), rgb(1 3 7 / 0.78);
+    radial-gradient(circle at 46% 42%, rgb(40 61 145 / 0.2), transparent 30rem), rgb(5 3 13 / 0.82);
   backdrop-filter: blur(0.35rem);
 }
 
 .skills .proof-panel {
+  position: relative;
   display: grid;
-  gap: 1rem;
-  padding: clamp(1rem, 3vw, 1.4rem);
-  background: linear-gradient(90deg, rgb(34 211 238 / 0.08), transparent 35%), rgb(2 6 13 / 0.94);
+  gap: 1.15rem;
+  padding: clamp(1.2rem, 4vw, 2rem);
+  overflow: hidden auto;
+  background:
+    radial-gradient(circle at 78% 18%, rgb(126 91 176 / 0.28), transparent 24rem),
+    linear-gradient(112deg, #110c20, #2b2048);
+}
+
+.skills .proof-panel::after {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.014) 0,
+    rgb(255 255 255 / 0.014) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  content: '';
+  pointer-events: none;
+}
+
+.skills .proof-panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .skills .proof-header {
@@ -136,6 +211,8 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(190 210 255 / 0.14);
 }
 
 .skills .proof-header p,
@@ -146,16 +223,19 @@
 }
 
 .skills .proof-header p {
-  color: var(--color-text-subtle);
-  font-size: 0.78rem;
+  color: #d8e400;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .skills .proof-header h3 {
   margin-top: 0.18rem;
-  color: var(--color-primary);
+  color: #37d8ff;
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 0.95rem + 1vw, 1.65rem);
-  font-weight: 600;
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 2.2rem);
+  font-weight: 500;
+  text-shadow: 0 0 0.8rem rgb(55 216 255 / 0.34);
 }
 
 .skills .proof-header span {
@@ -173,22 +253,23 @@
 .skills .proof-skills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.35rem 0;
 }
 
 .skills .proof-skills span {
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgb(34 211 238 / 0.14);
-  border-radius: var(--radius-small);
-  color: var(--color-primary-intense);
-  background: rgb(7 17 31 / 0.64);
+  color: rgb(168 239 255 / 0.78);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
+}
+
+.skills .proof-skills span:not(:last-child)::after {
+  margin-inline: 0.55rem;
+  color: rgb(168 239 255 / 0.28);
+  content: '/';
 }
 
 .skills .proof-list {
   display: grid;
-  gap: 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -196,21 +277,20 @@
 
 .skills .proof-list li {
   display: grid;
-  gap: 0.35rem;
-  padding: 0.9rem;
-  border: 1px solid rgb(156 176 195 / 0.1);
-  border-radius: var(--radius-small);
-  background: rgb(7 17 31 / 0.5);
+  gap: 0.3rem;
+  padding-block: 0.9rem;
+  border-top: 1px solid rgb(190 210 255 / 0.11);
 }
 
 .skills .proof-list strong {
   color: var(--color-text);
+  font-weight: 500;
 }
 
 .skills .proof-list span,
 .skills .proof-list small {
-  color: var(--color-primary);
-  font-size: 0.78rem;
+  color: #71dcf5;
+  font-size: 0.75rem;
 }
 
 .skills .proof-list p {
@@ -222,23 +302,28 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 1.5rem;
   padding-top: 0.25rem;
 }
 
-@media (max-width: 64rem) {
-  .skills .skill-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 48rem) {
+  .skills {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .skills .section-heading {
+    padding-left: 1rem;
   }
 }
 
 @media (max-width: 34rem) {
-  .skills .skill-grid {
-    grid-template-columns: 1fr;
-  }
-
   .skills .skill-proof-dialog {
     width: calc(100% - 1rem);
+  }
+
+  .skills .proof-panel {
+    padding: 1rem;
   }
 
   .skills .proof-header {
@@ -247,5 +332,11 @@
 
   .skills .proof-actions {
     justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills .skill-group {
+    transition: none;
   }
 }

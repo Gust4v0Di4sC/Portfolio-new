@@ -94,7 +94,7 @@ export function setupInterfaceController() {
     const found = target instanceof Element ? target.closest(interactiveSelector) : null;
     return found instanceof HTMLElement ? found : undefined;
   };
-  const canInteract = () => !document.documentElement.classList.contains('splash-running');
+  const canInteract = () => !document.documentElement.classList.contains('splash-active');
   const handlePointerEnter = (event: PointerEvent) => {
     if (!canInteract()) return;
     const target = findInteractive(event.target);

@@ -1,0 +1,26 @@
+import type { MenuContent } from './types';
+
+export const menuContent = {
+  main: { browser: 'Navegador', systemConfiguration: 'Configuração do Sistema' },
+  systemTitle: 'Configuração do Sistema',
+  language: 'Idioma',
+  languageTitle: 'Idioma',
+  portuguese: 'Português (Brasil)',
+  english: 'English',
+  portfolioOptions: 'Opções do portfólio',
+  mainMenuAriaLabel: 'Menu principal do portfólio',
+  systemAriaLabel: 'Configuração do sistema',
+  languageAriaLabel: 'Seleção de idioma',
+  localDateTimeAriaLabel: 'Data e hora local',
+  controlsAriaLabel: 'Controles do menu',
+  back: 'Voltar',
+  enter: 'Entrar',
+  viewer: 'Visor',
+  enableViewer: 'Ativar Visor',
+  exitViewer: 'Sair do Visor',
+  presentation: 'Apresentação',
+  openPresentation: 'Abrir apresentação',
+  returnToMain: 'Voltar ao menu principal',
+  returnToSystem: 'Voltar para Configuração do Sistema',
+  menu: 'Menu',
+} satisfies MenuContent;

@@ -7,9 +7,10 @@ export type ProjectPreviewSlug = 'infoshop' | 'pet-corner';
 interface ProjectPreviewMediaProps {
   slug: ProjectPreviewSlug;
   title: string;
+  label: string;
 }
 
-export default function ProjectPreviewMedia({ slug, title }: ProjectPreviewMediaProps) {
+export default function ProjectPreviewMedia({ slug, title, label }: ProjectPreviewMediaProps) {
   const mediaPath = `/media/projects/${slug}`;
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -46,7 +47,7 @@ export default function ProjectPreviewMedia({ slug, title }: ProjectPreviewMedia
         playsInline
         preload="metadata"
         poster={`${mediaPath}-poster.webp`}
-        aria-label={`Prévia animada do projeto ${title}`}
+        aria-label={`${label} ${title}`}
       >
         <source src={`${mediaPath}-preview.webm`} type="video/webm" />
       </video>

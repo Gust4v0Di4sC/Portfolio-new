@@ -1,24 +1,23 @@
 ---
 import '../styles/global.css';
-import { projectsContent, siteContent } from '../content';
+import type { PortfolioContent } from '../content';
 
 interface Props {
-  title: string;
-  description: string;
+  content: PortfolioContent;
   image?: string;
   imageAlt?: string;
   noindex?: boolean;
 }
 
-const {
-  title,
-  description,
-  image = siteContent.socialImage.path,
-  imageAlt = siteContent.socialImage.alt,
-  noindex = false,
-} = Astro.props;
+const { content, noindex = false } = Astro.props;
+const { projects: projectsContent, site: siteContent } = content;
+const { title, description } = siteContent;
+const image = Astro.props.image ?? siteContent.socialImage.path;
+const imageAlt = Astro.props.imageAlt ?? siteContent.socialImage.alt;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const portugueseURL = new URL('/', Astro.site ?? Astro.url.origin);
+const englishURL = new URL('/en/', Astro.site ?? Astro.url.origin);
 const socialImage = new URL(image, Astro.site ?? Astro.url.origin);
 const sitemapURL = new URL('sitemap-index.xml', Astro.site ?? Astro.url.origin);
 const robotsContent = noindex
@@ -71,7 +70,7 @@ const structuredData = {
       name: siteContent.name,
       url: `${canonicalURL.origin}/`,
       image: { '@id': `${canonicalURL.origin}/#primaryimage` },
-      jobTitle: 'Desenvolvedor Front-end e UI/UX Designer',
+      jobTitle: siteContent.jobTitle,
       sameAs: siteContent.sameAs,
       knowsAbout: siteContent.keywords,
     },
@@ -84,6 +83,19 @@ const structuredData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline define:vars={{ currentLocale: siteContent.language }}>
+      try {
+        const storageKey = 'portfolio-locale';
+        const savedLocale = window.localStorage.getItem(storageKey);
+        if (currentLocale === 'pt-BR' && savedLocale === 'en' && window.location.pathname === '/') {
+          window.location.replace(`/en/${window.location.search}${window.location.hash}`);
+        } else {
+          window.localStorage.setItem(storageKey, currentLocale);
+        }
+      } catch {
+        // The selected URL remains authoritative when browser storage is unavailable.
+      }
+    </script>
     <meta name="description" content={description} />
     <meta name="author" content={siteContent.author} />
     <meta name="keywords" content={siteContent.keywords.join(', ')} />
@@ -93,18 +105,23 @@ const structuredData = {
     <meta name="generator" content={Astro.generator} />
 
     <link rel="canonical" href={canonicalURL} />
-    <link rel="alternate" hreflang={siteContent.language} href={canonicalURL} />
-    <link rel="alternate" hreflang="x-default" href={canonicalURL} />
+    <link rel="alternate" hreflang="pt-BR" href={portugueseURL} />
+    <link rel="alternate" hreflang="en" href={englishURL} />
+    <link rel="alternate" hreflang="x-default" href={portugueseURL} />
     <link rel="sitemap" href={sitemapURL} />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Portfolio" />
+    <meta name="apple-mobile-web-app-title" content={siteContent.appTitle} />
     <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={siteContent.locale} />
+    <meta
+      property="og:locale:alternate"
+      content={siteContent.locale === 'pt_BR' ? 'en_US' : 'pt_BR'}
+    />
     <meta property="og:site_name" content={siteContent.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

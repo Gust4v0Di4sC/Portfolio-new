@@ -1,5 +1,5 @@
 export const experienceContent = {
-  eyebrow: 'Version Information',
+  eyebrow: 'Informações da versão',
   title: 'Experiência',
   timelineAriaLabel: 'Linha do tempo profissional',
   tagsAriaLabel: 'Tecnologias e temas',

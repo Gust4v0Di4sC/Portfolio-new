@@ -1,6 +1,12 @@
 ---
 import { BriefcaseBusiness, Building, CalendarDays } from '@lucide/astro';
-import { experienceContent as content } from '../../content';
+import type { ExperienceContent } from '../../content';
+
+interface Props {
+  content: ExperienceContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <section
@@ -10,7 +16,7 @@ import { experienceContent as content } from '../../content';
 >
   <div class="section-heading">
     <p>{content.eyebrow}</p>
-    <h2 id="experiencia-title">{content.title}</h2>
+    <h1 id="experiencia-title">{content.title}</h1>
   </div>
 
   <ol class="timeline" aria-label={content.timelineAriaLabel}>
@@ -25,7 +31,7 @@ import { experienceContent as content } from '../../content';
             <div class="experience-content">
               <div class="experience-topline">
                 <div>
-                  <h3>{experience.role}</h3>
+                  <h2>{experience.role}</h2>
                   <p>
                     <Building size={14} stroke-width={1.7} aria-hidden="true" />
                     {experience.company}
@@ -54,84 +60,95 @@ import { experienceContent as content } from '../../content';
 
 <style>
   .experience {
-    padding-top: clamp(4rem, 10vw, 8rem);
+    display: grid;
+    max-width: 68rem;
+    gap: clamp(1.75rem, 4vw, 3rem);
   }
 
   .section-heading {
     display: grid;
-    justify-items: center;
-    gap: 0.35rem;
-    margin-bottom: var(--space-content);
-    text-align: center;
+    gap: 0.2rem;
+    max-width: 58rem;
+    margin-inline: auto;
+    width: 100%;
   }
 
   .section-heading p {
-    color: var(--color-focus);
+    color: #d8e400;
     font-family: var(--font-mono);
-    font-size: var(--step-small);
-    letter-spacing: 0.08em;
+    font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+    letter-spacing: 0.1em;
+    text-shadow: 0 2px 2px rgb(0 0 0 / 0.9);
+    text-transform: uppercase;
+  }
+
+  .section-heading h1 {
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 1.35rem + 2.4vw, 3.5rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    text-shadow:
+      0 2px 2px rgb(0 0 0 / 0.9),
+      0 0 1rem rgb(55 216 255 / 0.2);
   }
 
   .timeline {
     position: relative;
     display: grid;
-    max-width: 50rem;
-    gap: 1.5rem;
+    max-width: 58rem;
     margin: 0 auto;
     padding: 0;
     list-style: none;
+    width: 100%;
   }
 
   .timeline::before {
     position: absolute;
-    inset-block: 1.25rem;
-    left: -1.5rem;
+    inset-block: 1.4rem;
+    left: 0.3rem;
     width: 1px;
-    background: linear-gradient(180deg, transparent, var(--color-primary), transparent);
+    background: linear-gradient(180deg, transparent, rgb(55 216 255 / 0.52), transparent);
     content: '';
-    opacity: 0.45;
   }
 
   .timeline > li {
     position: relative;
+    padding-left: clamp(2rem, 4vw, 3rem);
   }
 
   .timeline > li::before {
     position: absolute;
-    top: 1.45rem;
-    left: -1.75rem;
-    width: 0.5rem;
+    top: clamp(1.65rem, 3vw, 2.2rem);
+    left: 0;
+    width: 0.68rem;
     aspect-ratio: 1;
+    border: 1px solid rgb(189 247 255 / 0.72);
     border-radius: 999px;
-    background: var(--color-primary-intense);
-    box-shadow: 0 0 1rem var(--color-primary-intense);
+    background: #16264d;
+    box-shadow:
+      0 0 0.8rem rgb(55 216 255 / 0.58),
+      inset 0 0 0.35rem rgb(55 216 255 / 0.74);
     content: '';
   }
 
   .experience-card {
     display: grid;
-    grid-template-columns: 2.7rem minmax(0, 1fr);
-    gap: 1rem;
-    padding: clamp(1.1rem, 3vw, 1.6rem);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-medium);
-    background: linear-gradient(180deg, rgb(7 17 31 / 0.74), rgb(2 6 13 / 0.82));
-    box-shadow: var(--shadow-glow-soft);
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    gap: 0.85rem;
+    padding-block: clamp(1.25rem, 3vw, 1.8rem);
+    border-bottom: 1px solid rgb(190 210 255 / 0.12);
   }
 
   .experience-icon {
     display: grid;
-    width: 2.7rem;
+    width: 1.75rem;
     aspect-ratio: 1;
     place-items: center;
     align-self: start;
-    border: 1px solid rgb(34 211 238 / 0.22);
-    border-radius: var(--radius-small);
-    color: var(--color-primary-intense);
-    background: rgb(2 6 13 / 0.72);
-    box-shadow:
-      0 0 1rem rgb(34 211 238 / 0.08),
-      inset 0 0 0.8rem rgb(34 211 238 / 0.06);
+    margin-top: 0.05rem;
+    color: rgb(55 216 255 / 0.84);
   }
 
   .experience-content {
@@ -145,10 +162,12 @@ import { experienceContent as content } from '../../content';
     gap: 1rem;
   }
 
-  h3 {
+  .experience-topline h2 {
     color: var(--color-text);
-    font-size: clamp(1rem, 0.94rem + 0.35vw, 1.2rem);
-    font-weight: 700;
+    font-size: clamp(1.05rem, 0.96rem + 0.5vw, 1.35rem);
+    font-weight: 500;
+    line-height: 1.25;
+    text-shadow: 0 2px 2px rgb(0 0 0 / 0.84);
   }
 
   .experience-topline p,
@@ -156,57 +175,73 @@ import { experienceContent as content } from '../../content';
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     font-family: var(--font-mono);
     font-size: var(--step-small);
   }
 
   time {
-    color: var(--color-primary);
+    color: #71dcf5;
     white-space: nowrap;
   }
 
   .experience-summary {
-    margin-top: 1rem;
+    max-width: 49rem;
+    margin-top: 0.8rem;
     color: var(--color-text-muted);
+    line-height: 1.65;
   }
 
   .tag-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.35rem 0;
+    margin-top: 0.8rem;
     padding: 0;
     list-style: none;
   }
 
   .tag-list li {
-    padding: 0.25rem 0.55rem;
-    border: 1px solid rgb(34 211 238 / 0.18);
-    border-radius: var(--radius-small);
-    color: var(--color-primary);
+    color: rgb(168 239 255 / 0.78);
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    background: rgb(34 211 238 / 0.05);
+    font-size: 0.76rem;
+  }
+
+  .tag-list li:not(:last-child)::after {
+    margin-inline: 0.55rem;
+    color: rgb(168 239 255 / 0.28);
+    content: '/';
   }
 
   @media (max-width: 42rem) {
-    .timeline::before,
-    .timeline > li::before {
-      display: none;
-    }
-
     .experience-topline {
       display: grid;
+      gap: 0.35rem;
     }
 
     .experience-card {
-      grid-template-columns: 2.4rem minmax(0, 1fr);
-      gap: 0.8rem;
+      grid-template-columns: 1.4rem minmax(0, 1fr);
+      gap: 0.65rem;
     }
 
     .experience-icon {
-      width: 2.4rem;
+      width: 1.4rem;
+    }
+
+    .experience-icon :global(svg) {
+      width: 1rem;
+    }
+
+    .timeline > li {
+      padding-left: 1.45rem;
+    }
+
+    .timeline > li::before {
+      width: 0.55rem;
+    }
+
+    .timeline::before {
+      left: 0.25rem;
     }
   }
 </style>

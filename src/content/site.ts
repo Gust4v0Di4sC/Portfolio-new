@@ -25,4 +25,6 @@ export const siteContent = {
   },
   sameAs: ['https://www.linkedin.com/in/gustavo-dias-charra/', 'https://github.com/Gust4v0Di4sC'],
   skipLink: 'Pular para o conteúdo',
+  jobTitle: 'Desenvolvedor Front-end e UI/UX Designer',
+  appTitle: 'Portfólio',
 } as const;

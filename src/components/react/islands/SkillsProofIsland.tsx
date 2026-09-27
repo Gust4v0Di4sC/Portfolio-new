@@ -23,8 +23,7 @@ import {
   SearchCheck,
 } from 'lucide-react';
 
-import { skillsContent as content } from '../../../content';
-import type { SkillIcon } from '../../../content/skills';
+import type { SkillIcon, SkillsContent } from '../../../content';
 import DialogCloseButton from '../bits/DialogCloseButton';
 import './SkillsProofIsland.css';
 
@@ -51,9 +50,13 @@ const icons: Record<SkillIcon, LucideIcon> = {
   searchCheck: SearchCheck,
 };
 
-type SkillGroup = (typeof content.groups)[number];
+type SkillGroup = SkillsContent['groups'][number];
 
-export default function SkillsProofIsland() {
+type SkillsProofIslandProps = {
+  content: SkillsContent;
+};
+
+export default function SkillsProofIsland({ content }: SkillsProofIslandProps) {
   const [selectedGroup, setSelectedGroup] = useState<SkillGroup | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeDialog = useCallback(() => {
@@ -102,7 +105,7 @@ export default function SkillsProofIsland() {
     >
       <div className="section-heading">
         <p>{content.eyebrow}</p>
-        <h2 id="habilidades-title">{content.title}</h2>
+        <h1 id="habilidades-title">{content.title}</h1>
       </div>
 
       <div className="skill-grid">

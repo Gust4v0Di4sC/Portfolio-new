@@ -1,13 +1,7 @@
 import { useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 
-const fallbackConfig = { phase: 0, size: 1, brightness: 1 };
-const configs = [
-  fallbackConfig,
-  { phase: 1.18, size: 0.82, brightness: 0.82 },
-  { phase: 2.45, size: 1.15, brightness: 1.08 },
-  { phase: 3.7, size: 0.68, brightness: 0.76 },
-  { phase: 4.92, size: 0.9, brightness: 0.9 },
-];
+import { orbitalLightConfigs } from '../../../scripts/visual/orbitalLights';
 
 export default function ScrollBackground() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -38,7 +32,7 @@ export default function ScrollBackground() {
     const render = (time: number) => {
       const seconds = time / 1000;
       const motionFactor = reducedMotion.matches ? 0.28 : 1;
-      const orbitSpeed = reducedMotion.matches ? 0.18 : 1.85;
+      const orbitSpeed = reducedMotion.matches ? 0.28 : 1;
       const scrollAngle = scrollProgress * Math.PI * 1.45;
 
       if (orbField) {
@@ -48,10 +42,11 @@ export default function ScrollBackground() {
       }
 
       tracks.forEach((track, index) => {
-        const config = configs[index] ?? fallbackConfig;
-        const angle = config.phase + seconds * orbitSpeed * motionFactor + scrollAngle;
-        const radiusX = Math.max(170, width * 0.38);
-        const radiusY = Math.max(92, height * 0.18);
+        const config = orbitalLightConfigs[index] ?? orbitalLightConfigs[0]!;
+        const angle =
+          config.phase + seconds * config.speed * orbitSpeed * motionFactor + scrollAngle;
+        const radiusX = Math.max(120, width * config.radiusX);
+        const radiusY = Math.max(72, height * config.radiusY);
         const depth = (Math.sin(angle) + 1) / 2;
         const x = Math.cos(angle) * radiusX;
         const y = Math.sin(angle) * radiusY;
@@ -60,6 +55,7 @@ export default function ScrollBackground() {
 
         track.style.transform = `translate3d(calc(-50% + ${x}px), calc(-50% + ${y}px), 0) scale(${scale})`;
         track.style.opacity = `${opacity}`;
+        track.style.setProperty('--trail-angle', `${angle + Math.PI / 2}rad`);
       });
 
       particles.forEach((particle, index) => {
@@ -114,21 +110,15 @@ export default function ScrollBackground() {
   return (
     <div className="scroll-background" data-scroll-background aria-hidden="true" ref={rootRef}>
       <div className="orb-field">
-        <span className="orb-track orb-track-one">
-          <span className="bios-orb orb-one" />
-        </span>
-        <span className="orb-track orb-track-two">
-          <span className="bios-orb orb-two" />
-        </span>
-        <span className="orb-track orb-track-three">
-          <span className="bios-orb orb-three" />
-        </span>
-        <span className="orb-track orb-track-four">
-          <span className="bios-orb orb-four" />
-        </span>
-        <span className="orb-track orb-track-five">
-          <span className="bios-orb orb-five" />
-        </span>
+        {orbitalLightConfigs.map((config) => (
+          <span
+            className="orb-track"
+            key={config.id}
+            style={{ '--orb-color': config.color } as CSSProperties}
+          >
+            <span className="bios-orb" />
+          </span>
+        ))}
       </div>
 
       <span className="particle p1" />
@@ -148,6 +138,7 @@ export default function ScrollBackground() {
           z-index: 0;
           contain: paint;
           overflow: hidden;
+          opacity: var(--splash-page-background-opacity, 1);
           pointer-events: none;
         }
 
@@ -180,6 +171,7 @@ export default function ScrollBackground() {
         }
 
         .orb-track {
+          --orb-size: clamp(0.42rem, 0.9vw, 0.8rem);
           position: absolute;
           display: block;
           width: var(--orb-size);
@@ -193,41 +185,32 @@ export default function ScrollBackground() {
         }
 
         .bios-orb {
+          position: relative;
           display: block;
           width: 100%;
           height: 100%;
           border-radius: 999px;
-          background: radial-gradient(circle, #f1fbff 0 26%, #77ecff 34%, #00d8ff 62%, #0789d7 100%);
+          background: radial-gradient(circle, #fff 0 16%, var(--orb-color) 38%, transparent 72%);
           box-shadow:
-            0 0 0.8rem 0.18rem rgb(103 232 249 / 0.82),
-            0 0 2.4rem 0.9rem rgb(0 166 255 / 0.34),
-            0 0 4.5rem 1.7rem rgb(0 82 190 / 0.18);
+            0 0 0.8rem 0.18rem color-mix(in srgb, var(--orb-color) 82%, transparent),
+            0 0 2.4rem 0.9rem color-mix(in srgb, var(--orb-color) 34%, transparent),
+            0 0 4.5rem 1.7rem color-mix(in srgb, var(--orb-color) 16%, transparent);
           mix-blend-mode: screen;
           opacity: var(--orb-opacity, 0.82);
         }
 
-        .orb-track-one {
-          --orb-size: clamp(0.48rem, 0.95vw, 0.82rem);
-        }
-
-        .orb-track-two {
-          --orb-size: clamp(0.34rem, 0.72vw, 0.62rem);
-          --orb-opacity: 0.72;
-        }
-
-        .orb-track-three {
-          --orb-size: clamp(0.58rem, 1.08vw, 0.95rem);
-          --orb-opacity: 0.76;
-        }
-
-        .orb-track-four {
-          --orb-size: clamp(0.28rem, 0.52vw, 0.5rem);
-          --orb-opacity: 0.64;
-        }
-
-        .orb-track-five {
-          --orb-size: clamp(0.4rem, 0.82vw, 0.72rem);
-          --orb-opacity: 0.68;
+        .bios-orb::after {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: clamp(4rem, 9vw, 8rem);
+          height: 1px;
+          background: linear-gradient(90deg, transparent, var(--orb-color));
+          box-shadow: 0 0 0.55rem color-mix(in srgb, var(--orb-color) 54%, transparent);
+          content: '';
+          opacity: 0.48;
+          transform: translate(-100%, -50%) rotate(var(--trail-angle, 0rad));
+          transform-origin: 100% 50%;
         }
 
         .particle {
@@ -256,24 +239,8 @@ export default function ScrollBackground() {
             opacity: 0.68;
           }
 
-          .orb-track-five {
-            display: none;
-          }
-
-          .orb-track-one {
-            --orb-size: clamp(0.44rem, 2.3vw, 0.68rem);
-          }
-
-          .orb-track-two {
-            --orb-size: clamp(0.32rem, 1.8vw, 0.52rem);
-          }
-
-          .orb-track-three {
-            --orb-size: clamp(0.52rem, 2.7vw, 0.78rem);
-          }
-
-          .orb-track-four {
-            --orb-size: clamp(0.28rem, 1.5vw, 0.44rem);
+          .orb-track {
+            --orb-size: clamp(0.4rem, 2.2vw, 0.7rem);
           }
 
           .p2,

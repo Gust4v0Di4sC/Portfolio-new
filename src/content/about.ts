@@ -1,5 +1,5 @@
 export const aboutContent = {
-  eyebrow: 'About Save',
+  eyebrow: 'Sobre este save',
   title: 'Sobre',
   paragraphs: [
     'Sou desenvolvedor com foco em interfaces web, sistemas internos e soluções digitais bem estruturadas. Minha forma de trabalhar combina atenção à experiência do usuário, organização técnica e visão prática de produto, buscando transformar necessidades reais em aplicações claras, responsivas e fáceis de manter.',

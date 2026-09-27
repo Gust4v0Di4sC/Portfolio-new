@@ -1,23 +1,25 @@
+import type { ContactContent } from '../types';
+
 export const contactContent = {
-  title: 'Entre em contato comigo',
-  description: 'Vamos criar algo incrível juntos.',
+  title: 'Get in touch',
+  description: "Let's build something amazing together.",
   email: 'dscharraa@gmail.com',
-  actionLabel: 'Enviar e-mail',
-  socialsAriaLabel: 'Perfis profissionais',
+  actionLabel: 'Send email',
+  socialsAriaLabel: 'Professional profiles',
   socials: [
     {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/gustavo-dias-charra/',
       icon: '/icons/social/linkedin.svg',
       iconClass: '',
-      ariaLabel: 'Visitar LinkedIn de Gustavo Dias (abre em nova aba)',
+      ariaLabel: "Visit Gustavo Dias's LinkedIn profile (opens in a new tab)",
     },
     {
       label: 'GitHub',
       href: 'https://github.com/Gust4v0Di4sC',
       icon: '/icons/social/github.svg',
       iconClass: 'github-icon',
-      ariaLabel: 'Visitar GitHub de Gustavo Dias (abre em nova aba)',
+      ariaLabel: "Visit Gustavo Dias's GitHub profile (opens in a new tab)",
     },
   ],
-} as const;
+} satisfies ContactContent;
