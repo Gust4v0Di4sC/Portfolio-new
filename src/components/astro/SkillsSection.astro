@@ -1,5 +1,12 @@
 ---
 import SkillsProofIsland from '../react/islands/SkillsProofIsland';
+import type { SkillsContent } from '../../content';
+
+interface Props {
+  content: SkillsContent;
+}
+
+const { content } = Astro.props;
 ---
 
-<SkillsProofIsland client:idle />
+<SkillsProofIsland content={content} client:load />

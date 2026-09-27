@@ -1,33 +1,15 @@
-export type SkillIcon =
-  | 'accessibility'
-  | 'appWindow'
-  | 'atom'
-  | 'braces'
-  | 'cable'
-  | 'cloudUpload'
-  | 'codeXml'
-  | 'fileType'
-  | 'fingerprint'
-  | 'flask'
-  | 'gauge'
-  | 'gitBranch'
-  | 'layout'
-  | 'listChecks'
-  | 'mousePointer'
-  | 'orbit'
-  | 'palette'
-  | 'panels'
-  | 'penTool'
-  | 'searchCheck';
+import type { SkillIcon } from './types';
+
+export type { SkillIcon } from './types';
 
 export const skillsContent = {
-  eyebrow: 'System Abilities',
+  eyebrow: 'Habilidades do sistema',
   title: 'Habilidades',
-  cardEyebrow: 'Skill Set',
+  cardEyebrow: 'Conjunto de habilidades',
   singularProject: 'projeto',
   pluralProjects: 'projetos',
   skillListLabel: 'Habilidades de',
-  dialogEyebrow: 'Proof of Concept',
+  dialogEyebrow: 'Prova de conceito',
   closeLabel: 'Fechar prova de conceito',
   relatedSkillsLabel: 'Habilidades relacionadas',
   actionsLabel: 'Ações da prova de conceito',

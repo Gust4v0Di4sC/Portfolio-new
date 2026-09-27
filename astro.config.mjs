@@ -18,6 +18,13 @@ const site = /^https?:\/\//i.test(deploymentSite) ? deploymentSite : `https://${
 export default defineConfig({
   output: 'static',
   site,
+  i18n: {
+    locales: ['pt-BR', 'en'],
+    defaultLocale: 'pt-BR',
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
 
   integrations: [
     react(),

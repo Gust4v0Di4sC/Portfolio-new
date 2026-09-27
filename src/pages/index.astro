@@ -1,32 +1,5 @@
 ---
-import AboutSection from '../components/astro/AboutSection.astro';
-import ContactSection from '../components/astro/ContactSection.astro';
-import ExperienceSection from '../components/astro/ExperienceSection.astro';
-import Footer from '../components/astro/Footer.astro';
-import Header from '../components/astro/Header.astro';
-import Hero from '../components/astro/Hero.astro';
-import ProjectMemoryCard from '../components/astro/ProjectMemoryCard.astro';
-import SkillsSection from '../components/astro/SkillsSection.astro';
-import InterfaceController from '../components/react/islands/InterfaceController';
-import ScrollBackground from '../components/react/islands/ScrollBackground';
-import SplashIntro from '../components/react/islands/SplashIntro';
-import { siteContent } from '../content';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import PortfolioPage from '../components/astro/PortfolioPage.astro';
 ---
 
-<BaseLayout title={siteContent.title} description={siteContent.description}>
-  <SplashIntro slot="intro" client:load />
-  <Header slot="header" />
-
-  <ScrollBackground client:idle />
-  <Hero />
-
-  <ExperienceSection />
-  <ProjectMemoryCard />
-  <SkillsSection />
-  <AboutSection />
-  <ContactSection />
-  <InterfaceController client:idle />
-
-  <Footer slot="footer" />
-</BaseLayout>
+<PortfolioPage locale="pt-BR" />

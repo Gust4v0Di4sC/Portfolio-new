@@ -1,5 +1,11 @@
 ---
-import { navigationContent as content } from '../../content';
+import type { NavigationContent } from '../../content';
+
+interface Props {
+  content: NavigationContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <header class="site-header">

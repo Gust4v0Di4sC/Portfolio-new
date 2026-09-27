@@ -1,0 +1,26 @@
+import type { MenuContent } from '../types';
+
+export const menuContent = {
+  main: { browser: 'Browser', systemConfiguration: 'System Configuration' },
+  systemTitle: 'System Configuration',
+  language: 'Language',
+  languageTitle: 'Language',
+  portuguese: 'Português (Brasil)',
+  english: 'English',
+  portfolioOptions: 'Portfolio options',
+  mainMenuAriaLabel: 'Portfolio main menu',
+  systemAriaLabel: 'System configuration',
+  languageAriaLabel: 'Language selection',
+  localDateTimeAriaLabel: 'Local date and time',
+  controlsAriaLabel: 'Menu controls',
+  back: 'Back',
+  enter: 'Enter',
+  viewer: 'Viewer',
+  enableViewer: 'Enable Viewer',
+  exitViewer: 'Exit Viewer',
+  presentation: 'Presentation',
+  openPresentation: 'Open presentation',
+  returnToMain: 'Return to main menu',
+  returnToSystem: 'Return to System Configuration',
+  menu: 'Menu',
+} satisfies MenuContent;

@@ -1,6 +1,12 @@
 ---
-import { footerContent as content } from '../../content';
+import type { FooterContent } from '../../content';
 import Particles from '../react/islands/Particles';
+
+interface Props {
+  content: FooterContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <footer class="site-footer">

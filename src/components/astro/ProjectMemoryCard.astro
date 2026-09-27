@@ -1,6 +1,12 @@
 ---
-import { projectsContent as content } from '../../content';
+import type { ProjectsContent } from '../../content';
 import ProjectCarousel from '../react/islands/ProjectCarousel';
+
+interface Props {
+  content: ProjectsContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <section id="projetos" class="projects section-shell container" aria-labelledby="projetos-title">
@@ -9,32 +15,9 @@ import ProjectCarousel from '../react/islands/ProjectCarousel';
     <h2 id="projetos-title">{content.title}</h2>
   </div>
 
-  <article class="memory-card" aria-label={content.cardAriaLabel}>
-    <header class="memory-header">
-      <div>
-        <p>{content.memorySlot}</p>
-        <span>{content.status}</span>
-      </div>
-      <strong
-        >{
-          content.saveLabel.split(' / ').map((line) => (
-            <Fragment>
-              {line}
-              <br />
-            </Fragment>
-          ))
-        }</strong
-      >
-    </header>
-
-    <div class="carousel-slot">
-      <ProjectCarousel client:visible />
-    </div>
-
-    <footer class="memory-actions" aria-label={content.instructionsAriaLabel}>
-      {content.instructions.map((instruction) => <span>{instruction}</span>)}
-    </footer>
-  </article>
+  <div class="project-browser-slot" aria-label={content.cardAriaLabel}>
+    <ProjectCarousel content={content} client:visible />
+  </div>
 </section>
 
 <style>
@@ -42,104 +25,30 @@ import ProjectCarousel from '../react/islands/ProjectCarousel';
     display: grid;
     justify-items: center;
     gap: 0.35rem;
-    margin-bottom: var(--space-content);
+    margin-bottom: clamp(0.35rem, 1vh, 0.7rem);
     text-align: center;
+  }
+
+  .projects {
+    --color-text: #f1f7ff;
+    --color-text-muted: #d5e2ef;
+    --color-text-subtle: #bed0e1;
+    --color-primary: #67e8f9;
+    --color-primary-intense: #a5f3fc;
   }
 
   .section-heading p {
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: var(--step-small);
+    font-size: clamp(0.68rem, 1.2vw, 0.82rem);
   }
 
-  .memory-card {
-    max-width: 62rem;
+  .section-heading h2 {
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 1.9rem);
+  }
+
+  .project-browser-slot {
+    width: 100%;
     margin-inline: auto;
-    overflow: hidden;
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-medium);
-    background:
-      linear-gradient(
-        90deg,
-        rgb(34 211 238 / 0.06),
-        transparent 18%,
-        transparent 82%,
-        rgb(37 99 235 / 0.06)
-      ),
-      rgb(2 6 13 / 0.78);
-    box-shadow: var(--shadow-glow-strong);
-  }
-
-  .memory-header,
-  .memory-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem clamp(1rem, 3vw, 1.5rem);
-    font-family: var(--font-mono);
-  }
-
-  .memory-header {
-    border-bottom: 1px solid rgb(34 211 238 / 0.12);
-  }
-
-  .memory-header p {
-    color: var(--color-text);
-    font-weight: 700;
-  }
-
-  .memory-header span,
-  .memory-actions {
-    color: var(--color-text-muted);
-    font-size: var(--step-small);
-  }
-
-  .memory-header strong {
-    color: var(--color-primary);
-    font-size: var(--step-small);
-    line-height: 1.2;
-    text-align: right;
-  }
-
-  .carousel-slot {
-    display: grid;
-    justify-items: center;
-    padding: clamp(1rem, 4vw, 2rem);
-  }
-
-  .memory-actions {
-    justify-content: center;
-    flex-wrap: wrap;
-    min-height: 3.7rem;
-    padding-block: 0.7rem;
-    border-top: 1px solid rgb(34 211 238 / 0.12);
-    text-align: center;
-  }
-
-  .memory-actions span + span::before {
-    margin-right: 1rem;
-    color: var(--color-primary);
-    content: '•';
-  }
-
-  @media (max-width: 34rem) {
-    .memory-header {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
-    .memory-header strong {
-      text-align: left;
-    }
-
-    .memory-actions {
-      display: grid;
-      gap: 0.3rem;
-    }
-
-    .memory-actions span + span::before {
-      content: none;
-    }
   }
 </style>

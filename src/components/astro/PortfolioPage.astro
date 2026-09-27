@@ -1,0 +1,281 @@
+---
+import InterfaceController from '../react/islands/InterfaceController';
+import PortfolioMenu from '../react/islands/PortfolioMenu';
+import ScrollBackground from '../react/islands/ScrollBackground';
+import SplashIntro from '../react/islands/SplashIntro';
+import { getContent } from '../../content';
+import type { Locale } from '../../content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+import AboutSection from './AboutSection.astro';
+import ContactSection from './ContactSection.astro';
+import ExperienceSection from './ExperienceSection.astro';
+import Hero from './Hero.astro';
+import ProjectMemoryCard from './ProjectMemoryCard.astro';
+import SkillsSection from './SkillsSection.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const content = getContent(locale);
+---
+
+<BaseLayout content={content}>
+  <SplashIntro slot="intro" content={content.splash} client:load />
+  <PortfolioMenu locale={locale} content={content.menu} navigation={content.navigation} client:load />
+  <div class="portfolio-stage" data-portfolio-stage hidden>
+    <ScrollBackground client:idle />
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="hero"
+      aria-labelledby="hero-title"
+      tabindex="0"
+      hidden
+    >
+      <Hero content={content.hero} />
+    </div>
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="experiencia"
+      aria-labelledby="experiencia-title"
+      tabindex="0"
+      hidden
+    >
+      <ExperienceSection content={content.experience} />
+    </div>
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="projetos"
+      aria-labelledby="projetos-title"
+      tabindex="0"
+      hidden
+    >
+      <ProjectMemoryCard content={content.projects} />
+    </div>
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="habilidades"
+      aria-labelledby="habilidades-title"
+      tabindex="0"
+      hidden
+    >
+      <SkillsSection content={content.skills} />
+    </div>
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="sobre"
+      aria-labelledby="sobre-title"
+      tabindex="0"
+      hidden
+    >
+      <AboutSection content={content.about} />
+    </div>
+    <div
+      class="portfolio-screen"
+      data-portfolio-screen
+      data-screen="contato"
+      aria-labelledby="contato-title"
+      tabindex="0"
+      hidden
+    >
+      <ContactSection content={content.contact} />
+    </div>
+  </div>
+  <InterfaceController client:load />
+</BaseLayout>
+
+<style>
+  .portfolio-stage,
+  .portfolio-screen {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .portfolio-screen:not([hidden]) {
+    display: grid;
+    height: 100vh;
+    height: 100svh;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-block: clamp(3.75rem, 8vh, 5rem) clamp(1rem, 3vh, 2rem);
+    animation: screen-enter 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    scrollbar-gutter: stable;
+  }
+
+  .portfolio-screen:is(
+      [data-screen='hero'],
+      [data-screen='experiencia'],
+      [data-screen='habilidades'],
+      [data-screen='sobre'],
+      [data-screen='contato']
+    ):not([hidden]) {
+    --color-text: #f3f1f8;
+    --color-text-muted: #c5c0d2;
+    --color-text-subtle: #8f88a5;
+    --color-primary: #37d8ff;
+    --color-primary-intense: #a8efff;
+    --color-border: rgb(130 187 255 / 0.16);
+    --color-border-strong: rgb(95 218 255 / 0.4);
+
+    position: relative;
+    padding-block: clamp(5rem, 9vh, 6.5rem) clamp(5.5rem, 10vh, 7rem);
+    background:
+      radial-gradient(circle at 38% 48%, rgb(31 83 164 / 0.28), transparent 27rem),
+      radial-gradient(circle at 82% 36%, rgb(126 91 176 / 0.3), transparent 34rem),
+      linear-gradient(
+        112deg,
+        rgb(17 12 32 / 0.9) 0%,
+        rgb(34 24 60 / 0.86) 54%,
+        rgb(73 56 107 / 0.82) 100%
+      );
+    scrollbar-color: rgb(55 216 255 / 0.4) transparent;
+  }
+
+  .portfolio-screen:is(
+      [data-screen='hero'],
+      [data-screen='experiencia'],
+      [data-screen='habilidades'],
+      [data-screen='sobre'],
+      [data-screen='contato']
+    ):not([hidden])::before {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgb(255 255 255 / 0.014) 0,
+        rgb(255 255 255 / 0.014) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      radial-gradient(circle at center, transparent 34%, rgb(5 3 13 / 0.48) 100%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .portfolio-screen:is(
+      [data-screen='hero'],
+      [data-screen='experiencia'],
+      [data-screen='habilidades'],
+      [data-screen='sobre'],
+      [data-screen='contato']
+    ):not([hidden])
+    > :global(*) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden]) {
+    background:
+      radial-gradient(circle at 34% 45%, rgb(255 255 255 / 0.2), transparent 30rem),
+      radial-gradient(circle at 78% 18%, rgb(229 231 204 / 0.08), transparent 24rem),
+      linear-gradient(116deg, #a0a2a1 0%, #888a86 28%, #62645c 58%, #2d3028 100%);
+    background-attachment: local;
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden])::before {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(180deg, rgb(2 6 13 / 0.52), rgb(2 6 13 / 0.64)),
+      radial-gradient(circle at center, transparent 35%, rgb(0 0 0 / 0.16) 100%);
+    content: '';
+    pointer-events: none;
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden]) > :global(*) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.section-heading h2),
+  .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.memory-select-copy h3),
+  .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.save-gallery-header h3) {
+    text-shadow:
+      0 1px 2px rgb(0 0 0 / 0.88),
+      0 0 1rem rgb(0 0 0 / 0.38);
+  }
+
+  .portfolio-screen :global(.section-shell) {
+    width: min(calc(100% - (var(--container-padding) * 2)), var(--container-width));
+    min-height: auto;
+    padding-block: clamp(1rem, 3vh, 2rem);
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.section-heading) {
+    animation: project-heading-enter 560ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+  }
+
+  .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.project-browser-slot) {
+    animation: project-card-enter 680ms cubic-bezier(0.16, 1, 0.3, 1) 150ms both;
+  }
+
+  @keyframes screen-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes project-heading-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-0.8rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes project-card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem) scale(0.97);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 42rem) {
+    .portfolio-screen:not([hidden]) {
+      align-items: start;
+      padding-block: 4.25rem 1rem;
+    }
+
+    .portfolio-screen:is(
+        [data-screen='hero'],
+        [data-screen='experiencia'],
+        [data-screen='habilidades'],
+        [data-screen='sobre'],
+        [data-screen='contato']
+      ):not([hidden]) {
+      padding-block: 4.75rem 5.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.section-heading),
+    .portfolio-screen[data-screen='projetos']:not([hidden]) :global(.project-browser-slot) {
+      animation-duration: 520ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+</style>

@@ -2,11 +2,17 @@
 import { Image } from 'astro:assets';
 import heroCover from '../../assets/images/heroimg.png';
 import personalLogo from '../../assets/images/logopersonal2.svg';
-import { heroContent as content } from '../../content';
+import type { HeroContent } from '../../content';
 import HeroCard from '../react/islands/HeroCard';
+
+interface Props {
+  content: HeroContent;
+}
+
+const { content } = Astro.props;
 ---
 
-<section class="hero container" aria-labelledby="hero-title">
+<section id="hero" class="hero container" aria-labelledby="hero-title">
   <div class="hero-copy">
     <p class="hero-kicker">{content.kicker}</p>
 
@@ -59,7 +65,7 @@ import HeroCard from '../react/islands/HeroCard';
 <style>
   .hero {
     display: grid;
-    min-height: calc(100svh - var(--header-height));
+    min-height: 100svh;
     grid-template-columns: minmax(0, 1.02fr) minmax(18rem, 0.78fr);
     align-items: center;
     gap: clamp(2rem, 7vw, 6rem);
@@ -69,6 +75,14 @@ import HeroCard from '../react/islands/HeroCard';
   .hero-copy {
     position: relative;
     z-index: 1;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border-left: 1px solid rgb(95 218 255 / 0.32);
+    border-radius: 0 1rem 1rem 0;
+    background: linear-gradient(90deg, rgb(15 10 29 / 0.42), rgb(15 10 29 / 0.12));
+    box-shadow:
+      inset 1px 0 rgb(168 239 255 / 0.08),
+      0 1.5rem 4rem rgb(5 3 13 / 0.18);
+    backdrop-filter: blur(2px);
   }
 
   .hero-kicker {
@@ -88,8 +102,8 @@ import HeroCard from '../react/islands/HeroCard';
     font-weight: 700;
     line-height: 0.98;
     text-shadow:
-      0 0 0.75rem rgb(34 211 238 / 0.34),
-      0 0 2rem rgb(37 99 235 / 0.32);
+      0 0 0.75rem rgb(55 216 255 / 0.38),
+      0 0 2rem rgb(126 91 176 / 0.42);
   }
 
   .hero-title-lockup {
@@ -129,6 +143,10 @@ import HeroCard from '../react/islands/HeroCard';
       min-height: auto;
       grid-template-columns: 1fr;
       padding-block: clamp(3rem, 12vw, 5rem);
+    }
+
+    .hero-copy {
+      padding: clamp(1rem, 5vw, 1.5rem);
     }
 
     h1 {

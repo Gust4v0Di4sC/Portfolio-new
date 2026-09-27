@@ -23,9 +23,10 @@
   --color-focus: #f8e16c;
   --color-error: #ff6b7a;
 
-  --font-display: 'Orbitron', system-ui, sans-serif;
-  --font-body: Inter, system-ui, sans-serif;
-  --font-mono: 'Share Tech Mono', monospace;
+  --font-interface: Inter, system-ui, sans-serif;
+  --font-display: var(--font-interface);
+  --font-body: var(--font-interface);
+  --font-mono: var(--font-interface);
 
   --container-width: 75rem;
   --container-padding: clamp(1rem, 4vw, 2.5rem);

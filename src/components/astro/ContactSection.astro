@@ -1,58 +1,171 @@
 ---
-import { contactContent as content } from '../../content';
+import type { ContactContent } from '../../content';
+
+interface Props {
+  content: ContactContent;
+}
+
+const { content } = Astro.props;
 ---
 
 <section id="contato" class="contact section-shell container" aria-labelledby="contato-title">
   <div class="contact-panel">
-    <h2 id="contato-title">{content.title}</h2>
-    <p>{content.description}</p>
+    <header class="contact-heading">
+      <p>{content.description}</p>
+      <h1 id="contato-title">{content.title}</h1>
+    </header>
 
-    <a
-      class="email-button ps-control ps-control-cross"
-      href={`mailto:${content.email}`}
-      aria-keyshortcuts="X"
-      data-shortcut="x"
-    >
-      <span class="ps-symbol" aria-hidden="true">×</span>
-      <span>{content.actionLabel}</span>
-    </a>
+    <div class="contact-actions">
+      <a
+        class="email-button ps-control ps-control-cross"
+        href={`mailto:${content.email}`}
+        aria-keyshortcuts="X"
+        data-shortcut="x"
+      >
+        <span class="ps-symbol" aria-hidden="true">×</span>
+        <span>{content.actionLabel}</span>
+      </a>
+
+      <nav class="contact-socials" aria-label={content.socialsAriaLabel}>
+        {
+          content.socials.map((social) => (
+            <a
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.ariaLabel}
+              data-sound="confirm"
+            >
+              <img class={social.iconClass} src={social.icon} alt="" width="24" height="24" />
+              <span>{social.label}</span>
+            </a>
+          ))
+        }
+      </nav>
+    </div>
   </div>
 </section>
 
 <style>
   .contact {
-    padding-bottom: clamp(5rem, 12vw, 9rem);
+    max-width: 68rem;
   }
 
   .contact-panel {
     display: grid;
-    justify-items: center;
-    max-width: 38rem;
-    gap: 1rem;
+    max-width: 46rem;
+    gap: clamp(2rem, 5vw, 3.5rem);
     margin-inline: auto;
-    padding: clamp(1.6rem, 5vw, 3rem);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-medium);
-    background:
-      radial-gradient(circle at 50% 0%, rgb(0 229 255 / 0.12), transparent 18rem),
-      rgb(2 6 13 / 0.86);
-    box-shadow: var(--shadow-glow-strong);
-    text-align: center;
+    width: 100%;
   }
 
-  h2 {
-    color: var(--color-primary);
+  .contact-heading {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+
+  .contact-heading::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: linear-gradient(180deg, #37d8ff, rgb(55 216 255 / 0.08));
+    box-shadow: 0 0 0.9rem rgb(55 216 255 / 0.35);
+    content: '';
+  }
+
+  h1 {
+    margin-top: 0.25rem;
+    color: var(--color-text);
     font-family: var(--font-display);
-    font-size: clamp(1.35rem, 1rem + 1.8vw, 2rem);
+    font-size: clamp(2rem, 1.25rem + 3vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    text-shadow:
+      0 2px 2px rgb(0 0 0 / 0.9),
+      0 0 1rem rgb(55 216 255 / 0.2);
   }
 
-  .contact-panel > p {
-    color: var(--color-text-muted);
+  .contact-heading p {
+    color: #d8e400;
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+    letter-spacing: 0.1em;
+    text-shadow: 0 2px 2px rgb(0 0 0 / 0.9);
+    text-transform: uppercase;
+  }
+
+  .contact-actions {
+    display: grid;
+    max-width: 32rem;
+    margin-left: clamp(0rem, 8vw, 6rem);
   }
 
   .email-button {
-    min-height: 2.75rem;
-    margin-top: 0.5rem;
-    padding-inline: 1rem;
+    justify-content: flex-start;
+    min-height: 3.6rem;
+    border-bottom: 1px solid rgb(190 210 255 / 0.14);
+    color: #37d8ff;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+  }
+
+  .contact-socials {
+    display: grid;
+  }
+
+  .contact-socials a {
+    display: flex;
+    min-height: 3.6rem;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgb(190 210 255 / 0.14);
+    color: rgb(229 226 238 / 0.72);
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+    transition:
+      color var(--transition-fast),
+      padding-left var(--transition-fast),
+      text-shadow var(--transition-fast);
+  }
+
+  .contact-socials img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+    transition:
+      filter var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .contact-socials .github-icon {
+    filter: invert(1);
+  }
+
+  .contact-socials a:hover,
+  .contact-socials a:focus-visible {
+    color: #37d8ff;
+    padding-left: 0.4rem;
+    text-shadow: 0 0 0.7rem rgb(55 216 255 / 0.45);
+  }
+
+  .contact-socials a:hover img,
+  .contact-socials a:focus-visible img {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 0.45rem rgb(34 211 238 / 0.55));
+  }
+
+  .contact-socials a:hover .github-icon,
+  .contact-socials a:focus-visible .github-icon {
+    filter: invert(1) drop-shadow(0 0 0.45rem rgb(34 211 238 / 0.55));
+  }
+
+  @media (max-width: 42rem) {
+    .contact-heading {
+      padding-left: 1rem;
+    }
+
+    .contact-actions {
+      margin-left: 0;
+    }
   }
 </style>
