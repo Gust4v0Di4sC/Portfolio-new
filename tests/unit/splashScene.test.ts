@@ -1,19 +1,27 @@
 import { describe, expect, it } from 'vitest';
 
-import { getSplashTimings } from '../../src/scripts/three/splashScene';
+import { getSplashMotion } from '../../src/scripts/three/splashScene';
 
-describe('configuração da splash Three.js', () => {
-  it('mantém a abertura padrão visível por trinta segundos, incluindo a saída', () => {
-    const standard = getSplashTimings(false);
-
-    expect(standard.introDelay + standard.animationDuration + standard.fadeDuration).toBe(30000);
+describe('configuração da entrada Three.js', () => {
+  it('mantém movimento na experiência padrão', () => {
+    expect(getSplashMotion(false)).toEqual({
+      introDelay: 450,
+      motionFactor: 1,
+      sceneTimeOffset: 0,
+      starCount: 180,
+      cubeCount: 8,
+      maxPixelRatio: 2,
+    });
   });
 
-  it('reduz o tempo e a animação quando o usuário prefere menos movimento', () => {
-    const standard = getSplashTimings(false);
-    const reduced = getSplashTimings(true);
-    expect(reduced.animationDuration).toBeLessThan(standard.animationDuration);
-    expect(reduced.fadeDuration).toBeLessThan(standard.fadeDuration);
-    expect(reduced.introDelay).toBeLessThan(standard.introDelay);
+  it('mantém uma cena mais leve e suave quando o usuário prefere menos movimento', () => {
+    expect(getSplashMotion(true)).toEqual({
+      introDelay: 0,
+      motionFactor: 0.12,
+      sceneTimeOffset: 20,
+      starCount: 80,
+      cubeCount: 6,
+      maxPixelRatio: 1,
+    });
   });
 });

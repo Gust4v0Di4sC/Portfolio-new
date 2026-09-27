@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  defaultLocale,
   experienceContent,
+  getContent,
+  locales,
   navigationContent,
   projectsContent,
   siteContent,
@@ -9,6 +12,23 @@ import {
 } from '../../src/content';
 
 describe('blocos de conteúdo', () => {
+  it('registra português como padrão e oferece o pacote completo em inglês', () => {
+    expect(defaultLocale).toBe('pt-BR');
+    expect(locales).toEqual(['pt-BR', 'en']);
+
+    const portuguese = getContent('pt-BR');
+    const english = getContent('en');
+    expect(portuguese.site.language).toBe('pt-BR');
+    expect(english.site.language).toBe('en');
+    expect(english.menu.systemTitle).toBe('System Configuration');
+    expect(english.projects.items.map(({ id }) => id)).toEqual(
+      portuguese.projects.items.map(({ id }) => id),
+    );
+    expect(english.skills.groups.map(({ slug }) => slug)).toEqual(
+      portuguese.skills.groups.map(({ slug }) => slug),
+    );
+  });
+
   it('mantém os metadados essenciais preenchidos', () => {
     expect(siteContent.language).toBe('pt-BR');
     expect(siteContent.title).toContain('Gustavo Dias');

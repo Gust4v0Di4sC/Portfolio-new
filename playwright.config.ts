@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './tests',
   globalTeardown: './tests/support/global-teardown.ts',
   testMatch: ['e2e/**/*.spec.ts', 'a11y/**/*.spec.ts'],
-  fullyParallel: true,
+  fullyParallel: false,
   timeout: 30_000,
   use: {
     baseURL: 'http://127.0.0.1:4321',
