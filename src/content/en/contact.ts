@@ -3,8 +3,12 @@ import type { ContactContent } from '../types';
 export const contactContent = {
   title: 'Get in touch',
   description: "Let's build something amazing together.",
-  email: 'dscharraa@gmail.com',
-  actionLabel: 'Send email',
+  action: {
+    label: 'Send email',
+    href: 'mailto:dscharraa@gmail.com',
+    icon: '/icons/social/email.svg',
+    ariaLabel: 'Send an email to Gustavo Dias',
+  },
   socialsAriaLabel: 'Professional profiles',
   socials: [
     {
