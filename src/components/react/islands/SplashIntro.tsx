@@ -4,6 +4,7 @@ import type { SplashContent } from '../../../content';
 import { getSplashMotion, loadThree } from '../../../scripts/three/splashScene';
 import type { SplashBlock } from '../../../scripts/three/splashScene';
 import { orbitalLightConfigs } from '../../../scripts/visual/orbitalLights';
+import { getGraphicsQuality, shouldRenderFrame } from '../../../scripts/visual/graphicsQuality';
 
 type SplashIntroProps = {
   content: SplashContent;
@@ -22,12 +23,15 @@ export default function SplashIntro({ content }: SplashIntroProps) {
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const { introDelay, motionFactor, sceneTimeOffset, starCount, cubeCount, maxPixelRatio } =
-      getSplashMotion(reducedMotion);
+    const motion = getSplashMotion(reducedMotion);
+    const quality = getGraphicsQuality(reducedMotion);
+    const { introDelay, motionFactor, sceneTimeOffset, starCount, cubeCount } = motion;
+    const maxPixelRatio = Math.min(motion.maxPixelRatio, quality.pixelRatioCap);
     const blocks: SplashBlock[] = [];
     let animationFrame = 0;
     let startTime = performance.now();
     let previousFrameTime = startTime;
+    let previousRenderTime = 0;
     let disposed = false;
     let entranceComplete = false;
     let entranceListenersAttached = false;
@@ -146,12 +150,50 @@ export default function SplashIntro({ content }: SplashIntroProps) {
     window.addEventListener('portfolio:intro-rewind', handleIntroRewind);
     addEntranceListeners();
 
+    const smoothstep = (value: number, minimum: number, maximum: number) => {
+      const normalized = Math.min(1, Math.max(0, (value - minimum) / (maximum - minimum)));
+      return normalized * normalized * (3 - 2 * normalized);
+    };
+    const updateTransitionStyles = (progress: number) => {
+      const scrollProgress = smoothstep(progress, 0, 1);
+      const interfaceOpacity = smoothstep(progress, 0.25, 0.72);
+      const backdropOpacity = 1 - interfaceOpacity;
+      const canvasOpacity = 1 - smoothstep(progress, 0.78, 1);
+      const uiOpacity = 1 - smoothstep(progress, 0.12, 0.68);
+      const hintOpacity = 1 - smoothstep(progress, 0, 0.15);
+      const pageBackgroundOpacity = smoothstep(progress, 0.58, 0.96);
+
+      root.style.setProperty('--splash-backdrop-opacity', backdropOpacity.toFixed(3));
+      root.style.setProperty('--splash-canvas-opacity', canvasOpacity.toFixed(3));
+      root.style.setProperty('--splash-ui-opacity', uiOpacity.toFixed(3));
+      root.style.setProperty('--splash-hint-opacity', hintOpacity.toFixed(3));
+      root.style.setProperty('--splash-ui-scale', (1 + scrollProgress * 0.14).toFixed(3));
+      root.style.setProperty('--splash-ui-travel', `${(scrollProgress * 24).toFixed(2)}%`);
+      root.dataset.transitionProgress = progress.toFixed(3);
+      document.documentElement.style.setProperty(
+        '--splash-interface-opacity',
+        interfaceOpacity.toFixed(3),
+      );
+      document.documentElement.style.setProperty(
+        '--splash-interface-shift',
+        `${((1 - interfaceOpacity) * 8).toFixed(2)}vh`,
+      );
+      document.documentElement.style.setProperty(
+        '--splash-page-background-opacity',
+        pageBackgroundOpacity.toFixed(3),
+      );
+      return scrollProgress;
+    };
+
     const setup = async () => {
       const THREE = await loadThree();
+      const yieldToMain = () => new Promise<void>((resolve) => window.setTimeout(resolve, 0));
 
       if (disposed) {
         return;
       }
+
+      await yieldToMain();
 
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -230,6 +272,8 @@ export default function SplashIntro({ content }: SplashIntroProps) {
         scene.add(sprite);
         return { sprite, material, x, y, phase: index * 1.17, opacity };
       });
+
+      await yieldToMain();
 
       const blockMaterials = [
         new THREE.MeshStandardMaterial({
@@ -315,6 +359,8 @@ export default function SplashIntro({ content }: SplashIntroProps) {
         createBlock(cube.x, cube.z, cube.width, cube.depth, cube.height, cube.y, 0, index);
       });
 
+      await yieldToMain();
+
       scene.add(new THREE.AmbientLight(0x071127, 0.82));
 
       const centerLight = new THREE.PointLight(0x255cff, 7, 62);
@@ -360,6 +406,8 @@ export default function SplashIntro({ content }: SplashIntroProps) {
         };
       });
 
+      await yieldToMain();
+
       const resize = () => {
         const width = root.clientWidth;
         const height = root.clientHeight;
@@ -396,6 +444,12 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           return;
         }
 
+        if (!shouldRenderFrame(now, previousRenderTime, quality.frameInterval)) {
+          animationFrame = window.requestAnimationFrame(render);
+          return;
+        }
+        previousRenderTime = now;
+
         const deltaSeconds = Math.min((now - previousFrameTime) / 1000, 0.05);
         previousFrameTime = now;
         const smoothing = 1 - Math.exp(-deltaSeconds * (reducedMotion ? 14 : 9));
@@ -404,33 +458,8 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           transitionProgress = targetProgress;
         }
 
-        const scrollProgress = THREE.MathUtils.smoothstep(transitionProgress, 0, 1);
-        const interfaceOpacity = THREE.MathUtils.smoothstep(transitionProgress, 0.25, 0.72);
-        const backdropOpacity = 1 - interfaceOpacity;
-        const canvasOpacity = 1 - THREE.MathUtils.smoothstep(transitionProgress, 0.78, 1);
-        const uiOpacity = 1 - THREE.MathUtils.smoothstep(transitionProgress, 0.12, 0.68);
-        const hintOpacity = 1 - THREE.MathUtils.smoothstep(transitionProgress, 0, 0.15);
-        const pageBackgroundOpacity = THREE.MathUtils.smoothstep(transitionProgress, 0.58, 0.96);
-
-        root.style.setProperty('--splash-backdrop-opacity', backdropOpacity.toFixed(3));
-        root.style.setProperty('--splash-canvas-opacity', canvasOpacity.toFixed(3));
-        root.style.setProperty('--splash-ui-opacity', uiOpacity.toFixed(3));
-        root.style.setProperty('--splash-hint-opacity', hintOpacity.toFixed(3));
-        root.style.setProperty('--splash-ui-scale', (1 + scrollProgress * 0.14).toFixed(3));
-        root.style.setProperty('--splash-ui-travel', `${(scrollProgress * 24).toFixed(2)}%`);
-        root.dataset.transitionProgress = transitionProgress.toFixed(3);
-        document.documentElement.style.setProperty(
-          '--splash-interface-opacity',
-          interfaceOpacity.toFixed(3),
-        );
-        document.documentElement.style.setProperty(
-          '--splash-interface-shift',
-          `${((1 - interfaceOpacity) * 8).toFixed(2)}vh`,
-        );
-        document.documentElement.style.setProperty(
-          '--splash-page-background-opacity',
-          pageBackgroundOpacity.toFixed(3),
-        );
+        const scrollProgress = updateTransitionStyles(transitionProgress);
+        const backdropOpacity = Number(root.style.getPropertyValue('--splash-backdrop-opacity'));
 
         const elapsed = (now - startTime) / 1000;
         const motionElapsed = Math.max(0, elapsed - introDelay / 1000);
@@ -546,6 +575,8 @@ export default function SplashIntro({ content }: SplashIntroProps) {
       };
 
       resize();
+      void renderer.compileAsync(scene, camera).catch(() => undefined);
+      await yieldToMain();
       window.addEventListener('resize', resize);
       document.addEventListener('visibilitychange', handleVisibility);
       startTime = performance.now();
@@ -578,6 +609,7 @@ export default function SplashIntro({ content }: SplashIntroProps) {
       <div className="splash-ui">
         <h2>{content.title}</h2>
         <p className="splash-portfolio">{content.subtitle}</p>
+        <p className="splash-invitation">{content.invitation}</p>
       </div>
 
       <button className="splash-scroll-hint" type="button" data-splash-enter>
@@ -704,6 +736,18 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           animation: splash-reveal 1100ms ease 2000ms both;
         }
 
+        .splash-invitation {
+          max-width: 30rem;
+          margin-top: 0.5rem;
+          color: rgb(223 249 255 / 0.72);
+          font-family: var(--font-body);
+          font-size: clamp(0.78rem, 0.68rem + 0.45vw, 1rem);
+          letter-spacing: 0.06em;
+          line-height: 1.5;
+          text-shadow: 0 0 1rem rgb(0 229 255 / 0.28);
+          animation: splash-reveal 1100ms ease 2250ms both;
+        }
+
         .splash-scroll-hint {
           position: absolute;
           bottom: clamp(1.5rem, 5vh, 3.5rem);
@@ -786,6 +830,7 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           .splash-intro,
           .splash-ui h2,
           .splash-portfolio,
+          .splash-invitation,
           .splash-scroll-line {
             animation: none;
             transition-duration: 0.01ms;

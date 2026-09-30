@@ -7,6 +7,10 @@ const interactiveSelector =
 const shortcutSelector = '[data-shortcut]';
 
 export function setupInterfaceController() {
+  if (document.documentElement.dataset.interfaceControllerReady === 'true') {
+    return () => undefined;
+  }
+  document.documentElement.dataset.interfaceControllerReady = 'true';
   let audioContext: AudioContext | undefined;
   const getAudioContext = () => {
     if (audioContext) return audioContext;
@@ -147,6 +151,7 @@ export function setupInterfaceController() {
   document.addEventListener('click', handleClick);
   document.addEventListener('keydown', handleKeydown);
   return () => {
+    delete document.documentElement.dataset.interfaceControllerReady;
     document.removeEventListener('pointerenter', handlePointerEnter, true);
     document.removeEventListener('click', handleClick);
     document.removeEventListener('keydown', handleKeydown);

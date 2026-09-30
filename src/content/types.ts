@@ -225,6 +225,7 @@ export interface SplashContent {
   ariaLabel: string;
   title: string;
   subtitle: string;
+  invitation: string;
   scrollHint: string;
 }
 

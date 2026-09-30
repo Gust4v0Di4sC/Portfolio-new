@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { loadThree } from '../../../scripts/three/splashScene';
 import { getSystemConfigurationMotion } from '../../../scripts/three/systemConfigurationScene';
+import { getGraphicsQuality, shouldRenderFrame } from '../../../scripts/visual/graphicsQuality';
 
 type SystemConfigurationSceneProps = {
   selectedIndex: number;
@@ -44,6 +45,7 @@ export default function SystemConfigurationScene({
     if (!root || !canvas) return undefined;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const quality = getGraphicsQuality(reducedMotion);
     const { cubeFloatAmplitude, maxPixelRatio, motionFactor } =
       getSystemConfigurationMotion(reducedMotion);
     let disposed = false;
@@ -58,10 +60,12 @@ export default function SystemConfigurationScene({
         const renderer = new THREE.WebGLRenderer({
           canvas,
           alpha: true,
-          antialias: !reducedMotion,
+          antialias: quality.antialias,
           powerPreference: 'high-performance',
         });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
+        renderer.setPixelRatio(
+          Math.min(window.devicePixelRatio, maxPixelRatio, quality.pixelRatioCap),
+        );
         renderer.setClearColor(0x120d25, 0);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -212,8 +216,14 @@ export default function SystemConfigurationScene({
 
         let startTime = performance.now();
         let previousTime = startTime;
+        let previousRenderTime = 0;
         const render = (now: number) => {
           if (disposed) return;
+          if (!shouldRenderFrame(now, previousRenderTime, quality.frameInterval)) {
+            frameId = window.requestAnimationFrame(render);
+            return;
+          }
+          previousRenderTime = now;
           const delta = Math.min((now - previousTime) / 1000, 0.05);
           previousTime = now;
           const elapsed = ((now - startTime) / 1000) * motionFactor;

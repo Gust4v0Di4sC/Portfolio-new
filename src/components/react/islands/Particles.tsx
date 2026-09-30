@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Camera, Geometry, Mesh, Program, Renderer } from 'ogl';
+import { getGraphicsQuality } from '../../../scripts/visual/graphicsQuality';
 
 import './Particles.css';
 
@@ -121,20 +122,23 @@ export default function Particles({
     }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const quality = getGraphicsQuality(reducedMotion);
+    const effectiveParticleCount = Math.max(60, Math.round(particleCount * quality.densityFactor));
+    const effectivePixelRatio = Math.min(pixelRatio, quality.pixelRatioCap);
     const renderer = new Renderer({
-      dpr: Math.min(pixelRatio, 2),
+      dpr: effectivePixelRatio,
       depth: false,
       alpha: true,
-      antialias: true,
+      antialias: quality.antialias,
     });
     const gl = renderer.gl;
     const canvas = gl.canvas;
     const camera = new Camera(gl, { fov: 15 });
     const mouse = { x: 0, y: 0 };
     const palette = paletteKey.length > 0 ? paletteKey.split(',') : defaultColors;
-    const positions = new Float32Array(particleCount * 3);
-    const randoms = new Float32Array(particleCount * 4);
-    const colors = new Float32Array(particleCount * 3);
+    const positions = new Float32Array(effectiveParticleCount * 3);
+    const randoms = new Float32Array(effectiveParticleCount * 4);
+    const colors = new Float32Array(effectiveParticleCount * 3);
     let animationFrame = 0;
     let previousTime = performance.now();
     let elapsed = 0;
@@ -144,7 +148,7 @@ export default function Particles({
     gl.clearColor(0, 0, 0, 0);
     camera.position.set(0, 0, cameraDistance);
 
-    for (let index = 0; index < particleCount; index += 1) {
+    for (let index = 0; index < effectiveParticleCount; index += 1) {
       let x: number;
       let y: number;
       let z: number;
@@ -175,7 +179,7 @@ export default function Particles({
       uniforms: {
         uTime: { value: 0 },
         uSpread: { value: particleSpread },
-        uBaseSize: { value: particleBaseSize * Math.min(pixelRatio, 2) },
+        uBaseSize: { value: particleBaseSize * effectivePixelRatio },
         uSizeRandomness: { value: sizeRandomness },
         uAlphaParticles: { value: alphaParticles ? 1 : 0 },
       },

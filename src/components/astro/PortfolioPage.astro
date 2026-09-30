@@ -1,5 +1,4 @@
 ---
-import InterfaceController from '../react/islands/InterfaceController';
 import PortfolioMenu from '../react/islands/PortfolioMenu';
 import ScrollBackground from '../react/islands/ScrollBackground';
 import SplashIntro from '../react/islands/SplashIntro';
@@ -24,9 +23,14 @@ const content = getContent(locale);
 
 <BaseLayout content={content}>
   <SplashIntro slot="intro" content={content.splash} client:load />
-  <PortfolioMenu locale={locale} content={content.menu} navigation={content.navigation} client:load />
+  <PortfolioMenu
+    locale={locale}
+    content={content.menu}
+    navigation={content.navigation}
+    client:load
+  />
   <div class="portfolio-stage" data-portfolio-stage hidden>
-    <ScrollBackground client:idle />
+    <ScrollBackground client:visible />
     <div
       class="portfolio-screen"
       data-portfolio-screen
@@ -88,8 +92,13 @@ const content = getContent(locale);
       <ContactSection content={content.contact} />
     </div>
   </div>
-  <InterfaceController client:load />
 </BaseLayout>
+
+<script>
+  import { setupInterfaceController } from '../../scripts/audio/interfaceController';
+
+  setupInterfaceController();
+</script>
 
 <style>
   .portfolio-stage,
