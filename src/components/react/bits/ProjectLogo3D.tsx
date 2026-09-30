@@ -14,6 +14,7 @@ import {
   WebGLRenderer,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { getGraphicsQuality, shouldRenderFrame } from '../../../scripts/visual/graphicsQuality';
 
 const ROTATION_SPEED = 0.85;
 
@@ -25,16 +26,23 @@ type ProjectLogo3DProps = {
 
 export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo3DProps) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [modelReady, setModelReady] = useState(false);
+  const [modelState, setModelState] = useState<'loading' | 'ready' | 'failed'>('loading');
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return undefined;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const quality = getGraphicsQuality(reducedMotion);
 
     let renderer: WebGLRenderer;
     try {
-      renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+      renderer = new WebGLRenderer({
+        alpha: true,
+        antialias: quality.antialias,
+        powerPreference: 'low-power',
+      });
     } catch {
+      queueMicrotask(() => setModelState('failed'));
       return undefined;
     }
 
@@ -42,12 +50,13 @@ export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo
     const rotationRoot = new Group();
     const camera = new PerspectiveCamera(32, 1, 0.01, 100);
     let frameId = 0;
-    let isVisible = true;
+    let previousRenderTime = 0;
+    let isVisible = false;
     let isDisposed = false;
     let model: Awaited<ReturnType<GLTFLoader['loadAsync']>>['scene'] | undefined;
 
     renderer.setClearColor(new Color(0x000000), 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.pixelRatioCap));
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -71,7 +80,12 @@ export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo
 
     const animate = (time: number) => {
       frameId = 0;
-      if (isDisposed || !isVisible) return;
+      if (isDisposed || !isVisible || document.hidden) return;
+      if (!shouldRenderFrame(time, previousRenderTime, quality.frameInterval)) {
+        frameId = window.requestAnimationFrame(animate);
+        return;
+      }
+      previousRenderTime = time;
 
       if (model) rotationRoot.rotation.y = (time * 0.001 * ROTATION_SPEED) % (Math.PI * 2);
       render();
@@ -82,16 +96,30 @@ export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo
     resizeObserver.observe(mount);
     resize();
 
-    const visibilityObserver = new IntersectionObserver(([entry]) => {
-      isVisible = entry?.isIntersecting ?? false;
-      if (isVisible && frameId === 0) {
+    const updateVisibility = (visible: boolean) => {
+      isVisible = visible;
+      if (isVisible && !document.hidden && frameId === 0) {
         frameId = window.requestAnimationFrame(animate);
       } else if (!isVisible && frameId !== 0) {
         window.cancelAnimationFrame(frameId);
         frameId = 0;
       }
-    });
-    visibilityObserver.observe(mount);
+    };
+    const visibilityObserver =
+      'IntersectionObserver' in window
+        ? new IntersectionObserver(([entry]) => updateVisibility(entry?.isIntersecting ?? false))
+        : undefined;
+    if (visibilityObserver) visibilityObserver.observe(mount);
+    else updateVisibility(true);
+    const handleVisibility = () => {
+      if (document.hidden && frameId !== 0) {
+        window.cancelAnimationFrame(frameId);
+        frameId = 0;
+      } else if (!document.hidden && isVisible && frameId === 0) {
+        frameId = window.requestAnimationFrame(animate);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const loader = new GLTFLoader();
     loader.load(
@@ -115,18 +143,19 @@ export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo
         camera.updateProjectionMatrix();
 
         render();
-        setModelReady(true);
+        setModelState('ready');
         if (frameId === 0) frameId = window.requestAnimationFrame(animate);
       },
       undefined,
-      () => setModelReady(false),
+      () => setModelState('failed'),
     );
 
     return () => {
       isDisposed = true;
       if (frameId !== 0) window.cancelAnimationFrame(frameId);
-      visibilityObserver.disconnect();
+      visibilityObserver?.disconnect();
       resizeObserver.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
       scene.traverse((object) => {
         if (!('geometry' in object)) return;
         const mesh = object as import('three').Mesh;
@@ -142,16 +171,18 @@ export default function ProjectLogo3D({ modelSrc, videoSrc, label }: ProjectLogo
 
   return (
     <div className="project-logo" role="img" aria-label={label}>
-      <video
-        className={`project-logo-fallback${modelReady ? ' is-hidden' : ''}`}
-        src={videoSrc}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        aria-hidden="true"
-      />
+      {modelState === 'failed' && (
+        <video
+          className="project-logo-fallback"
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+      )}
       <div ref={mountRef} className="project-logo-canvas" aria-hidden="true" />
     </div>
   );

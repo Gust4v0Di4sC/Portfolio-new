@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { Locale, MenuContent, NavigationContent } from '../../../content';
-import SystemConfigurationScene from './SystemConfigurationScene';
 import './PortfolioMenu.css';
+
+const SystemConfigurationScene = lazy(() => import('./SystemConfigurationScene'));
 
 type MenuView = 'main' | 'system' | 'language' | 'viewer' | 'content';
 
@@ -364,9 +365,7 @@ export default function PortfolioMenu({ locale, content, navigation }: Portfolio
         className="portfolio-menu-return ps-control ps-control-circle"
         type="button"
         onClick={returnToMenu}
-        aria-label={
-          returnsToSystem ? content.returnToSystem : content.returnToMain
-        }
+        aria-label={returnsToSystem ? content.returnToSystem : content.returnToMain}
         aria-keyshortcuts="O Escape"
         data-shortcut="o"
         data-sound="back"
@@ -392,10 +391,21 @@ export default function PortfolioMenu({ locale, content, navigation }: Portfolio
 
       {isSystemView && (
         <>
-          <SystemConfigurationScene
-            selectedIndex={view === 'language' ? systemOptions.length - 1 : selectedIndex}
-            viewerMode={view === 'viewer'}
-          />
+          <Suspense
+            fallback={
+              <div
+                className="system-scene"
+                data-system-scene
+                data-scene-ready="loading"
+                aria-hidden="true"
+              />
+            }
+          >
+            <SystemConfigurationScene
+              selectedIndex={view === 'language' ? systemOptions.length - 1 : selectedIndex}
+              viewerMode={view === 'viewer'}
+            />
+          </Suspense>
           <SystemClock ariaLabel={content.localDateTimeAriaLabel} />
         </>
       )}
@@ -506,7 +516,12 @@ export default function PortfolioMenu({ locale, content, navigation }: Portfolio
                       data-sound={isCurrent ? 'option' : 'confirm'}
                     >
                       {option.label}
-                      {isCurrent && <span className="language-current" aria-hidden="true"> •</span>}
+                      {isCurrent && (
+                        <span className="language-current" aria-hidden="true">
+                          {' '}
+                          •
+                        </span>
+                      )}
                     </button>
                   </li>
                 );

@@ -139,10 +139,7 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
             <div>
               <p>{content.gallery.eyebrow}</p>
               <h3 id="save-gallery-title" ref={galleryHeadingRef} tabIndex={-1}>
-                {
-                  content.memoryCards.find((memory) => memory.status === activeMemory)
-                    ?.title
-                }
+                {content.memoryCards.find((memory) => memory.status === activeMemory)?.title}
               </h3>
             </div>
             <button

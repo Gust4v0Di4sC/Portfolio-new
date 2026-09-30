@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 
 import { orbitalLightConfigs } from '../../../scripts/visual/orbitalLights';
+import { getGraphicsQuality, shouldRenderFrame } from '../../../scripts/visual/graphicsQuality';
 
 export default function ScrollBackground() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -17,7 +18,10 @@ export default function ScrollBackground() {
     const tracks = Array.from(background.querySelectorAll<HTMLElement>('.orb-track'));
     const particles = Array.from(background.querySelectorAll<HTMLElement>('.particle'));
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const quality = getGraphicsQuality(reducedMotion.matches);
     let frameId = 0;
+    let previousRenderTime = 0;
+    let isVisible = false;
     let width = window.innerWidth;
     let height = window.innerHeight;
     let scrollProgress = 0;
@@ -30,6 +34,16 @@ export default function ScrollBackground() {
     };
 
     const render = (time: number) => {
+      if (!isVisible || document.hidden) {
+        frameId = 0;
+        return;
+      }
+
+      if (!shouldRenderFrame(time, previousRenderTime, quality.frameInterval)) {
+        frameId = window.requestAnimationFrame(render);
+        return;
+      }
+      previousRenderTime = time;
       const seconds = time / 1000;
       const motionFactor = reducedMotion.matches ? 0.28 : 1;
       const orbitSpeed = reducedMotion.matches ? 0.28 : 1;
@@ -67,7 +81,7 @@ export default function ScrollBackground() {
     };
 
     const start = () => {
-      if (frameId === 0) {
+      if (frameId === 0 && isVisible && !document.hidden) {
         frameId = window.requestAnimationFrame(render);
       }
     };
@@ -85,7 +99,7 @@ export default function ScrollBackground() {
         document.hidden ? 'paused' : 'running',
       );
 
-      if (document.hidden) {
+      if (document.hidden || !isVisible) {
         stop();
       } else {
         start();
@@ -93,7 +107,13 @@ export default function ScrollBackground() {
     };
 
     refresh();
-    start();
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry?.isIntersecting ?? false;
+      if (isVisible) start();
+      else stop();
+    });
+    visibilityObserver.observe(background);
 
     window.addEventListener('resize', refresh, { passive: true });
     window.addEventListener('scroll', refresh, { passive: true });
@@ -101,6 +121,7 @@ export default function ScrollBackground() {
 
     return () => {
       stop();
+      visibilityObserver.disconnect();
       window.removeEventListener('resize', refresh);
       window.removeEventListener('scroll', refresh);
       document.removeEventListener('visibilitychange', handleVisibility);

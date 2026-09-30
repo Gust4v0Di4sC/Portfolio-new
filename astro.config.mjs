@@ -4,7 +4,6 @@ import { env } from 'node:process';
 
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import tailwindcss from '@tailwindcss/vite';
 
 const deploymentSite =
   env.PUBLIC_SITE_URL ??
@@ -37,7 +36,6 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [tailwindcss()],
     build: {
       sourcemap: false,
     },
