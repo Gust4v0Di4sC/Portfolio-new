@@ -15,4 +15,5 @@ export const getContent = (locale: Locale): PortfolioContent => contentByLocale[
 export const getLocalePath = (locale: Locale): '/' | '/en/' =>
   locale === defaultLocale ? '/' : '/en/';
 
-export const isLocale = (value: string): value is Locale => locales.some((locale) => locale === value);
+export const isLocale = (value: string): value is Locale =>
+  locales.some((locale) => locale === value);

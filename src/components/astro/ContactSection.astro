@@ -17,13 +17,15 @@ const { content } = Astro.props;
 
     <div class="contact-actions">
       <a
-        class="email-button ps-control ps-control-cross"
-        href={`mailto:${content.email}`}
+        class="email-button ps-control"
+        href={content.action.href}
+        aria-label={content.action.ariaLabel}
         aria-keyshortcuts="X"
         data-shortcut="x"
+        data-sound="confirm"
       >
-        <span class="ps-symbol" aria-hidden="true">×</span>
-        <span>{content.actionLabel}</span>
+        <img src={content.action.icon} alt="" width="24" height="24" />
+        <span>{content.action.label}</span>
       </a>
 
       <nav class="contact-socials" aria-label={content.socialsAriaLabel}>
@@ -107,6 +109,21 @@ const { content } = Astro.props;
     border-bottom: 1px solid rgb(190 210 255 / 0.14);
     color: #37d8ff;
     font-size: clamp(1rem, 1.8vw, 1.25rem);
+  }
+
+  .email-button img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+    transition:
+      filter var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .email-button:hover img,
+  .email-button:focus-visible img {
+    filter: drop-shadow(0 0 0.5rem rgb(234 67 53 / 0.65));
+    transform: scale(1.08);
   }
 
   .contact-socials {

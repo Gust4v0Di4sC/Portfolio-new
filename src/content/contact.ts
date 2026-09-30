@@ -1,8 +1,12 @@
 export const contactContent = {
   title: 'Entre em contato comigo',
   description: 'Vamos criar algo incrível juntos.',
-  email: 'dscharraa@gmail.com',
-  actionLabel: 'Enviar e-mail',
+  action: {
+    label: 'Enviar e-mail',
+    href: 'mailto:dscharraa@gmail.com',
+    icon: '/icons/social/email.svg',
+    ariaLabel: 'Enviar e-mail para Gustavo Dias',
+  },
   socialsAriaLabel: 'Perfis profissionais',
   socials: [
     {

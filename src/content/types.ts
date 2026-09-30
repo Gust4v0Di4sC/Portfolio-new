@@ -203,8 +203,12 @@ export interface AboutContent {
 export interface ContactContent {
   title: string;
   description: string;
-  email: string;
-  actionLabel: string;
+  action: {
+    label: string;
+    href: string;
+    icon: string;
+    ariaLabel: string;
+  };
   socialsAriaLabel: string;
   socials: readonly {
     label: string;
