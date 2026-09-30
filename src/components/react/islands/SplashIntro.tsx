@@ -185,7 +185,118 @@ export default function SplashIntro({ content }: SplashIntroProps) {
       return scrollProgress;
     };
 
+    const setupWorkerScene = () => {
+      if (
+        typeof Worker === 'undefined' ||
+        !('transferControlToOffscreen' in canvas) ||
+        typeof OffscreenCanvas === 'undefined'
+      ) {
+        return false;
+      }
+
+      let worker: Worker;
+      let offscreenCanvas: OffscreenCanvas;
+      try {
+        worker = new Worker(
+          new URL('../../../scripts/three/splashScene.worker.ts', import.meta.url),
+          {
+            type: 'module',
+          },
+        );
+        offscreenCanvas = canvas.transferControlToOffscreen();
+      } catch {
+        return false;
+      }
+
+      let previousUiFrame = 0;
+      const resize = () => {
+        worker.postMessage({
+          type: 'resize',
+          width: root.clientWidth,
+          height: root.clientHeight,
+          pixelRatio: Math.min(window.devicePixelRatio, maxPixelRatio),
+        });
+      };
+      const renderTransition = (now: number) => {
+        if (disposed || entranceComplete) {
+          animationFrame = 0;
+          return;
+        }
+        if (!shouldRenderFrame(now, previousUiFrame, quality.frameInterval)) {
+          animationFrame = window.requestAnimationFrame(renderTransition);
+          return;
+        }
+        previousUiFrame = now;
+        const deltaSeconds = Math.min((now - previousFrameTime) / 1000, 0.05);
+        previousFrameTime = now;
+        const smoothing = 1 - Math.exp(-deltaSeconds * (reducedMotion ? 14 : 9));
+        transitionProgress += (targetProgress - transitionProgress) * smoothing;
+        if (Math.abs(targetProgress - transitionProgress) < 0.0005) {
+          transitionProgress = targetProgress;
+        }
+        const scrollProgress = updateTransitionStyles(transitionProgress);
+        worker.postMessage({
+          type: 'progress',
+          progress: scrollProgress,
+          backdropOpacity: Number(root.style.getPropertyValue('--splash-backdrop-opacity')),
+        });
+        if (targetProgress >= 1 && transitionProgress >= 0.999) {
+          completeEntrance();
+          return;
+        }
+        animationFrame = window.requestAnimationFrame(renderTransition);
+      };
+
+      stopRendering = () => {
+        if (animationFrame !== 0) window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        worker.postMessage({ type: 'pause' });
+      };
+      startRendering = () => {
+        if (animationFrame !== 0 || disposed || entranceComplete || document.hidden) return;
+        previousFrameTime = performance.now();
+        previousUiFrame = 0;
+        worker.postMessage({ type: 'resume' });
+        animationFrame = window.requestAnimationFrame(renderTransition);
+      };
+      const handleVisibility = () => {
+        if (document.hidden) stopRendering();
+        else startRendering();
+      };
+      cleanupScene = () => {
+        stopRendering();
+        window.removeEventListener('resize', resize);
+        document.removeEventListener('visibilitychange', handleVisibility);
+        worker.postMessage({ type: 'dispose' });
+        worker.terminate();
+      };
+
+      worker.postMessage(
+        {
+          type: 'init',
+          canvas: offscreenCanvas,
+          width: root.clientWidth,
+          height: root.clientHeight,
+          pixelRatio: Math.min(window.devicePixelRatio, maxPixelRatio),
+          reducedMotion,
+          starCount,
+          cubeCount,
+          introDelay,
+          motionFactor,
+          sceneTimeOffset,
+          frameInterval: quality.frameInterval,
+          antialias: quality.antialias,
+        },
+        [offscreenCanvas],
+      );
+      window.addEventListener('resize', resize, { passive: true });
+      document.addEventListener('visibilitychange', handleVisibility);
+      startRendering();
+      return true;
+    };
+
     const setup = async () => {
+      if (setupWorkerScene()) return;
       const THREE = await loadThree();
       const yieldToMain = () => new Promise<void>((resolve) => window.setTimeout(resolve, 0));
 
