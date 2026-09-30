@@ -8,18 +8,21 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "validate": "pnpm check && pnpm lint && pnpm format:check && pnpm test:unit",
+    "verify": "pnpm validate && pnpm build && pnpm test:e2e && pnpm test:a11y && pnpm test:perf",
     "test": "vitest",
     "test:run": "vitest run",
     "test:unit": "vitest run",
     "test:e2e": "playwright test tests/e2e",
     "test:a11y": "playwright test tests/a11y",
+    "test:perf": "playwright test --config=playwright.performance.config.ts",
     "test:all": "pnpm test:unit && pnpm test:e2e && pnpm test:a11y"
   },
   "dependencies": {
