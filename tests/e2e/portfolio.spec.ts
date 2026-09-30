@@ -1,6 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const finishSplash = async (page: Page) => {
+  await expect(page.locator('astro-island[component-url*="SplashIntro"]')).not.toHaveAttribute(
+    'ssr',
+    '',
+  );
   const enterButton = page.getByRole('button', { name: 'Role para entrar' });
   await expect(enterButton).toBeVisible();
   await enterButton.click();
@@ -21,9 +25,7 @@ const openSystemScreen = async (page: Page, screenName: string) => {
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await expect(
-    page.locator('astro-island[component-url*="InterfaceController"]'),
-  ).not.toHaveAttribute('ssr', '');
+  await expect(page.locator('html')).toHaveAttribute('data-interface-controller-ready', 'true');
   await enterPortfolio(page);
 });
 
@@ -33,6 +35,7 @@ test('usa a splash como entrada e revela o menu orbital ao rolar', async ({ page
 
   await expect(splash).toBeVisible();
   await expect(splash.getByRole('heading', { name: 'Gustavo Dias' })).toBeVisible();
+  await expect(splash.getByText('Entre e faça parte da experiência.')).toBeVisible();
   await expect(splash.getByRole('button', { name: 'Role para entrar' })).toBeVisible();
   await expect
     .poll(() =>
@@ -225,7 +228,11 @@ test('mantém System Configuration utilizável em viewport móvel', async ({ pag
 
   await page.getByRole('button', { name: 'Contato', exact: true }).click();
   await expect(page.locator('#contato')).toBeInViewport();
-  await expect(page.getByRole('link', { name: 'Enviar e-mail' })).toBeVisible();
+  const emailLink = page.getByRole('link', {
+    name: 'Enviar e-mail para Gustavo Dias',
+  });
+  await expect(emailLink).toBeVisible();
+  await expect(emailLink).toHaveAttribute('href', 'mailto:dscharraa@gmail.com');
   const actionsBox = await page.locator('.contact-actions').boundingBox();
   const returnBox = await page
     .getByRole('button', { name: 'Voltar para Configuração do Sistema' })
@@ -269,9 +276,9 @@ test('troca o idioma pelo submenu e persiste a escolha entre visitas', async ({ 
 
   await expect(page).toHaveURL(/\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('portfolio-locale'))).toBe(
-    'pt-BR',
-  );
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem('portfolio-locale')))
+    .toBe('pt-BR');
 });
 
 test('publica metadados e alternates localizados nas duas rotas', async ({ page }) => {
@@ -464,4 +471,94 @@ test('abre a seleção de Memory Cards somente após acionar o Browser', async (
 
   await expect(page.locator('[data-memory-slot]:visible')).toHaveCount(2);
   await expect(page.locator('[data-project-trigger="1"]')).toHaveCount(0);
+});
+
+test('abre, joga, fecha e recria o minijogo do hero sem duplicar o canvas', async ({ page }) => {
+  test.setTimeout(45_000);
+  await page.getByRole('button', { name: 'Voltar ao menu principal' }).click();
+  await page.getByRole('button', { name: 'Abrir apresentação' }).click();
+
+  const trigger = page.getByRole('button', { name: 'Abrir o minijogo Fuga do Buraco Negro' });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+
+  const dialog = page.getByRole('dialog', { name: 'Fuga do Buraco Negro' });
+  const gameHost = dialog.getByRole('button', {
+    name: 'Jogo de plataforma Fuga do Buraco Negro',
+  });
+  await expect(dialog).toBeVisible();
+  await expect(gameHost).toHaveAttribute('data-game-state', 'ready', { timeout: 15_000 });
+  await expect(gameHost.locator('canvas')).toHaveCount(1);
+
+  await page.keyboard.press('Space');
+  await expect(gameHost).toHaveAttribute('data-game-state', 'playing');
+  await expect(gameHost).toHaveAttribute('data-player-motion', 'running');
+  await expect
+    .poll(() => dialog.locator('[data-game-score]').textContent().then(Number))
+    .toBeGreaterThan(0);
+
+  await page.keyboard.press('Space');
+  await expect(gameHost).toHaveAttribute('data-player-motion', /rising|falling/);
+
+  const firstBlackHoleFrame = await gameHost.getAttribute('data-black-hole-frame');
+  await expect
+    .poll(() => gameHost.getAttribute('data-black-hole-frame'))
+    .not.toBe(firstBlackHoleFrame);
+
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(gameHost).toHaveAttribute('data-game-state', 'paused');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value: false });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(gameHost).toHaveAttribute('data-game-state', 'playing');
+
+  await expect(gameHost).toHaveAttribute('data-game-state', 'gameover', { timeout: 20_000 });
+  await expect(dialog.getByText('O vazio alcançou você')).toBeVisible();
+  const savedBest = Number(await dialog.locator('[data-game-best]').textContent());
+  expect(savedBest).toBeGreaterThan(0);
+  await expect
+    .poll(() => page.evaluate(() => Number(localStorage.getItem('portfolio-black-hole-best'))))
+    .toBe(savedBest);
+
+  await dialog.getByRole('button', { name: 'Tentar novamente' }).click();
+  await expect(gameHost).toHaveAttribute('data-game-state', 'playing');
+  await expect(gameHost).toHaveAttribute('data-player-motion', 'running');
+  await expect(gameHost).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  await expect(gameHost.locator('canvas')).toHaveCount(0);
+
+  await trigger.click();
+  await expect(dialog).toBeVisible();
+  await expect(gameHost).toHaveAttribute('data-game-state', 'ready', { timeout: 15_000 });
+  await expect(gameHost.locator('canvas')).toHaveCount(1);
+  await expect(dialog.locator('[data-game-best]')).toHaveText(
+    savedBest.toString().padStart(4, '0'),
+  );
+});
+
+test('localiza e ajusta o minijogo para viewport móvel', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en/');
+  await page.getByRole('button', { name: 'Scroll to enter' }).click();
+  await expect(page.locator('[data-splash-intro]')).toBeHidden({ timeout: 15_000 });
+  await page.getByRole('button', { name: 'Browser' }).click();
+  await page.getByRole('button', { name: 'Return to main menu' }).click();
+  await page.getByRole('button', { name: 'Open presentation' }).click();
+  await page.getByRole('button', { name: 'Open the Escape the Black Hole minigame' }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Escape the Black Hole' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('Ready to run?')).toBeVisible({ timeout: 15_000 });
+  const box = await dialog.boundingBox();
+  expect(box).not.toBeNull();
+  if (!box) throw new Error('O modal do minijogo não foi renderizado');
+  expect(box.width).toBeLessThanOrEqual(390);
+  expect(box.height).toBeLessThanOrEqual(844);
 });

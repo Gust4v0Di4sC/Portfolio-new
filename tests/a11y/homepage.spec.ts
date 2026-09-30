@@ -48,3 +48,20 @@ test('mantém a rota inglesa e o seletor de idioma sem violações automáticas'
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
 });
+
+test('mantém o minijogo do hero sem violações automáticas', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Role para entrar' }).click();
+  await expect(page.locator('[data-splash-intro]')).toBeHidden({ timeout: 15_000 });
+  await page.getByRole('button', { name: 'Navegador' }).click();
+  await page.getByRole('button', { name: 'Voltar ao menu principal' }).click();
+  await page.getByRole('button', { name: 'Abrir apresentação' }).click();
+  await page.getByRole('button', { name: 'Abrir o minijogo Fuga do Buraco Negro' }).click();
+
+  const gameHost = page.getByRole('button', {
+    name: 'Jogo de plataforma Fuga do Buraco Negro',
+  });
+  await expect(gameHost).toHaveAttribute('data-game-state', 'ready', { timeout: 15_000 });
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});

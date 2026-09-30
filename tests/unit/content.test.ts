@@ -27,6 +27,13 @@ describe('blocos de conteúdo', () => {
     expect(english.skills.groups.map(({ slug }) => slug)).toEqual(
       portuguese.skills.groups.map(({ slug }) => slug),
     );
+    expect(portuguese.hero.game.title).toBe('Fuga do Buraco Negro');
+    expect(english.hero.game.title).toBe('Escape the Black Hole');
+    expect(portuguese.splash.invitation).toBe('Entre e faça parte da experiência.');
+    expect(english.splash.invitation).toBe('Step in and be part of the experience.');
+    expect(portuguese.contact.action.label).toBe('Enviar e-mail');
+    expect(english.contact.action.label).toBe('Send email');
+    expect(portuguese.contact.action.href).toBe('mailto:dscharraa@gmail.com');
   });
 
   it('mantém os metadados essenciais preenchidos', () => {
