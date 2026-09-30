@@ -1,11 +1,21 @@
-import { type CSSProperties, type PointerEvent, type ReactNode, useEffect, useRef } from 'react';
+import {
+  type CSSProperties,
+  type PointerEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
+import type { HeroContent } from '../../../content';
 import PixelCard from '../bits/PixelCard';
+import BlackHoleGameModal from './BlackHoleGameModal';
 import './HeroCard.css';
 
 type HeroCardProps = {
   children: ReactNode;
   figureAriaLabel: string;
+  gameContent: HeroContent['game'];
 };
 
 type HeroCardStyle = CSSProperties & {
@@ -22,9 +32,11 @@ const restingStyle: HeroCardStyle = {
   '--hero-card-shine-y': '45%',
 };
 
-export default function HeroCard({ children, figureAriaLabel }: HeroCardProps) {
+export default function HeroCard({ children, figureAriaLabel, gameContent }: HeroCardProps) {
   const figureRef = useRef<HTMLElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [isGameOpen, setIsGameOpen] = useState(false);
 
   useEffect(() => {
     const floatingCard = floatRef.current;
@@ -38,8 +50,13 @@ export default function HeroCard({ children, figureAriaLabel }: HeroCardProps) {
     const cycleDuration = reducedMotion ? 7000 : 3400;
     let animationFrame = 0;
     let startTime = performance.now();
+    let isVisible = false;
 
     const animate = (now: number) => {
+      if (!isVisible || document.hidden) {
+        animationFrame = 0;
+        return;
+      }
       const elapsed = now - startTime;
       const phase = (elapsed / cycleDuration) * Math.PI * 2;
       const verticalOffset = Math.sin(phase) * amplitude;
@@ -53,17 +70,32 @@ export default function HeroCard({ children, figureAriaLabel }: HeroCardProps) {
     const handleVisibility = () => {
       window.cancelAnimationFrame(animationFrame);
 
-      if (!document.hidden) {
+      if (!document.hidden && isVisible) {
         startTime = performance.now();
         animationFrame = window.requestAnimationFrame(animate);
       }
     };
 
-    animationFrame = window.requestAnimationFrame(animate);
+    const updateVisibility = (visible: boolean) => {
+      isVisible = visible;
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      if (isVisible && !document.hidden) {
+        startTime = performance.now();
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+    const visibilityObserver =
+      'IntersectionObserver' in window
+        ? new IntersectionObserver(([entry]) => updateVisibility(entry?.isIntersecting ?? false))
+        : undefined;
+    if (visibilityObserver) visibilityObserver.observe(floatingCard);
+    else updateVisibility(true);
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      visibilityObserver?.disconnect();
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, []);
@@ -109,14 +141,34 @@ export default function HeroCard({ children, figureAriaLabel }: HeroCardProps) {
           gap={8}
           speed={42}
           colors="#dff9ff,#67e8f9,#00e5ff,#0ea5e9"
+          noFocus
           className="hero-card-surface"
         >
-          <div className="hero-card-media">
-            {children}
-            <span className="hero-card-glare" aria-hidden="true" />
-          </div>
+          <button
+            className="hero-card-trigger"
+            type="button"
+            aria-label={gameContent.triggerLabel}
+            aria-haspopup="dialog"
+            aria-controls="black-hole-game-dialog"
+            data-sound="confirm"
+            ref={triggerRef}
+            onClick={() => setIsGameOpen(true)}
+          >
+            <span className="hero-card-media">
+              {children}
+              <span className="hero-card-glare" aria-hidden="true" />
+            </span>
+          </button>
         </PixelCard>
       </div>
+      <BlackHoleGameModal
+        content={gameContent}
+        isOpen={isGameOpen}
+        onRequestClose={() => {
+          setIsGameOpen(false);
+          window.requestAnimationFrame(() => triggerRef.current?.focus({ preventScroll: true }));
+        }}
+      />
     </figure>
   );
 }
