@@ -50,14 +50,19 @@ const { content } = Astro.props;
     </div>
   </div>
 
-  <HeroCard client:idle figureAriaLabel={content.image.figureAriaLabel}>
+  <HeroCard
+    client:visible
+    figureAriaLabel={content.image.figureAriaLabel}
+    gameContent={content.game}
+  >
     <Image
       src={heroCover}
       alt={content.image.alt}
       class="hero-cover-image"
       widths={[320, 480, 640, 768]}
       sizes="(max-width: 54rem) min(78vw, 24rem), min(26vw, 24rem)"
-      priority
+      loading="lazy"
+      decoding="async"
     />
   </HeroCard>
 </section>

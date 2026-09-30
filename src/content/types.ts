@@ -81,6 +81,20 @@ export interface HeroContent {
     contact: { href: string; label: string; ariaLabel: string };
   };
   image: { alt: string; figureAriaLabel: string };
+  game: {
+    triggerLabel: string;
+    eyebrow: string;
+    title: string;
+    closeLabel: string;
+    canvasLabel: string;
+    loadingLabel: string;
+    scoreLabel: string;
+    bestLabel: string;
+    readyTitle: string;
+    instructions: string;
+    gameOverTitle: string;
+    retryLabel: string;
+  };
 }
 
 export interface ExperienceContent {
