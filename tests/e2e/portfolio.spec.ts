@@ -35,7 +35,6 @@ test('usa a splash como entrada e revela o menu orbital ao rolar', async ({ page
 
   await expect(splash).toBeVisible();
   await expect(splash.getByRole('heading', { name: 'Gustavo Dias' })).toBeVisible();
-  await expect(splash.getByText('Entre e faça parte da experiência.')).toBeVisible();
   await expect(splash.getByRole('button', { name: 'Role para entrar' })).toBeVisible();
   await expect
     .poll(() =>
@@ -155,6 +154,9 @@ test('abre projetos pelo Browser e agrupa as demais opções no System Configura
     await systemMenu.getByRole('button', { name: screen.name, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`#${screen.hash}$`));
     await expect(page.locator(`#${screen.hash}`)).toBeInViewport();
+    if (screen.hash === 'sobre') {
+      await expect(page.getByRole('heading', { level: 1, name: 'Sobre mim' })).toBeVisible();
+    }
 
     const returnButton = page.getByRole('button', {
       name: 'Voltar para Configuração do Sistema',

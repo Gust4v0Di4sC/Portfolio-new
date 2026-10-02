@@ -1,6 +1,5 @@
 export const aboutContent = {
-  eyebrow: 'Sobre este save',
-  title: 'Sobre',
+  title: 'Sobre mim',
   paragraphs: [
     'Sou desenvolvedor com foco em interfaces web, sistemas internos e soluções digitais bem estruturadas. Minha forma de trabalhar combina atenção à experiência do usuário, organização técnica e visão prática de produto, buscando transformar necessidades reais em aplicações claras, responsivas e fáceis de manter.',
     'Tenho como principais especialidades o desenvolvimento front-end com React, TypeScript, JavaScript, HTML, CSS, integração com APIs, componentização e manutenção de sistemas. Também trago experiência com sustentação de aplicações, automação de processos, documentação técnica e análise de problemas em ambientes corporativos.',

@@ -720,7 +720,6 @@ export default function SplashIntro({ content }: SplashIntroProps) {
       <div className="splash-ui">
         <h2>{content.title}</h2>
         <p className="splash-portfolio">{content.subtitle}</p>
-        <p className="splash-invitation">{content.invitation}</p>
       </div>
 
       <button className="splash-scroll-hint" type="button" data-splash-enter>
@@ -847,18 +846,6 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           animation: splash-reveal 1100ms ease 2000ms both;
         }
 
-        .splash-invitation {
-          max-width: 30rem;
-          margin-top: 0.5rem;
-          color: rgb(223 249 255 / 0.72);
-          font-family: var(--font-body);
-          font-size: clamp(0.78rem, 0.68rem + 0.45vw, 1rem);
-          letter-spacing: 0.06em;
-          line-height: 1.5;
-          text-shadow: 0 0 1rem rgb(0 229 255 / 0.28);
-          animation: splash-reveal 1100ms ease 2250ms both;
-        }
-
         .splash-scroll-hint {
           position: absolute;
           bottom: clamp(1.5rem, 5vh, 3.5rem);
@@ -941,7 +928,6 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           .splash-intro,
           .splash-ui h2,
           .splash-portfolio,
-          .splash-invitation,
           .splash-scroll-line {
             animation: none;
             transition-duration: 0.01ms;
