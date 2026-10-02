@@ -6,7 +6,6 @@ export type Difficulty = {
   gapMax: number;
   platformMinWidth: number;
   platformMaxWidth: number;
-  blackHoleClosingSpeed: number;
 };
 
 export type PlatformSpec = {
@@ -21,6 +20,14 @@ type StorageWriter = Pick<Storage, 'setItem'>;
 const clamp = (value: number, minimum: number, maximum: number) =>
   Math.min(maximum, Math.max(minimum, value));
 
+export const MAX_PLAYER_SPEED = 440;
+export const BLACK_HOLE_SPEED_CAP = MAX_PLAYER_SPEED - 15;
+
+const BLACK_HOLE_BASE_SPEED = 245;
+const BLACK_HOLE_SPEED_INCREASE = BLACK_HOLE_SPEED_CAP - BLACK_HOLE_BASE_SPEED;
+const BLACK_HOLE_FAR_GAP = 360;
+const BLACK_HOLE_NEAR_GAP = 185;
+
 export function getDifficulty(distance: number): Difficulty {
   const progress = clamp(distance / 14_000, 0, 1);
   const speed = 235 + progress * 205;
@@ -32,8 +39,17 @@ export function getDifficulty(distance: number): Difficulty {
     gapMax: Math.min(200, 118 + progress * 82, reachableGap),
     platformMinWidth: 132 - progress * 16,
     platformMaxWidth: 190 - progress * 24,
-    blackHoleClosingSpeed: 3.5 + progress * 5.5,
   };
+}
+
+export function getBlackHoleSpeed(playerSpeed: number, gap: number, distance: number) {
+  const progress = clamp(distance / 14_000, 0, 1);
+  let speed = BLACK_HOLE_BASE_SPEED + progress * BLACK_HOLE_SPEED_INCREASE;
+
+  if (gap > BLACK_HOLE_FAR_GAP) speed += 25;
+  else if (gap < BLACK_HOLE_NEAR_GAP) speed -= 35;
+
+  return clamp(speed, 0, Math.min(BLACK_HOLE_SPEED_CAP, playerSpeed + 25));
 }
 
 export function createPlatformSpec(
