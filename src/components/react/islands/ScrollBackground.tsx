@@ -22,6 +22,7 @@ export default function ScrollBackground() {
     let frameId = 0;
     let previousRenderTime = 0;
     let isVisible = false;
+    let isGameActive = false;
     let width = window.innerWidth;
     let height = window.innerHeight;
     let scrollProgress = 0;
@@ -34,7 +35,7 @@ export default function ScrollBackground() {
     };
 
     const render = (time: number) => {
-      if (!isVisible || document.hidden) {
+      if (!isVisible || document.hidden || isGameActive) {
         frameId = 0;
         return;
       }
@@ -81,7 +82,7 @@ export default function ScrollBackground() {
     };
 
     const start = () => {
-      if (frameId === 0 && isVisible && !document.hidden) {
+      if (frameId === 0 && isVisible && !document.hidden && !isGameActive) {
         frameId = window.requestAnimationFrame(render);
       }
     };
@@ -105,6 +106,11 @@ export default function ScrollBackground() {
         start();
       }
     };
+    const handleGameActivity = (event: Event) => {
+      isGameActive = (event as CustomEvent<{ active?: boolean }>).detail.active === true;
+      if (isGameActive) stop();
+      else start();
+    };
 
     refresh();
 
@@ -118,6 +124,7 @@ export default function ScrollBackground() {
     window.addEventListener('resize', refresh, { passive: true });
     window.addEventListener('scroll', refresh, { passive: true });
     document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('portfolio:game-activity', handleGameActivity);
 
     return () => {
       stop();
@@ -125,6 +132,7 @@ export default function ScrollBackground() {
       window.removeEventListener('resize', refresh);
       window.removeEventListener('scroll', refresh);
       document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('portfolio:game-activity', handleGameActivity);
     };
   }, []);
 

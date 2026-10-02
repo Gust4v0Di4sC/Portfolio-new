@@ -2,7 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   BEST_SCORE_STORAGE_KEY,
+  BLACK_HOLE_SPEED_CAP,
   createPlatformSpec,
+  getBlackHoleSpeed,
   getDifficulty,
   readBestScore,
   scoreFromDistance,
@@ -22,9 +24,36 @@ describe('regras de Fuga do Buraco Negro', () => {
     expect(maximum.platformMinWidth).toBe(116);
     expect(initial.platformMaxWidth).toBe(190);
     expect(maximum.platformMaxWidth).toBe(166);
-    expect(initial.blackHoleClosingSpeed).toBe(3.5);
-    expect(maximum.blackHoleClosingSpeed).toBe(9);
-    expect(maximum.blackHoleClosingSpeed).toBeGreaterThan(initial.blackHoleClosingSpeed);
+  });
+
+  it('adapta o buraco negro sem ultrapassar o limite seguro', () => {
+    const playerSpeed = getDifficulty(0).speed;
+    const normalSpeed = getBlackHoleSpeed(playerSpeed, 270, 0);
+    const farSpeed = getBlackHoleSpeed(playerSpeed, 400, 0);
+    const nearSpeed = getBlackHoleSpeed(playerSpeed, 170, 0);
+    const maximumSpeed = getBlackHoleSpeed(999, 400, 99_999);
+
+    expect(farSpeed).toBeGreaterThan(normalSpeed);
+    expect(nearSpeed).toBeLessThan(playerSpeed);
+    expect(maximumSpeed).toBe(BLACK_HOLE_SPEED_CAP);
+    expect(maximumSpeed).toBeLessThan(getDifficulty(99_999).speed);
+  });
+
+  it('mantém uma margem de reação mesmo depois de uma corrida longa', () => {
+    let distance = 0;
+    let gap = 270;
+    let smallestGap = gap;
+
+    for (let frame = 0; frame < 60 * 180; frame += 1) {
+      const playerSpeed = getDifficulty(distance).speed;
+      const blackHoleSpeed = getBlackHoleSpeed(playerSpeed, gap, distance);
+      gap += (playerSpeed - blackHoleSpeed) / 60;
+      distance += playerSpeed / 60;
+      smallestGap = Math.min(smallestGap, gap);
+    }
+
+    expect(smallestGap).toBeGreaterThan(175);
+    expect(gap).toBeGreaterThan(smallestGap);
   });
 
   it('gera a próxima plataforma adiante e dentro da faixa vertical', () => {

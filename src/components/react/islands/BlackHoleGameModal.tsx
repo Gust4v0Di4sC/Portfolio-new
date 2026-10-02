@@ -24,6 +24,18 @@ export default function BlackHoleGameModal({
   const [best, setBest] = useState(0);
 
   useEffect(() => {
+    if (!isOpen) return undefined;
+
+    window.dispatchEvent(new CustomEvent('portfolio:game-activity', { detail: { active: true } }));
+
+    return () => {
+      window.dispatchEvent(
+        new CustomEvent('portfolio:game-activity', { detail: { active: false } }),
+      );
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 

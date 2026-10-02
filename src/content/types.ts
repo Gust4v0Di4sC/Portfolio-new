@@ -195,7 +195,6 @@ export interface SkillsContent {
 }
 
 export interface AboutContent {
-  eyebrow: string;
   title: string;
   paragraphs: readonly string[];
 }
@@ -229,7 +228,6 @@ export interface SplashContent {
   ariaLabel: string;
   title: string;
   subtitle: string;
-  invitation: string;
   scrollHint: string;
 }
 

@@ -122,7 +122,6 @@
 .black-hole-dialog::backdrop {
   background:
     radial-gradient(circle at 24% 46%, rgb(37 99 235 / 0.2), transparent 28rem), rgb(1 2 8 / 0.88);
-  backdrop-filter: blur(0.55rem);
 }
 
 .black-hole-panel {

@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import { BLACK_HOLE_ASSETS } from './assets';
-import { createPlatformSpec, getDifficulty, scoreFromDistance } from './rules';
+import { createPlatformSpec, getBlackHoleSpeed, getDifficulty, scoreFromDistance } from './rules';
 import type { PlatformSpec } from './rules';
 import type { BlackHoleGameController, BlackHoleGameOptions, BlackHoleGameState } from './types';
 
@@ -15,10 +15,22 @@ const PLAYER_BODY_WIDTH = 34;
 const PLAYER_BODY_HEIGHT = 60;
 const START_PLAYER_Y = START_PLATFORM.y - PLAYER_BODY_HEIGHT / 2 + 1;
 const PLAYER_SCREEN_X = 280;
+const REFERENCE_FRAME_MS = 1000 / 60;
+const MAX_FRAME_DELTA_MS = 50;
+const CAMERA_FOLLOW_LERP = 0.18;
+const BLACK_HOLE_SPEED_LERP = 0.08;
+const RUN_ANIMATION_MAX_TIME_SCALE = 1.35;
 const JUMP_VELOCITY = -680;
+const APEX_VELOCITY_THRESHOLD = 120;
 const JUMP_BUFFER_MS = 130;
 const COYOTE_TIME_MS = 110;
+const LANDING_POSE_MS = 100;
 const BLACK_HOLE_ANIMATION = 'black-hole-threat-spinning';
+const PLAYER_RUN_ANIMATION = 'black-hole-runner-running';
+const START_DIFFICULTY = getDifficulty(0);
+
+const getFrameRateIndependentLerp = (lerpAt60Fps: number, delta: number) =>
+  1 - Math.pow(1 - lerpAt60Fps, Math.min(delta, MAX_FRAME_DELTA_MS) / REFERENCE_FRAME_MS);
 
 export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGameController {
   let bestScore = options.initialBest;
@@ -39,8 +51,11 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
     private startPosition = START_X;
     private blackHoleX = START_X - BLACK_HOLE_START_GAP;
     private blackHoleGap = BLACK_HOLE_START_GAP;
+    private blackHoleSpeed = getBlackHoleSpeed(START_DIFFICULTY.speed, BLACK_HOLE_START_GAP, 0);
     private lastGroundedAt = 0;
     private jumpRequestedAt = Number.NEGATIVE_INFINITY;
+    private landingUntil = 0;
+    private wasGrounded = true;
     private playerFrame = -1;
     private playerMotion = '';
     private score = 0;
@@ -81,6 +96,14 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
         frameRate: options.reducedMotion ? 4 : 10,
         repeat: -1,
       });
+      this.anims.create({
+        key: PLAYER_RUN_ANIMATION,
+        frames: this.anims.generateFrameNumbers(BLACK_HOLE_ASSETS.player.key, {
+          frames: [...BLACK_HOLE_ASSETS.player.frames.running],
+        }),
+        frameRate: options.reducedMotion ? 6 : 12,
+        repeat: -1,
+      });
 
       this.blackHole = this.add
         .sprite(this.blackHoleX, GAME_HEIGHT / 2, BLACK_HOLE_ASSETS.blackHole.key)
@@ -99,10 +122,16 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
       body.setMaxVelocity(560, 900);
 
       this.playerVisual = this.add
-        .sprite(START_X, START_PLATFORM.y, BLACK_HOLE_ASSETS.player.key, 1)
-        .setDisplaySize(96, 96)
+        .sprite(
+          START_X,
+          START_PLATFORM.y,
+          BLACK_HOLE_ASSETS.player.key,
+          BLACK_HOLE_ASSETS.player.frames.ready,
+        )
+        .setOrigin(0.5, 1)
+        .setScale(96 / BLACK_HOLE_ASSETS.player.frameHeight)
         .setDepth(4);
-      this.setPlayerFrame(1);
+      this.setPlayerFrame(BLACK_HOLE_ASSETS.player.frames.ready);
 
       this.physics.add.collider(this.playerBody, this.platforms);
       this.cameras.main.scrollX = START_X - PLAYER_SCREEN_X;
@@ -118,6 +147,7 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
 
       const body = this.getPlayerBody();
       const grounded = body.blocked.down || body.touching.down || this.isStandingOnPlatform(body);
+      const landed = grounded && !this.wasGrounded;
       let jumped = false;
       if (grounded) this.lastGroundedAt = time;
 
@@ -130,20 +160,51 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
       }
 
       if (grounded && !jumped) {
-        this.setPlayerFrame(Math.floor(time / 125) % 2 === 0 ? 2 : 3);
-        this.setPlayerMotion('running');
+        if (landed) this.landingUntil = time + LANDING_POSE_MS;
+        if (time < this.landingUntil) {
+          this.setPlayerFrame(BLACK_HOLE_ASSETS.player.frames.landing);
+          this.setPlayerMotion('landing');
+        } else {
+          this.playerVisual.play(PLAYER_RUN_ANIMATION, true);
+          this.setPlayerMotion('running');
+        }
       } else {
-        this.setPlayerFrame(body.velocity.y < 0 ? 5 : 7);
-        this.setPlayerMotion(body.velocity.y < 0 ? 'rising' : 'falling');
+        const rising = body.velocity.y < -APEX_VELOCITY_THRESHOLD;
+        const atApex = !rising && body.velocity.y <= APEX_VELOCITY_THRESHOLD;
+        const airborneFrame = rising
+          ? BLACK_HOLE_ASSETS.player.frames.rising
+          : atApex
+            ? BLACK_HOLE_ASSETS.player.frames.apex
+            : BLACK_HOLE_ASSETS.player.frames.falling;
+        this.setPlayerFrame(airborneFrame);
+        this.setPlayerMotion(rising ? 'rising' : atApex ? 'apex' : 'falling');
       }
+      this.wasGrounded = grounded && !jumped;
 
       const distance = this.playerBody.x - this.startPosition;
       const difficulty = getDifficulty(distance);
       body.setVelocityX(difficulty.speed);
-      this.cameras.main.scrollX = this.playerBody.x - PLAYER_SCREEN_X;
+      this.playerVisual.anims.timeScale = Phaser.Math.Clamp(
+        difficulty.speed / START_DIFFICULTY.speed,
+        1,
+        RUN_ANIMATION_MAX_TIME_SCALE,
+      );
+      const cameraTargetX = this.playerBody.x - PLAYER_SCREEN_X;
+      this.cameras.main.scrollX = Phaser.Math.Linear(
+        this.cameras.main.scrollX,
+        cameraTargetX,
+        getFrameRateIndependentLerp(CAMERA_FOLLOW_LERP, delta),
+      );
+      const targetBlackHoleSpeed = getBlackHoleSpeed(difficulty.speed, this.blackHoleGap, distance);
+      this.blackHoleSpeed = Phaser.Math.Linear(
+        this.blackHoleSpeed,
+        targetBlackHoleSpeed,
+        getFrameRateIndependentLerp(BLACK_HOLE_SPEED_LERP, delta),
+      );
       this.blackHoleGap = Math.max(
         0,
-        this.blackHoleGap - difficulty.blackHoleClosingSpeed * (delta / 1000),
+        this.blackHoleGap +
+          (difficulty.speed - this.blackHoleSpeed) * (Math.min(delta, MAX_FRAME_DELTA_MS) / 1000),
       );
       this.blackHoleX = this.playerBody.x - this.blackHoleGap;
       this.blackHole.setX(this.blackHoleX);
@@ -173,15 +234,19 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
       body.reset(START_X, START_PLAYER_Y);
       body.setVelocity(0, 0);
       this.playerVisual.clearTint();
-      this.setPlayerFrame(1);
+      this.setPlayerFrame(BLACK_HOLE_ASSETS.player.frames.ready);
       this.syncPlayerVisual();
       this.blackHoleGap = BLACK_HOLE_START_GAP;
       this.blackHoleX = START_X - BLACK_HOLE_START_GAP;
+      this.blackHoleSpeed = getBlackHoleSpeed(START_DIFFICULTY.speed, BLACK_HOLE_START_GAP, 0);
       this.blackHole.setPosition(this.blackHoleX, GAME_HEIGHT / 2);
+      this.cameras.main.scrollX = START_X - PLAYER_SCREEN_X;
       this.startPosition = START_X;
       this.score = 0;
       this.lastGroundedAt = this.time.now;
       this.jumpRequestedAt = Number.NEGATIVE_INFINITY;
+      this.landingUntil = 0;
+      this.wasGrounded = true;
       this.runState = 'playing';
       this.setPlayerMotion('running');
       options.onScoreChange(0);
@@ -210,7 +275,7 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
       this.physics.pause();
       this.jumpRequestedAt = Number.NEGATIVE_INFINITY;
       this.setPlayerMotion('gameover');
-      this.setPlayerFrame(6);
+      this.setPlayerFrame(BLACK_HOLE_ASSETS.player.frames.gameOver);
       this.playerVisual.setTint(0xff5fa2);
       if (this.score > bestScore) {
         bestScore = this.score;
@@ -264,11 +329,12 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
     }
 
     private beginJump(body: Phaser.Physics.Arcade.Body) {
-      body.reset(this.playerBody.x, this.playerBody.y - 2);
       body.setVelocityY(JUMP_VELOCITY);
       this.jumpRequestedAt = Number.NEGATIVE_INFINITY;
       this.lastGroundedAt = Number.NEGATIVE_INFINITY;
-      this.setPlayerFrame(5);
+      this.landingUntil = 0;
+      this.wasGrounded = false;
+      this.setPlayerFrame(BLACK_HOLE_ASSETS.player.frames.rising);
       this.setPlayerMotion('rising');
     }
 
@@ -286,13 +352,15 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
     }
 
     private setPlayerFrame(frame: number) {
+      if (this.playerVisual.anims.isPlaying) this.playerVisual.stop();
       if (this.playerFrame === frame) return;
-      const anchor = BLACK_HOLE_ASSETS.player.anchors[frame] ?? { x: 0.5, y: 1 };
       this.playerFrame = frame;
-      this.playerVisual.setFrame(frame).setOrigin(anchor.x, anchor.y);
+      this.playerVisual.setFrame(frame);
     }
 
-    private setPlayerMotion(motion: 'ready' | 'running' | 'rising' | 'falling' | 'gameover') {
+    private setPlayerMotion(
+      motion: 'ready' | 'running' | 'rising' | 'apex' | 'falling' | 'landing' | 'gameover',
+    ) {
       if (this.playerMotion === motion) return;
       this.playerMotion = motion;
       options.parent.dataset.playerMotion = motion;
@@ -393,8 +461,7 @@ export function mountBlackHoleGame(options: BlackHoleGameOptions): BlackHoleGame
       default: 'arcade',
       arcade: {
         gravity: { x: 0, y: 1_800 },
-        fps: 60,
-        fixedStep: true,
+        fixedStep: false,
         debug: false,
       },
     },
