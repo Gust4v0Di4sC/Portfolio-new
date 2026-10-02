@@ -45,6 +45,11 @@ export default function HeroCard({ children, figureAriaLabel, gameContent }: Her
       return undefined;
     }
 
+    if (isGameOpen) {
+      floatingCard.style.transform = 'none';
+      return undefined;
+    }
+
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const amplitude = reducedMotion ? 3 : 15;
     const cycleDuration = reducedMotion ? 7000 : 3400;
@@ -98,7 +103,7 @@ export default function HeroCard({ children, figureAriaLabel, gameContent }: Her
       visibilityObserver?.disconnect();
       document.removeEventListener('visibilitychange', handleVisibility);
     };
-  }, []);
+  }, [isGameOpen]);
 
   const updateTilt = (event: PointerEvent<HTMLElement>) => {
     const figure = figureRef.current;
@@ -142,6 +147,7 @@ export default function HeroCard({ children, figureAriaLabel, gameContent }: Her
           speed={42}
           colors="#dff9ff,#67e8f9,#00e5ff,#0ea5e9"
           noFocus
+          active={!isGameOpen}
           className="hero-card-surface"
         >
           <button

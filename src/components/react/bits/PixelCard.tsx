@@ -14,6 +14,7 @@ type PixelCardProps = {
   className?: string;
   style?: CSSProperties;
   children?: ReactNode;
+  active?: boolean;
 };
 
 type PixelCardStyle = CSSProperties & {
@@ -161,6 +162,7 @@ export default function PixelCard({
   className = '',
   style,
   children,
+  active = true,
 }: PixelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -186,7 +188,8 @@ export default function PixelCard({
     const context = canvas.getContext('2d');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!context || reducedMotion) {
+    if (!context || reducedMotion || !active) {
+      context?.clearRect(0, 0, canvas.width, canvas.height);
       return undefined;
     }
 
@@ -259,7 +262,7 @@ export default function PixelCard({
       window.cancelAnimationFrame(animationFrame);
       startAnimationRef.current = () => undefined;
     };
-  }, [finalColors, finalGap, finalSpeed]);
+  }, [active, finalColors, finalGap, finalSpeed]);
 
   return (
     <div
