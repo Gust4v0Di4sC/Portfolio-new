@@ -64,6 +64,9 @@ test('mantém o minijogo do hero sem violações automáticas', async ({ page })
   await page.getByRole('button', { name: 'Navegador' }).click();
   await page.getByRole('button', { name: 'Voltar ao menu principal' }).click();
   await page.getByRole('button', { name: 'Abrir apresentação' }).click();
+  const heroCard = page.locator('astro-island[component-url*="HeroCard"]');
+  await heroCard.scrollIntoViewIfNeeded();
+  await expect(heroCard).not.toHaveAttribute('ssr', '', { timeout: 15_000 });
   await page.getByRole('button', { name: 'Abrir o minijogo Fuga do Buraco Negro' }).click();
 
   const gameHost = page.getByRole('button', {
