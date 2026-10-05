@@ -349,6 +349,18 @@ test('abre a prévia de um projeto com ações externas', async ({ page }) => {
   const dialog = page.getByRole('dialog', { name: 'InfoShop' });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText('Disponível', { exact: true })).toBeVisible();
+  await expect(
+    dialog.getByRole('heading', { name: 'Métricas de performance' }),
+  ).toBeVisible();
+  await expect(
+    dialog.getByText(
+      'Auditoria Lighthouse mobile realizada em 03.10.2026. Os resultados podem variar.',
+    ),
+  ).toBeVisible();
+  await expect(dialog.locator('.project-metric')).toHaveCount(4);
+  await expect(dialog.locator('.project-metric').filter({ hasText: 'Performance' })).toContainText(
+    '52/100',
+  );
   const previewVideo = dialog.getByLabel('Prévia animada do projeto InfoShop');
 
   await expect(previewVideo).toHaveAttribute('preload', 'metadata');

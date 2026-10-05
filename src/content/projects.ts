@@ -47,6 +47,15 @@ export const projectsContent = {
     videoLabel: 'Prévia em vídeo',
     statusLabel: 'Status',
     stackLabel: 'Tecnologias',
+    metricsLabel: 'Métricas de performance',
+    metricsDescription:
+      'Auditoria {tool} {profile} realizada em {date}. Os resultados podem variar.',
+    metricLabels: {
+      performance: 'Performance',
+      accessibility: 'Acessibilidade',
+      bestPractices: 'Boas práticas',
+      seo: 'SEO',
+    },
     projectAction: 'Abrir projeto',
     repositoryAction: 'Abrir repositório',
     linksUnavailable: 'Links disponíveis após o lançamento.',
@@ -74,6 +83,13 @@ export const projectsContent = {
       projectUrl: 'https://infoshop.netlify.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Info-Shop',
       previewSlug: 'infoshop',
+      audit: {
+        tool: 'Lighthouse',
+        profile: 'mobile',
+        date: '2026-10-03',
+        dateLabel: '03.10.2026',
+        scores: { performance: 52, accessibility: 100, bestPractices: 100, seo: 92 },
+      },
     },
     {
       title: 'PetCorner',
@@ -91,6 +107,13 @@ export const projectsContent = {
       projectUrl: 'https://pet-corner-next-nine.vercel.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Pet-Corner-Next',
       previewSlug: 'pet-corner',
+      audit: {
+        tool: 'Lighthouse',
+        profile: 'mobile',
+        date: '2026-10-03',
+        dateLabel: '03.10.2026',
+        scores: { performance: 55, accessibility: 96, bestPractices: 100, seo: 100 },
+      },
     },
     {
       title: 'Pizza Party',
@@ -141,5 +164,17 @@ export const projectsContent = {
     projectUrl: string | undefined;
     repositoryUrl: string | undefined;
     previewSlug: 'infoshop' | 'pet-corner' | undefined;
+    audit?: {
+      tool: 'Lighthouse';
+      profile: string;
+      date: string;
+      dateLabel: string;
+      scores: {
+        performance: number;
+        accessibility: number;
+        bestPractices: number;
+        seo: number;
+      };
+    };
   }>,
 } as const;
