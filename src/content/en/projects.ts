@@ -45,6 +45,14 @@ export const projectsContent = {
     videoLabel: 'Video preview',
     statusLabel: 'Status',
     stackLabel: 'Technologies',
+    metricsLabel: 'Performance metrics',
+    metricsDescription: '{tool} {profile} audit run on {date}. Results may vary.',
+    metricLabels: {
+      performance: 'Performance',
+      accessibility: 'Accessibility',
+      bestPractices: 'Best practices',
+      seo: 'SEO',
+    },
     projectAction: 'Open project',
     repositoryAction: 'Open repository',
     linksUnavailable: 'Links will be available after launch.',
@@ -69,6 +77,13 @@ export const projectsContent = {
       projectUrl: 'https://infoshop.netlify.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Info-Shop',
       previewSlug: 'infoshop',
+      audit: {
+        tool: 'Lighthouse',
+        profile: 'mobile',
+        date: '2026-10-03',
+        dateLabel: '10.03.2026',
+        scores: { performance: 52, accessibility: 100, bestPractices: 100, seo: 92 },
+      },
     },
     {
       title: 'PetCorner',
@@ -86,6 +101,13 @@ export const projectsContent = {
       projectUrl: 'https://pet-corner-next-nine.vercel.app/',
       repositoryUrl: 'https://github.com/Gust4v0Di4sC/Pet-Corner-Next',
       previewSlug: 'pet-corner',
+      audit: {
+        tool: 'Lighthouse',
+        profile: 'mobile',
+        date: '2026-10-03',
+        dateLabel: '10.03.2026',
+        scores: { performance: 55, accessibility: 96, bestPractices: 100, seo: 100 },
+      },
     },
     {
       title: 'Pizza Party',

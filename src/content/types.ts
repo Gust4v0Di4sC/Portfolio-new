@@ -126,6 +126,18 @@ export interface ProjectContentItem {
   projectUrl?: string | undefined;
   repositoryUrl?: string | undefined;
   previewSlug?: 'infoshop' | 'pet-corner' | undefined;
+  audit?: {
+    tool: 'Lighthouse';
+    profile: string;
+    date: string;
+    dateLabel: string;
+    scores: {
+      performance: number;
+      accessibility: number;
+      bestPractices: number;
+      seo: number;
+    };
+  };
 }
 
 export interface ProjectsContent {
@@ -157,6 +169,14 @@ export interface ProjectsContent {
     videoLabel: string;
     statusLabel: string;
     stackLabel: string;
+    metricsLabel: string;
+    metricsDescription: string;
+    metricLabels: {
+      performance: string;
+      accessibility: string;
+      bestPractices: string;
+      seo: string;
+    };
     projectAction: string;
     repositoryAction: string;
     linksUnavailable: string;
