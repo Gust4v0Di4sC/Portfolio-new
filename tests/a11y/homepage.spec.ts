@@ -55,6 +55,10 @@ test('mantém a rota inglesa e o seletor de idioma sem violações automáticas'
 
 test('mantém o minijogo do hero sem violações automáticas', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('astro-island[component-url*="SplashIntro"]')).not.toHaveAttribute(
+    'ssr',
+    '',
+  );
   await page.getByRole('button', { name: 'Role para entrar' }).click();
   await expect(page.locator('[data-splash-intro]')).toBeHidden({ timeout: 15_000 });
   await page.getByRole('button', { name: 'Navegador' }).click();
