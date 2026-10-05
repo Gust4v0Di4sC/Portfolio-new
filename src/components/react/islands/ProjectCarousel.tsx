@@ -243,6 +243,38 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
               </div>
             </div>
 
+            {selectedProject.audit && (
+              <section className="project-metrics" aria-labelledby="project-metrics-title">
+                <div className="project-metrics-heading">
+                  <h4 id="project-metrics-title">{content.dialog.metricsLabel}</h4>
+                  <p>
+                    {content.dialog.metricsDescription
+                      .replace('{tool}', selectedProject.audit.tool)
+                      .replace('{profile}', selectedProject.audit.profile)
+                      .replace('{date}', selectedProject.audit.dateLabel)}
+                  </p>
+                </div>
+                <dl className="project-metrics-grid">
+                  {(
+                    [
+                      ['performance', selectedProject.audit.scores.performance],
+                      ['accessibility', selectedProject.audit.scores.accessibility],
+                      ['bestPractices', selectedProject.audit.scores.bestPractices],
+                      ['seo', selectedProject.audit.scores.seo],
+                    ] as const
+                  ).map(([metric, score]) => (
+                    <div className="project-metric" key={metric}>
+                      <dt>{content.dialog.metricLabels[metric]}</dt>
+                      <dd>
+                        <strong>{score}</strong>
+                        <span>/100</span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
+
             <footer className="project-preview-actions">
               {selectedProject.projectUrl && (
                 <a
