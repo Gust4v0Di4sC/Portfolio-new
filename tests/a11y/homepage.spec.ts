@@ -40,6 +40,10 @@ test('mantém System Configuration, telas secundárias e Visor sem violações a
 
 test('mantém a rota inglesa e o seletor de idioma sem violações automáticas', async ({ page }) => {
   await page.goto('/en/');
+  await expect(page.locator('astro-island[component-url*="SplashIntro"]')).not.toHaveAttribute(
+    'ssr',
+    '',
+  );
   await page.getByRole('button', { name: 'Scroll to enter' }).click();
   await expect(page.locator('[data-splash-intro]')).toBeHidden({ timeout: 15_000 });
   await page.getByRole('button', { name: 'System Configuration' }).click();
