@@ -74,6 +74,27 @@ describe('blocos de conteúdo', () => {
     ]);
   });
 
+  it('mantém as auditorias de projeto localizadas e com pontuações válidas', () => {
+    const portuguese = getContent('pt-BR');
+    const english = getContent('en');
+    const portugueseAudits = portuguese.projects.items.filter(({ audit }) => audit);
+    const englishAudits = english.projects.items.filter(({ audit }) => audit);
+
+    expect(portugueseAudits.map(({ title }) => title)).toEqual(['InfoShop', 'PetCorner']);
+    expect(englishAudits.map(({ title }) => title)).toEqual(['InfoShop', 'PetCorner']);
+    expect(portuguese.projects.dialog.metricsLabel).toBe('Métricas de performance');
+    expect(english.projects.dialog.metricsLabel).toBe('Performance metrics');
+
+    for (const project of portugueseAudits) {
+      expect(project.audit?.tool).toBe('Lighthouse');
+      expect(project.audit?.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      for (const score of Object.values(project.audit?.scores ?? {})) {
+        expect(score).toBeGreaterThanOrEqual(0);
+        expect(score).toBeLessThanOrEqual(100);
+      }
+    }
+  });
+
   it('liga as provas de habilidade aos projetos cadastrados', () => {
     const projectTitles = new Set(projectsContent.items.map(({ title }) => title));
 
