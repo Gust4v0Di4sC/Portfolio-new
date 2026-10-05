@@ -20,6 +20,9 @@ playwright-report/
 .env
 .env.production
 
+# Vercel project link
+.vercel/
+
 # macOS-specific files
 .DS_Store
 

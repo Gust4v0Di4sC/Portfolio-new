@@ -1,43 +1,64 @@
-# Astro Starter Kit: Minimal
+# Portfolio PS2
+
+Portfólio bilíngue inspirado na interface do PlayStation 2, construído com Astro, React e TypeScript. O projeto é gerado como site estático e inclui animações 3D, um minijogo em Phaser, prévias de projetos e testes automatizados de interface, acessibilidade e performance.
+
+## Requisitos
+
+- Node.js 24
+- pnpm 10.25.0
+
+## Desenvolvimento
 
 ```sh
-pnpm create astro@latest -- --template minimal
+pnpm install --frozen-lockfile
+pnpm astro dev --background
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+O servidor em segundo plano pode ser administrado com:
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+pnpm astro dev status
+pnpm astro dev logs
+pnpm astro dev stop
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Copie `.env.example` para `.env` quando quiser definir uma URL pública para metadados, sitemap e URLs canônicas:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```env
+PUBLIC_SITE_URL=https://seu-dominio.com.br
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+Na Vercel, `VERCEL_PROJECT_PRODUCTION_URL` é detectada automaticamente quando `PUBLIC_SITE_URL` não está definida.
 
-## 🧞 Commands
+## Qualidade e build
 
-All commands are run from the root of the project, from a terminal:
+```sh
+pnpm validate   # Astro check, ESLint, Prettier e testes unitários
+pnpm verify     # validação, build, E2E, acessibilidade e performance
+pnpm build      # gera o site estático em dist/
+pnpm preview    # serve o build localmente
+```
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+O workflow `.github/workflows/ci.yml` executa `pnpm verify` em pushes e pull requests direcionados à `main`.
 
-## 👀 Want to learn more?
+## Deploy na Vercel
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+O projeto usa `output: "static"`; portanto, não precisa do adapter `@astrojs/vercel` para o deploy atual.
+
+```sh
+vercel link --yes --project portfolio-ps2
+vercel deploy
+vercel deploy --prod
+```
+
+- `vercel deploy` cria um Preview.
+- `vercel deploy --prod` publica no ambiente de produção.
+- A pasta local `.vercel/` guarda o vínculo do projeto e não deve ser versionada.
+
+## Estrutura principal
+
+- `src/pages/`: rotas em português, inglês e `robots.txt`.
+- `src/components/`: componentes Astro e ilhas React.
+- `src/content/`: conteúdo localizado e tipos compartilhados.
+- `src/game/`: regras, assets e runtime do minijogo.
+- `tests/`: testes unitários, E2E, acessibilidade e performance.
