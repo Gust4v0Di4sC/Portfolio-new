@@ -1,7 +1,10 @@
 .project-browser {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 66rem);
   margin-inline: auto;
   color: var(--color-text);
+  contain: paint;
 }
 .memory-select {
   display: grid;
@@ -30,6 +33,10 @@
   font-size: clamp(1.15rem, 1rem + 1.1vw, 1.8rem);
   font-weight: 500;
   letter-spacing: 0.08em;
+}
+.memory-select-copy h3:focus,
+.save-gallery-header h3:focus {
+  outline: 0;
 }
 .memory-select-copy span {
   color: var(--color-text-subtle);
@@ -107,9 +114,6 @@
 .save-gallery-header > div {
   display: grid;
   gap: 0.2rem;
-}
-.save-gallery-header h3:focus {
-  outline: 0;
 }
 .save-grid {
   display: grid;

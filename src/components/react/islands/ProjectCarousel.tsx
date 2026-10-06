@@ -44,6 +44,7 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const galleryHeadingRef = useRef<HTMLHeadingElement>(null);
+  const memorySelectHeadingRef = useRef<HTMLHeadingElement>(null);
 
   const visibleProjects = useMemo(
     () => content.items.filter((project) => project.status === activeMemory),
@@ -92,7 +93,14 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
 
   const openMemory = (slot: MemorySlot) => {
     setActiveMemory(slot);
-    window.requestAnimationFrame(() => galleryHeadingRef.current?.focus());
+    window.requestAnimationFrame(() => galleryHeadingRef.current?.focus({ preventScroll: true }));
+  };
+
+  const closeMemory = () => {
+    setActiveMemory(null);
+    window.requestAnimationFrame(() =>
+      memorySelectHeadingRef.current?.focus({ preventScroll: true }),
+    );
   };
 
   return (
@@ -100,7 +108,9 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
       {activeMemory === null ? (
         <div className="memory-select" aria-labelledby="memory-select-title">
           <div className="memory-select-copy">
-            <h3 id="memory-select-title">{content.memorySelect.title}</h3>
+            <h3 id="memory-select-title" ref={memorySelectHeadingRef} tabIndex={-1}>
+              {content.memorySelect.title}
+            </h3>
             <span>{content.memorySelect.hint}</span>
           </div>
 
@@ -146,7 +156,7 @@ export default function ProjectCarousel({ content }: ProjectCarouselProps) {
               className="ps-control ps-control-circle"
               type="button"
               data-sound="back"
-              onClick={() => setActiveMemory(null)}
+              onClick={closeMemory}
             >
               <span className="ps-symbol" aria-hidden="true">
                 ○

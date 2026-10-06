@@ -190,7 +190,6 @@
   bottom: clamp(1.25rem, 4vh, 2.75rem);
   left: clamp(1.25rem, 5vw, 4.5rem);
   z-index: 100;
-  isolation: isolate;
   padding: 0.25rem 0;
   color: #e6e3ed;
   background: transparent;
@@ -199,12 +198,12 @@
   text-shadow: 0 2px 2px rgb(0 0 0 / 0.9);
 }
 
-.portfolio-menu-return::before {
+.portfolio-menu-return-bar {
   position: fixed;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: -1;
+  z-index: 99;
   height: clamp(4.75rem, 11vh, 6.25rem);
   background: linear-gradient(
     0deg,
@@ -212,7 +211,6 @@
     rgb(5 3 13 / 0.72) 58%,
     transparent 100%
   );
-  content: '';
   pointer-events: none;
 }
 
@@ -649,7 +647,7 @@
     left: 1rem;
   }
 
-  .portfolio-menu-return::before {
+  .portfolio-menu-return-bar {
     height: 5.25rem;
   }
 }
