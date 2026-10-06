@@ -722,9 +722,17 @@ export default function SplashIntro({ content }: SplashIntroProps) {
         <p className="splash-portfolio">{content.subtitle}</p>
       </div>
 
-      <button className="splash-scroll-hint" type="button" data-splash-enter>
-        <span>{content.scrollHint}</span>
-        <span className="splash-scroll-line" />
+      <button
+        className="splash-scroll-hint"
+        type="button"
+        aria-label={content.scrollHint}
+        data-splash-enter
+      >
+        <span className="splash-scroll-arrows" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
       </button>
 
       <style>{`
@@ -853,16 +861,14 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           z-index: 2;
           display: grid;
           justify-items: center;
-          gap: 0.7rem;
-          color: var(--color-text-muted);
-          font-family: var(--font-mono);
-          font-size: 0.72rem;
-          letter-spacing: 0.14em;
+          width: 3rem;
+          min-height: 4rem;
+          place-items: center;
+          padding: 0.4rem;
           border: 0;
           background: transparent;
           cursor: pointer;
           opacity: var(--splash-hint-opacity);
-          text-transform: uppercase;
           transform: translateX(-50%);
           will-change: opacity;
         }
@@ -871,13 +877,29 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           border-radius: 0.25rem;
         }
 
-        .splash-scroll-line {
-          width: 1px;
-          height: clamp(2rem, 6vh, 3.5rem);
-          background: linear-gradient(180deg, var(--color-primary-intense), transparent);
-          box-shadow: 0 0 0.75rem rgb(0 229 255 / 0.7);
-          animation: splash-scroll-pulse 1600ms ease-in-out infinite;
-          transform-origin: top;
+        .splash-scroll-arrows {
+          display: grid;
+          justify-items: center;
+          filter: drop-shadow(0 0 0.55rem rgb(0 229 255 / 0.68));
+        }
+
+        .splash-scroll-arrows > span {
+          width: 1rem;
+          height: 1rem;
+          margin-top: -0.22rem;
+          border-right: 2px solid var(--color-primary-intense);
+          border-bottom: 2px solid var(--color-primary-intense);
+          opacity: 0;
+          animation: splash-scroll-arrow 1650ms ease-in-out infinite;
+          transform: rotate(45deg) translate(-0.2rem, -0.2rem);
+        }
+
+        .splash-scroll-arrows > span:nth-child(2) {
+          animation-delay: 180ms;
+        }
+
+        .splash-scroll-arrows > span:nth-child(3) {
+          animation-delay: 360ms;
         }
 
         @keyframes splash-reveal {
@@ -904,16 +926,20 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           }
         }
 
-        @keyframes splash-scroll-pulse {
-          0%,
-          100% {
-            opacity: 0.35;
-            transform: scaleY(0.45);
+        @keyframes splash-scroll-arrow {
+          0% {
+            opacity: 0;
+            transform: rotate(45deg) translate(-0.45rem, -0.45rem);
           }
 
-          50% {
+          38% {
             opacity: 1;
-            transform: scaleY(1);
+          }
+
+          75%,
+          100% {
+            opacity: 0;
+            transform: rotate(45deg) translate(0.3rem, 0.3rem);
           }
         }
 
@@ -928,9 +954,10 @@ export default function SplashIntro({ content }: SplashIntroProps) {
           .splash-intro,
           .splash-ui h2,
           .splash-portfolio,
-          .splash-scroll-line {
+          .splash-scroll-arrows > span {
             animation: none;
             transition-duration: 0.01ms;
+            opacity: 1;
           }
         }
       `}</style>

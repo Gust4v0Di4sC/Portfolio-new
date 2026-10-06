@@ -361,21 +361,24 @@ export default function PortfolioMenu({ locale, content, navigation }: Portfolio
   if (view === 'content') {
     const returnsToSystem = systemOptions.some((option) => option.target === contentTarget);
     return (
-      <button
-        className="portfolio-menu-return ps-control ps-control-circle"
-        type="button"
-        onClick={returnToMenu}
-        aria-label={returnsToSystem ? content.returnToSystem : content.returnToMain}
-        aria-keyshortcuts="O Escape"
-        data-shortcut="o"
-        data-sound="back"
-        data-return-destination={returnsToSystem ? 'system' : 'main'}
-      >
-        <span className="ps-symbol" aria-hidden="true">
-          ○
-        </span>
-        <span>{returnsToSystem ? content.systemTitle : content.menu}</span>
-      </button>
+      <>
+        <div className="portfolio-menu-return-bar" aria-hidden="true" />
+        <button
+          className="portfolio-menu-return ps-control ps-control-circle"
+          type="button"
+          onClick={returnToMenu}
+          aria-label={returnsToSystem ? content.returnToSystem : content.returnToMain}
+          aria-keyshortcuts="O Escape"
+          data-shortcut="o"
+          data-sound="back"
+          data-return-destination={returnsToSystem ? 'system' : 'main'}
+        >
+          <span className="ps-symbol" aria-hidden="true">
+            ○
+          </span>
+          <span>{returnsToSystem ? content.systemTitle : content.menu}</span>
+        </button>
+      </>
     );
   }
 
